@@ -5,6 +5,7 @@ import { ArrowRightToLine } from 'lucide-react';
 import SchoolIcon from '@mui/icons-material/School';
 import { GiTeacher } from "react-icons/gi";
 import { RiParentFill } from "react-icons/ri";
+import { Link } from 'react-router-dom';
 
 const LoginCards = () => {
   return (
@@ -73,31 +74,42 @@ const LoginCards = () => {
             {/* Login cards grid */}
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6'>
               
-              <button className='bg-blue-500 hover:bg-blue-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <Link to='/studentLogin'>
+              <button className='bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
                 <AccessibilityNewIcon sx={{
                 fontSize: 40,
                 color: "white",
               }}/>
                 <span className='font-semibold text-lg'>Student Login</span>  
               </button>
+              </Link>
 
-              <button className='bg-green-500 hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <Link to='teacherLoging'>
+              <button className='bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
                  <GiTeacher  size={48} />
                 <span className='font-semibold text-lg'>Teacher Login</span>
               </button>
+              
+              </Link>
 
-              <button className='bg-red-500 hover:bg-red-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+             <Link to='/adminLogin'>
+              <button className='bg-red-500 cursor-pointer hover:bg-red-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
                  <SchoolIcon sx={{
                 fontSize: 40,
                 color: "white",
               }}/>
                 <span className='font-semibold text-lg'>Admin Login</span>
               </button>
+             
+             </Link>
 
-              <button className='bg-purple-600 hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+             <Link to='/parentLogint'>
+              <button className='bg-purple-600 cursor-pointer hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
                  <RiParentFill size={48} />
                 <span className='font-semibold text-lg'>Parent Login</span>
               </button>
+             
+             </Link>
 
             </div>
 
