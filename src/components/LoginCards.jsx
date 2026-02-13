@@ -74,8 +74,8 @@ const LoginCards = () => {
             {/* Login cards grid */}
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6'>
               
-              <Link to='/studentLogin'>
-              <button className='bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <Link to='/studentLogin' className='bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <button className='flex flex-col items-center' >
                 <AccessibilityNewIcon sx={{
                 fontSize: 40,
                 color: "white",
@@ -84,16 +84,16 @@ const LoginCards = () => {
               </button>
               </Link>
 
-              <Link to='teacherLoging'>
-              <button className='bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <Link to='teacherLoging' className='bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <button className='flex flex-col items-center'>
                  <GiTeacher  size={48} />
                 <span className='font-semibold text-lg'>Teacher Login</span>
               </button>
               
               </Link>
 
-             <Link to='/adminLogin'>
-              <button className='bg-red-500 cursor-pointer hover:bg-red-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+             <Link to='/adminLogin'  className='bg-red-500 cursor-pointer hover:bg-red-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <button className='flex flex-col items-center'>
                  <SchoolIcon sx={{
                 fontSize: 40,
                 color: "white",
@@ -103,8 +103,8 @@ const LoginCards = () => {
              
              </Link>
 
-             <Link to='/parentLogint'>
-              <button className='bg-purple-600 cursor-pointer hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+             <Link to='/parentLogint' className='bg-purple-600 cursor-pointer hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <button className='flex flex-col items-center'>
                  <RiParentFill size={48} />
                 <span className='font-semibold text-lg'>Parent Login</span>
               </button>
