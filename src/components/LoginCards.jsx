@@ -84,7 +84,7 @@ const LoginCards = () => {
               </button>
               </Link>
 
-              <Link to='teacherLoging' className='bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+              <Link to='/teacherLogin' className='bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
               <button className='flex flex-col items-center'>
                  <GiTeacher  size={48} />
                 <span className='font-semibold text-lg'>Teacher Login</span>
@@ -103,7 +103,7 @@ const LoginCards = () => {
              
              </Link>
 
-             <Link to='/parentLogint' className='bg-purple-600 cursor-pointer hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
+             <Link to='/parentLogin' className='bg-purple-600 cursor-pointer hover:bg-purple-700 text-white rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all duration-200 hover:scale-105 shadow-md'>
               <button className='flex flex-col items-center'>
                  <RiParentFill size={48} />
                 <span className='font-semibold text-lg'>Parent Login</span>
