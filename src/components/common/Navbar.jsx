@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 shadow-lg">
-      <div className="px-4 md:px-8 lg:px-24 mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="px-4 md:px-8 lg:px-24 mx-auto  py-4 flex items-center justify-between">
         
         {/* Logo + Title */}
        <Link to='/'>
@@ -27,7 +27,7 @@ const Navbar = () => {
         </div>
        </Link>
 
-        <p className="text-white/90 text-sm md:text-xl lg:text-2xl font-medium">
+        <p className="text-white/90 text-xl md:text-xl lg:text-2xl font-medium">
           Terminal Report Management System
         </p>
 

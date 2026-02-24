@@ -13,6 +13,7 @@ import TeacherLogin from './layout/TeacherLoging'
 import AdminLogin from './layout/AdminLogin'
 import ParentLogin from './layout/ParentLogin'
 import MainLaout from './components/MainLaout'
+import Dasboard from './admin/dasboard'
 
 const App = () => {
   return (
@@ -26,8 +27,7 @@ const App = () => {
         <Route path='/about' element={<About/>}/>
         <Route path='/contact' element={<Contact/>}/>
         </Route>
-       
-          </Routes>
+       </Routes>
            
 
 
@@ -39,6 +39,9 @@ const App = () => {
         <Route path='/teacherLogin' element={<TeacherLogin/> } />
         <Route path='/adminLogin' element={<AdminLogin/> } />
         <Route path='/parentLogin' element={<ParentLogin/> } />
+        {/* admin Route */}
+        <Route path='/dasboard' element={ <Dasboard/> }/>
+
 
      
       </Routes>
