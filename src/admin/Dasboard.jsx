@@ -100,13 +100,15 @@ const Dashboard = () => {
         </div>
 
         {/* Admin Profile */}
-        <div className="flex flex-col items-center py-5 mx-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
-          <div className="w-14 h-14 rounded-full bg-orange-400 flex items-center justify-center mb-2 shadow-lg">
+        <div className="flex flex-col gap-4 md:flex-row items-center py-5 mx-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+          <div className="w-14 h-14 rounded-full bg-[var(--accent-red)] flex items-center justify-center mb-2 shadow-lg">
             <FaUsers className="text-white text-2xl" />
           </div>
-          <p className="text-white font-semibold text-sm">System Administrator</p>
+      <div className="">
+            <p className="text-white font-semibold text-sm">System Administrator</p>
           <p className="text-blue-300 text-xs">admin@excellence.edu.gh</p>
           <span className="mt-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">SUPER ADMIN</span>
+      </div>
         </div>
 
         {/* Nav */}
@@ -165,7 +167,7 @@ const Dashboard = () => {
             <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100">
               <FaSearch className="text-gray-600" />
             </button>
-            <div className="flex items-center gap-2 text-white px-4 py-2 rounded-lg ml-2" style={{ backgroundColor: 'var(--royal-blue-dark)' }}>
+            <div className="flex items-center gap-2 text-white px-4 py-2 rounded-lg ml-2 bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-2 border-red-700 " >
               <FaCalendarAlt />
               <div className="text-xs leading-tight">
                 <div className="font-bold">Academic Year: 2023/2024</div>
@@ -309,18 +311,22 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Upcoming Events */}
-              <div className="rounded-xl shadow-lg overflow-hidden" >
-                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] px-6 py-4 border-b-4 border-red-700 flex items-center gap-2 text-white font-bold text-base">
+
+            </div>
+            
+      
+          </div>
+                  {/* Upcoming Events */}
+              <div className="shadow-lg  w-full" >
+                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] px-6 py-4 border-b-4 border-red-700  flex items-center justify-between rounded-t-2xl mt-20">
+                    <div className="flex items-center gap-2 text-white font-bold text-base">
                     <FaCalendarAlt /> Upcoming Academic Events
                   </div>
-                <div className="flex items-center justify-between px-6 py-4">
-                  
                   <button className="text-red-400 text-sm font-semibold hover:text-red-300">Full Calendar</button>
                 </div>
-                <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
+                <div className="mt-4 gap-4 mx-4 mb-4 rounded-lg divide-y divide-gray-100">
                   {events.map((ev, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4">
+                    <div key={i} className="flex items-center  mb-2 gap-4 p-4">
                       <div className="border-2 rounded-lg px-3 py-2 text-center min-w-[54px]" style={{ borderColor: 'var(--royal-blue-dark)' }}>
                         <div className="text-lg font-bold leading-none" style={{ color: 'var(--royal-blue-dark)' }}>{ev.day}</div>
                         <div className="text-xs font-semibold" style={{ color: 'var(--royal-blue)' }}>{ev.month}</div>
@@ -334,9 +340,6 @@ const Dashboard = () => {
                   ))}
                 </div>
               </div>
-
-            </div>
-          </div>
 
         </div>
       </div>
