@@ -17,3 +17,37 @@
     --danger: #e74c3c;
     --info: #3498db;
 }
+
+/* FLOATING BACKGROUND CIRCLES */
+
+@keyframes floatOne {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(-40px, 40px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+@keyframes floatTwo {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(50px, -30px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+.animate-float-one {
+  animation: floatOne 12s ease-in-out infinite;
+}
+
+.animate-float-two {
+  animation: floatTwo 15s ease-in-out infinite;
+}

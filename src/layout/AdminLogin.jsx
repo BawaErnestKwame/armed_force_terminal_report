@@ -183,7 +183,7 @@ const AdminLogin = () => {
                 />
                 <span className="text-gray-700 text-sm">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-red-500 text-sm font-semibold hover:underline flex items-center gap-1">
+              <Link to="/forgotPassword" className="text-red-500 text-sm font-semibold hover:underline flex items-center gap-1">
                 <FaKey className="text-xs" /> Forgot Password?
               </Link>
             </div>
