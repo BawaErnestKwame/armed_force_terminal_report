@@ -15,15 +15,15 @@ const Dashboard = () => {
   const [activeNav, setActiveNav] = useState('Dashboard');
 
   const navItems = [
-    { icon: <FaTachometerAlt />, label: 'Dashboard' },
-    { icon: <FaUsers />, label: 'User Management' },
-    { icon: <FaCalendarAlt />, label: 'Academic Setup', hasArrow: true },
-    { icon: <FaClipboardList />, label: 'Audit Logs' },
-    { icon: <FaDatabase />, label: 'Backup Status' },
-    { icon: <FaFileAlt />, label: 'Report Templates' },
-    { icon: <FaBullhorn />, label: 'Bulk Communication' },
-    { icon: <FaChartPie />, label: 'Analytics Dashboard' },
-  ];
+  { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/dashboard' },
+  { icon: <FaUsers />, label: 'User Management', path: '/userManagement' },
+  { icon: <FaCalendarAlt />, label: 'Academic Setup', path: '/academicSetup', hasArrow: true },
+  { icon: <FaClipboardList />, label: 'Audit Logs', path: '/auditLogs' },
+  { icon: <FaDatabase />, label: 'Backup Status', path: '/backupStatus' },
+  { icon: <FaFileAlt />, label: 'Report Templates', path: '/reportTemplates' },
+  { icon: <FaBullhorn />, label: 'Bulk Communication', path: '/bulkCommunication' },
+  { icon: <FaChartPie />, label: 'Analytics Dashboard', path: '/analyticsDashboard' },
+];
 
   const stats = [
     { icon: <FaUserGraduate />, value: '1,245', label: 'Total Students', change: '↑ 5% from last term', changeColor: 'text-green-500', bg: 'bg-blue-400' },
@@ -113,22 +113,24 @@ const Dashboard = () => {
 
         {/* Nav */}
         <nav className="flex-1 py-4 px-2">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => setActiveNav(item.label)}
-              className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg mb-1 text-sm font-medium transition-all
-                ${activeNav === item.label
-                  ? 'text-white border-l-4 border-red-500'
-                  : 'text-blue-200 hover:text-white'}`}
-              style={activeNav === item.label ? { backgroundColor: 'var(--royal-blue)' } : {}}
-            >
-              <span className="text-base">{item.icon}</span>
-              <span className="flex-1 text-left">{item.label}</span>
-              {item.hasArrow && <FaAngleRight className="text-xs" />}
-            </button>
-          ))}
-        </nav>
+  {navItems.map((item, index) => (
+    <Link to={item.path} key={item.label}>
+      <button
+        onClick={() => setActiveNav(item.label)}
+        className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg mb-1 text-sm font-medium transition-all
+          ${activeNav === item.label
+            ? 'text-white border-l-4 border-red-500'
+            : 'text-blue-200 hover:text-white'}`}
+        style={activeNav === item.label ? { backgroundColor: 'var(--royal-blue)' } : {}}
+      >
+        <span className="text-base">{item.icon}</span>
+        <span className="flex-1 text-left">{item.label}</span>
+        {item.hasArrow && <FaAngleRight className="text-xs" />}
+      </button>
+    </Link>
+  ))}
+</nav>
+   
 
         {/* Footer */}
         <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>

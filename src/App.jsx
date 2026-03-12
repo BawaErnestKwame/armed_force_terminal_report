@@ -15,6 +15,7 @@ import ParentLogin from './layout/ParentLogin'
 import MainLaout from './components/MainLaout'
 import Dasboard from './admin/dasboard'
 import ForgotPassword from './auth/ForgotPassword'
+import UserManagement from './admin/user-management/UserManagement'
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
         <Route path='/adminLogin' element={<AdminLogin/> } />
         <Route path='/parentLogin' element={<ParentLogin/> } />
         <Route path='/forgotPassword' element={<ForgotPassword/>}/>
+        <Route path='/userManagement'element={<UserManagement/> }/>
         {/* admin Route */}
         <Route path='/dasboard' element={ <Dasboard/> }/>
 
