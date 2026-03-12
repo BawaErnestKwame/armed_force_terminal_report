@@ -1,4 +1,9 @@
 import { useState } from "react";
+     import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+     import FileUploadIcon from '@mui/icons-material/FileUpload';
+     import SearchIcon from '@mui/icons-material/Search';
+    import GroupAddIcon from '@mui/icons-material/GroupAdd';
+
 
 const users = [
   { id: "STD2024001", name: "Kwame Asante", role: "STUDENT", dept: "Form 2 Science A", email: "k.asante@student.excellence.edu.gh", status: "Active" },
@@ -56,54 +61,14 @@ const UserManagement = () => {
   return (
     <div className="flex min-h-screen bg-gray-100 font-sans">
       {/* SIDEBAR */}
-      <aside className="w-60 flex-shrink-0 flex flex-col" style={{ background: "linear-gradient(180deg, #1a237e 0%, #1e3a8a 60%, #1d4ed8 100%)", borderRight: "3px solid #ef4444" }}>
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-            <span className="text-2xl">🎓</span>
-          </div>
-          <div>
-            <div className="text-white font-extrabold text-sm leading-tight">EXCELLENCE</div>
-            <div className="text-white font-extrabold text-sm leading-tight">ACADEMY</div>
-            <div className="text-white/50 text-xs mt-0.5">Admin Portal</div>
-          </div>
-        </div>
 
-        <div className="px-5 py-5 border-b border-white/10 flex flex-col items-center gap-2">
-          <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-2xl">👤</div>
-          <div className="text-center">
-            <div className="text-white font-bold text-sm">System Administrator</div>
-            <div className="text-white/60 text-xs">admin@excellence.edu.gh</div>
-          </div>
-          <span className="mt-1 px-4 py-1 rounded-full bg-red-600 text-white text-xs font-bold tracking-wide">SUPER ADMIN</span>
-        </div>
-
-        <nav className="flex-1 px-3 py-5 flex flex-col gap-1">
-          {["Dashboard", "User Management"].map((item) => (
-            <button key={item} onClick={() => setActiveNav(item)}
-              className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-semibold transition-all ${activeNav === item ? "bg-white/15 text-white border-l-4 border-red-500" : "text-white/70 hover:bg-white/10 hover:text-white"}`}>
-              <span>{item === "Dashboard" ? "⚙️" : "👥"}</span>
-              {item}
-            </button>
-          ))}
-        </nav>
-
-        <div className="px-5 py-4 border-t border-white/10">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
-            <span className="text-white/70 text-xs">System: Online</span>
-          </div>
-          <button className="flex items-center gap-2 w-full px-4 py-2 rounded-lg bg-purple-800 hover:bg-purple-700 text-white text-sm font-semibold transition-all">
-            <span>🚪</span> Logout
-          </button>
-        </div>
-      </aside>
 
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col min-h-screen overflow-auto">
         <div className="bg-white px-8 pt-7 pb-4 border-b border-gray-200">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-extrabold text-gray-800">User Management Console</h1>
+              <h1 className="text-3xl font-extrabold text-[var(--royal-blue)]">User Management Console</h1>
               <nav className="text-sm text-gray-400 mt-1">
                 <span>Home</span> <span className="mx-1">/</span>
                 <span>Admin</span> <span className="mx-1">/</span>
@@ -113,10 +78,11 @@ const UserManagement = () => {
             <div className="flex gap-2 mt-1">
               <button onClick={() => setShowAddUser(true)}
                 className="flex items-center gap-1 px-4 py-2 rounded-lg border-2 border-blue-700 text-blue-700 text-sm font-bold hover:bg-blue-50 transition-all">
-                <span>👤+</span> Add User
+             
+                <span><AccountCircleIcon/></span> Add User
               </button>
               <button className="flex items-center gap-1 px-4 py-2 rounded-lg border-2 border-blue-700 text-blue-700 text-sm font-bold hover:bg-blue-50 transition-all">
-                <span>📤</span> Export
+                <span><FileUploadIcon/></span> Export
               </button>
             </div>
           </div>
@@ -125,7 +91,7 @@ const UserManagement = () => {
         <div className="px-8 py-6 flex-1">
           <div className="flex items-center gap-3 mb-5 flex-wrap">
             <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 w-72">
-              <span className="text-gray-400">🔍</span>
+              <span className="text-gray-400"><SearchIcon/></span>
               <input value={search} onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search users by name, email..."
                 className="text-sm outline-none w-full text-gray-700 placeholder-gray-400" />
@@ -145,7 +111,8 @@ const UserManagement = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4" style={{ background: "linear-gradient(90deg, #1a237e 0%, #1e3a8a 100%)" }}>
               <div className="flex items-center gap-3 text-white font-bold text-base">
-                <span>👥</span> System Users
+                
+                <span className="text-red-500 bg-amber-50 w-10 h-10 rounded-full flex items-center justify-center"><GroupAddIcon/></span> System Users
               </div>
               <div className="text-white font-semibold text-sm">Total: 1,345 users</div>
             </div>
