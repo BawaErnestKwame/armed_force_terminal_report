@@ -205,7 +205,7 @@ const AdminLogin = () => {
                 onClick={() => handleDemoAccess('student')}
                 className="flex-1 py-2 px-4 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-blue-700 hover:text-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
               >
-               <Link to='/dasboard'> <FaGraduationCap /> Student Demo</Link>
+               <Link to='/dashboard'> <FaGraduationCap /> Student Demo</Link>
               </button>
               <button
                 onClick={() => handleDemoAccess('teacher')}
