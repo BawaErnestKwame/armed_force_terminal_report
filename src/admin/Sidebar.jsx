@@ -42,7 +42,7 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className="flex h-full flex-col w-64 border-r-4 border-red-600 shadow-xl flex-shrink-0"
+        className="flex fixed top-0 left-0  h-full mb-10 flex-col w-64 border-r-4 border-red-600 shadow-xl flex-shrink-0"
         style={{ background: 'linear-gradient(180deg, var(--royal-blue) 0%, var(--royal-blue-dark) 100%)' }}
       >
 
@@ -165,7 +165,7 @@ const Sidebar = () => {
 
         {/* Footer */}
         <div
-          className="p-4"
+          className="p-4 mb-500"
           style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}
         >
 

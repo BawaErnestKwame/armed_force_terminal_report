@@ -80,15 +80,15 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex w-full min-h-screen font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
+    <div className="flex w-full gap-60 min-h-screen font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
 
       {/* Sidebar */}
       <Sidebar/>
 
 
       {/* Main Content */}
-      <div className="flex-1 bg-gray-50 overflow-y-auto">
-        <Outlet/>kwaku
+      <div className="flex-1 w-full bg-gray-50 overflow-y-auto">
+    
 
         {/* Top Bar */}
         <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
@@ -282,7 +282,12 @@ const Dashboard = () => {
               </div>
 
         </div>
+           <div className="p-8">
+            <Outlet/>
       </div>
+      </div>
+
+   
     </div>
   );
 }
