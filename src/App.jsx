@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import Features  from './pages/features/Features'
 import Contact from './pages/contact/Contact'
 import About from './pages/about/About'
+import Footer from './components/common/Footer'
 
 // layout
 
@@ -13,7 +14,7 @@ import TeacherLogin from './layout/TeacherLoging'
 import AdminLogin from './layout/AdminLogin'
 import ParentLogin from './layout/ParentLogin'
 import MainLaout from './components/MainLaout'
-import Dasboard from './admin/dasboard'
+import Dashboard from './admin/Dashboard'
 import ForgotPassword from './auth/ForgotPassword'
 import UserManagement from './admin/user-management/UserManagement'
 
@@ -32,6 +33,8 @@ const App = () => {
        </Routes>
            
 
+    <Footer/>
+
 
       
     
@@ -44,7 +47,7 @@ const App = () => {
         <Route path='/forgotPassword' element={<ForgotPassword/>}/>
         <Route path='/userManagement'element={<UserManagement/> }/>
         {/* admin Route */}
-        <Route path='/dasboard' element={ <Dasboard/> }/>
+        <Route path='/dashboard' element={ <Dashboard/> }/>
 
 
      
