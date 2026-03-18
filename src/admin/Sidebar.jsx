@@ -1,31 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaGraduationCap } from "react-icons/fa";
 import {
-  FaTachometerAlt, FaUsers, FaCalendarAlt, FaClipboardList,
-  FaDatabase, FaFileAlt, FaBullhorn, FaChartPie,
-  FaSignOutAlt, FaAngleRight
+  FaGraduationCap,
+  FaTachometerAlt,
+  FaUsers,
+  FaCalendarAlt,
+  FaClipboardList,
+  FaDatabase,
+  FaFileAlt,
+  FaBullhorn,
+  FaChartPie,
+  FaSignOutAlt,
+  FaAngleRight,
+  FaBars
 } from 'react-icons/fa';
 
 const Sidebar = () => {
 
   const [activeNav, setActiveNav] = useState('Dashboard');
+  const [activeSub, setActiveSub] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
     { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/dashboard' },
-
     { icon: <FaUsers />, label: 'User Management', path: '/userManagement' },
 
     {
       icon: <FaCalendarAlt />,
       label: 'Academic Setup',
-      path: '/academicSetup',
       hasArrow: true,
       children: [
-        { label: "Academic Year/Term", path: "academicYear" },
+        { label: "Academic Year/Term", path: "/academicYear" },
         { label: "School Structure", path: "/schoolStructure" },
-        { label: "Grading Configuration", path: "/gradindingConfig" },
+        { label: "Grading Configuration", path: "/gradingConfig" },
         { label: "Comment Bank", path: "/commentBank" },
       ]
     },
@@ -42,112 +50,125 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className="flex fixed top-0 left-0  h-full mb-10 flex-col w-64 border-r-4 border-red-600 shadow-xl flex-shrink-0"
-        style={{ background: 'linear-gradient(180deg, var(--royal-blue) 0%, var(--royal-blue-dark) 100%)' }}
+        className={`fixed top-0 left-0 h-screen flex flex-col shadow-xl border-r-4 border-red-600
+        transition-all duration-300 ease-in-out
+        ${collapsed ? 'w-20' : 'w-64'}`}
+        style={{
+          background: 'linear-gradient(180deg, var(--royal-blue) 0%, var(--royal-blue-dark) 100%)'
+        }}
       >
 
-        {/* Logo */}
-        <div className="flex items-center gap-3 p-4 pb-2">
-          <Link to="/">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
-              <FaGraduationCap className="text-red-500 text-2xl" />
+        {/* Top */}
+        <div className="flex items-center justify-between p-4">
+
+          {!collapsed && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                <FaGraduationCap className="text-red-500 text-xl" />
+              </div>
+              <h1 className="text-white text-sm font-bold">EXCELLENCE</h1>
             </div>
-          </Link>
+          )}
 
-          <div>
-            <h1 className="text-white text-sm font-bold leading-tight">
-              EXCELLENCE <br /> ACADEMY
-            </h1>
+          <button onClick={() => setCollapsed(!collapsed)}>
+            <FaBars className="text-white text-lg" />
+          </button>
 
-            <span className="text-xs bg-gray-600 text-gray-200 px-2 py-0.5 rounded mt-1 inline-block">
-              Admin Portal
-            </span>
-          </div>
         </div>
 
+        {/* Profile */}
+        {!collapsed && (
+          <div className="flex flex-col items-center py-4 border-b border-white/20">
+            <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center mb-2">
+              <FaUsers className="text-white text-xl" />
+            </div>
 
-        {/* Admin Profile */}
-        <div
-          className="flex flex-col gap-4 md:flex-row items-center py-5 mx-3"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}
-        >
-
-          <div className="w-14 h-14 rounded-full bg-[var(--accent-red)] flex items-center justify-center mb-2 shadow-lg">
-            <FaUsers className="text-white text-2xl" />
-          </div>
-
-          <div>
-            <p className="text-white font-semibold text-sm">
+            <p className="text-white text-sm font-semibold">
               System Administrator
             </p>
 
-            <p className="text-blue-300 text-xs">
+            <span className="text-xs text-blue-300">
               admin@excellence.edu.gh
-            </p>
-
-            <span className="mt-2 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              SUPER ADMIN
             </span>
           </div>
-
-        </div>
-
+        )}
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 px-2">
+        <nav className="flex-1 overflow-y-auto px-2 py-4">
 
           {navItems.map((item, index) => (
 
-            <div key={item.label}>
+            <div key={item.label} className="relative group">
 
               {/* Main Menu */}
               <div
                 onClick={() => {
-                  setActiveNav(item.label)
-
+                  setActiveNav(item.label);
                   if (item.children) {
-                    setOpenMenu(openMenu === index ? null : index)
+                    setOpenMenu(openMenu === index ? null : index);
                   }
                 }}
-
-                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg mb-1 text-sm font-medium transition-all cursor-pointer
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 cursor-pointer transition-all duration-200
                 ${activeNav === item.label
-                    ? 'text-white border-l-4 border-red-500'
-                    : 'text-blue-200 hover:text-white'}`}
-
-                style={activeNav === item.label ? { backgroundColor: 'var(--royal-blue)' } : {}}
+                    ? 'text-white bg-white/10 border-l-4 border-red-500'
+                    : 'text-blue-200 hover:text-white hover:bg-white/10'
+                  }`}
               >
 
-                <span className="text-base">
-                  {item.icon}
-                </span>
+                <span className="text-lg">{item.icon}</span>
 
-                <Link to={item.path} className="flex-1 text-left">
-                  {item.label}
-                </Link>
+                {!collapsed && (
+                  <>
+                    {!item.children ? (
+                      <Link to={item.path} className="flex-1">
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <span className="flex-1">{item.label}</span>
+                    )}
 
-                {item.hasArrow && (
-                  <FaAngleRight
-                    className={`text-xs transition-transform ${openMenu === index ? 'rotate-90' : ''}`}
-                  />
+                    {item.hasArrow && (
+                      <FaAngleRight
+                        className={`text-xs transition-transform duration-300 ${
+                          openMenu === index ? 'rotate-90' : ''
+                        }`}
+                      />
+                    )}
+                  </>
                 )}
 
               </div>
 
+              {/* Tooltip (when collapsed) */}
+              {collapsed && (
+                <div className="absolute left-20 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                  <div className="bg-black text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                    {item.label}
+                  </div>
+                </div>
+              )}
 
               {/* Submenu */}
-              {item.children && openMenu === index && (
+              {item.children && openMenu === index && !collapsed && (
 
-                <div className="ml-8 mb-2">
+                <div className="ml-8 mb-2 transition-all duration-300">
 
                   {item.children.map((child) => (
 
-                    <Link to={child.path} key={child.label}>
-
-                      <div className="text-blue-200 hover:text-white text-sm py-1 cursor-pointer">
+                    <Link
+                      to={child.path}
+                      key={child.label}
+                      onClick={() => setActiveSub(child.label)}
+                    >
+                      <div
+                        className={`text-sm py-1 px-2 rounded cursor-pointer transition-all duration-200
+                        ${activeSub === child.label
+                            ? 'bg-red-500 text-white'
+                            : 'text-blue-200 hover:text-white hover:bg-white/10'
+                          }`}
+                      >
                         {child.label}
                       </div>
-
                     </Link>
 
                   ))}
@@ -162,38 +183,19 @@ const Sidebar = () => {
 
         </nav>
 
-
         {/* Footer */}
-        <div
-          className="p-4 mb-500"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}
-        >
+        <div className="p-4 border-t border-white/20">
 
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+          {!collapsed && (
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+              <span className="text-green-300 text-xs">System: Online</span>
+            </div>
+          )}
 
-            <span className="text-green-300 text-xs">
-              System: Online
-            </span>
-          </div>
-
-
-          <button
-            className="flex items-center gap-2 w-full text-white text-sm px-4 py-2 rounded-lg transition-all"
-            style={{ backgroundColor: 'var(--royal-blue-dark)' }}
-
-            onMouseEnter={e =>
-              e.currentTarget.style.backgroundColor = 'var(--royal-blue)'
-            }
-
-            onMouseLeave={e =>
-              e.currentTarget.style.backgroundColor = 'var(--royal-blue-dark)'
-            }
-          >
-
+          <button className="flex items-center gap-2 w-full text-white text-sm px-3 py-2 rounded-lg bg-[var(--royal-blue-dark)] hover:bg-[var(--royal-blue)] transition-all duration-200">
             <FaSignOutAlt />
-            Logout
-
+            {!collapsed && "Logout"}
           </button>
 
         </div>
@@ -201,7 +203,7 @@ const Sidebar = () => {
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
