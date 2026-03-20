@@ -1,34 +1,36 @@
-import React from 'react';
-import { Routes, Route } from "react-router-dom";
+import React from 'react'
+import { Routes, Route } from "react-router-dom"
 
-import Hero from './components/Hero';
-import Features from './pages/features/Features';
-import Contact from './pages/contact/Contact';
-import About from './pages/about/About';
+import Hero from './components/Hero'
+import Features from './pages/features/Features'
+import Contact from './pages/contact/Contact'
+import About from './pages/about/About'
 
-import StudentLogin from './layout/StudentLogin';
-import TeacherLogin from './layout/TeacherLogin';
-import AdminLogin from './layout/AdminLogin';
-import ParentLogin from './layout/ParentLogin';
+import StudentLogin from './layout/StudentLogin'
+import TeacherLogin from './layout/TeacherLogin'
+import AdminLogin from './layout/AdminLogin'
+import ParentLogin from './layout/ParentLogin'
 
-import MainLayout from './components/MainLayout';
-import DashboardLayout from './admin/DashboardLayout';
 
-import Dashboard from './admin/DashboardLayout';
-import UserManagement from './admin/user-management/UserManagement';
-import ForgotPassword from './auth/ForgotPassword';
+import DashboardLayout from './admin/DashboardLayout'
+import ForgotPassword from './auth/ForgotPassword'
+import UserManagement from './admin/user-management/UserManagement'
+import MainLayout from './components/MainLayout'
 
 const App = () => {
   return (
     <Routes>
 
       {/* Public Layout */}
-      <Route element={<MainLayout />}>
+      <Route element={<MainLayout/>}>
+
         <Route path='/' element={<Hero />} />
         <Route path='features' element={<Features />} />
         <Route path='about' element={<About />} />
         <Route path='contact' element={<Contact />} />
+
       </Route>
+
 
       {/* Login Pages */}
       <Route path='studentLogin' element={<StudentLogin />} />
@@ -37,16 +39,16 @@ const App = () => {
       <Route path='parentLogin' element={<ParentLogin />} />
       <Route path='forgotPassword' element={<ForgotPassword />} />
 
-      {/* Dashboard Layout */}
-      <Route path='/dashboard' element={<DashboardLayout />}>
 
-        <Route index element={<Dashboard />} />
+      {/* Admin Dashboard Layout */}
+      <Route path='/dashboardLayout' element={<DashboardLayout />}>
+
         <Route path='userManagement' element={<UserManagement />} />
 
       </Route>
 
     </Routes>
-  );
-};
+  )
+}
 
-export default App;
+export default App

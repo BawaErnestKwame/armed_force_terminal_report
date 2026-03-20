@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import Footer from './common/Footer'
 
 
-const MainLaout = () => {
+const MainLayout = () => {
   return (
     <div>
         <Navbar/>
@@ -15,4 +15,4 @@ const MainLaout = () => {
   )
 }
 
-export default MainLaout
+export default MainLayout

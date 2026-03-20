@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fa';
 import Sidebar from './Sidebar';
 
-const Dashboard = () => {
+const DashboardLayout = () => {
 //   const [activeNav, setActiveNav] = useState('Dashboard');
 
 //   const navItems = [
@@ -292,4 +292,4 @@ const Dashboard = () => {
   );
 }
 
-export default Dashboard;
+export default DashboardLayout ;
