@@ -43,7 +43,7 @@ const App = () => {
       {/* Admin Dashboard Layout */}
       <Route path='/dashboardLayout' element={<DashboardLayout />}>
 
-        <Route path='userManagement' element={<UserManagement />} />
+        <Route path='/userManagement' element={<UserManagement />} />
 
       </Route>
 

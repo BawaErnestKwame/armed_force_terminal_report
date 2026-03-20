@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom';
 import { FaGraduationCap } from "react-icons/fa";
+
 import {
   FaTachometerAlt, FaUsers, FaCalendarAlt, FaClipboardList,
   FaDatabase, FaFileAlt, FaBullhorn, FaChartPie,
@@ -13,18 +14,7 @@ import {
 import Sidebar from './Sidebar';
 
 const DashboardLayout = () => {
-//   const [activeNav, setActiveNav] = useState('Dashboard');
-
-//   const navItems = [
-//   { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/dashboard' },
-//   { icon: <FaUsers />, label: 'User Management', path: '/userManagement' },
-//   { icon: <FaCalendarAlt />, label: 'Academic Setup', path: '/academicSetup', hasArrow: true },
-//   { icon: <FaClipboardList />, label: 'Audit Logs', path: '/auditLogs' },
-//   { icon: <FaDatabase />, label: 'Backup Status', path: '/backupStatus' },
-//   { icon: <FaFileAlt />, label: 'Report Templates', path: '/reportTemplates' },
-//   { icon: <FaBullhorn />, label: 'Bulk Communication', path: '/bulkCommunication' },
-//   { icon: <FaChartPie />, label: 'Analytics Dashboard', path: '/analyticsDashboard' },
-// ];
+  const [collapsed, setCollapsed] = useState(false);
 
   const stats = [
     { icon: <FaUserGraduate />, value: '1,245', label: 'Total Students', change: '↑ 5% from last term', changeColor: 'text-green-500', bg: 'bg-blue-400' },
@@ -80,15 +70,19 @@ const DashboardLayout = () => {
   ];
 
   return (
-    <div className="flex w-full gap-60 min-h-screen font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
+    <div className="flex w-full min-h-screen font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
 
       {/* Sidebar */}
-      <Sidebar/>
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
+      {/* Spacer that matches the sidebar width so main content is never hidden behind it */}
+      <div
+        className="flex-shrink-0 transition-all duration-300 ease-in-out"
+        style={{ width: collapsed ? '80px' : '256px' }}
+      />
 
-      {/* Main Content */}
-      <div className="flex-1 w-full bg-gray-50 overflow-y-auto">
-    
+      {/* Main Content — takes all remaining space */}
+      <div className="flex-1 min-w-0 bg-gray-50 overflow-y-auto">
 
         {/* Top Bar */}
         <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
@@ -107,7 +101,7 @@ const DashboardLayout = () => {
             <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100">
               <FaSearch className="text-gray-600" />
             </button>
-            <div className="flex items-center gap-2 text-white px-4 py-2 rounded-lg ml-2 bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-2 border-red-700 " >
+            <div className="flex items-center gap-2 text-white px-4 py-2 rounded-lg ml-2 bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-2 border-red-700">
               <FaCalendarAlt />
               <div className="text-xs leading-tight">
                 <div className="font-bold">Academic Year: 2023/2024</div>
@@ -139,7 +133,7 @@ const DashboardLayout = () => {
           <div className="grid grid-cols-2 gap-6 mb-6">
 
             {/* System Health */}
-            <div className="rounded-xl shadow-lg overflow-hidden" >
+            <div className="rounded-xl shadow-lg overflow-hidden">
               <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 px-4 py-6 flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-2 text-white font-bold text-base">
                   <FaHeart className="text-pink-400" /> System Health Status
@@ -180,12 +174,11 @@ const DashboardLayout = () => {
             </div>
 
             {/* Recent System Activity */}
-            <div className="rounded-xl shadow-lg overflow-hidden ">
-                  <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 px-4 py-6 flex items-center gap-2 text-white font-bold text-base">
-                  <FaClock className="text-blue-300" /> Recent System Activity
-                </div>
+            <div className="rounded-xl shadow-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 px-4 py-6 flex items-center gap-2 text-white font-bold text-base">
+                <FaClock className="text-blue-300" /> Recent System Activity
+              </div>
               <div className="flex items-center justify-between px-6 py-4">
-              
                 <button className="text-red-400 text-sm font-semibold hover:text-red-300">View All</button>
               </div>
               <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
@@ -209,8 +202,8 @@ const DashboardLayout = () => {
           <div className="grid grid-cols-2 gap-6">
 
             {/* Quick Actions */}
-            <div className="rounded-xl shadow-lg overflow-hidden" >
-              <div className=" bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
+            <div className="rounded-xl shadow-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
                 <FaBolt className="text-yellow-400" /> Quick Actions
               </div>
               <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
@@ -227,12 +220,11 @@ const DashboardLayout = () => {
             <div className="space-y-6">
 
               {/* Important Notifications */}
-              <div className="rounded-xl shadow-lg overflow-hidden " >
+              <div className="rounded-xl shadow-lg overflow-hidden">
                 <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 text-white font-bold text-base px-6 py-4 w-full">
-                    <FaBell /> Important Notifications
-                  </div>
+                  <FaBell /> Important Notifications
+                </div>
                 <div className="flex items-center justify-between px-6 py-4">
-                  
                   <span className="text-white text-sm font-semibold">3 New</span>
                 </div>
                 <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
@@ -251,45 +243,45 @@ const DashboardLayout = () => {
                 </div>
               </div>
 
-
             </div>
-            
-      
+
           </div>
-                  {/* Upcoming Events */}
-              <div className="shadow-lg  w-full" >
-                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] px-6 py-4 border-b-4 border-red-700  flex items-center justify-between rounded-t-2xl mt-20">
-                    <div className="flex items-center gap-2 text-white font-bold text-base">
-                    <FaCalendarAlt /> Upcoming Academic Events
-                  </div>
-                  <button className="text-red-400 text-sm font-semibold hover:text-red-300">Full Calendar</button>
-                </div>
-                <div className="mt-4 gap-4 mx-4 mb-4 rounded-lg divide-y divide-gray-100">
-                  {events.map((ev, i) => (
-                    <div key={i} className="flex items-center  mb-2 gap-4 p-4">
-                      <div className="border-2 rounded-lg px-3 py-2 text-center min-w-[54px]" style={{ borderColor: 'var(--royal-blue-dark)' }}>
-                        <div className="text-lg font-bold leading-none" style={{ color: 'var(--royal-blue-dark)' }}>{ev.day}</div>
-                        <div className="text-xs font-semibold" style={{ color: 'var(--royal-blue)' }}>{ev.month}</div>
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-sm" style={{ color: 'var(--royal-blue-dark)' }}>{ev.title}</p>
-                        <p className="text-gray-500 text-xs">{ev.desc}</p>
-                      </div>
-                      <span className={`text-xs px-3 py-1 ${ev.badgeStyle}`}>{ev.badge}</span>
-                    </div>
-                  ))}
-                </div>
+
+          {/* Upcoming Events */}
+          <div className="shadow-lg w-full">
+            <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] px-6 py-4 border-b-4 border-red-700 flex items-center justify-between rounded-t-2xl mt-20">
+              <div className="flex items-center gap-2 text-white font-bold text-base">
+                <FaCalendarAlt /> Upcoming Academic Events
               </div>
+              <button className="text-red-400 text-sm font-semibold hover:text-red-300">Full Calendar</button>
+            </div>
+            <div className="mt-4 gap-4 mx-4 mb-4 rounded-lg divide-y divide-gray-100">
+              {events.map((ev, i) => (
+                <div key={i} className="flex items-center mb-2 gap-4 p-4">
+                  <div className="border-2 rounded-lg px-3 py-2 text-center min-w-[54px]" style={{ borderColor: 'var(--royal-blue-dark)' }}>
+                    <div className="text-lg font-bold leading-none" style={{ color: 'var(--royal-blue-dark)' }}>{ev.day}</div>
+                    <div className="text-xs font-semibold" style={{ color: 'var(--royal-blue)' }}>{ev.month}</div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm" style={{ color: 'var(--royal-blue-dark)' }}>{ev.title}</p>
+                    <p className="text-gray-500 text-xs">{ev.desc}</p>
+                  </div>
+                  <span className={`text-xs px-3 py-1 ${ev.badgeStyle}`}>{ev.badge}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
         </div>
-           <div className="p-8">
-            <Outlet/>
-      </div>
+
+        <div className="p-8">
+          <Outlet />
+        </div>
+
       </div>
 
-   
     </div>
   );
 }
 
-export default DashboardLayout ;
+export default DashboardLayout;
