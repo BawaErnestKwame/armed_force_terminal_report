@@ -17,31 +17,31 @@ import {
 
 const Sidebar = ({collapsed, setCollapsed}) => {
 
-  const [activeNav, setActiveNav] = useState('Dashboard');
+  const [activeNav, setActiveNav] = useState('DashboardLayout');
   const [activeSub, setActiveSub] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
 
   const navItems = [
     { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/dashboardLayout' },
-    { icon: <FaUsers />, label: 'User Management', path: '/userManagement' },
+    { icon: <FaUsers />, label: 'User Management', path: '/dashboardLayout/userManagement' },
 
     {
       icon: <FaCalendarAlt />,
       label: 'Academic Setup',
       hasArrow: true,
-      children: [
-        { label: "Academic Year/Term", path: "/academicYear" },
-        { label: "School Structure", path: "/schoolStructure" },
-        { label: "Grading Configuration", path: "/gradingConfig" },
-        { label: "Comment Bank", path: "/commentBank" },
-      ]
+     children: [
+  { label: "Academic Year/Term", path: "/dashboardLayout/academicYear" },
+  { label: "School Structure", path: "/dashboardLayout/schoolStructure" },
+  { label: "Grading Configuration", path: "/dashboardLayout/gradingConfig" },
+  { label: "Comment Bank", path: "/dashboardLayout/commentBank" },
+]
     },
 
-    { icon: <FaClipboardList />, label: 'Audit Logs', path: '/auditLogs' },
-    { icon: <FaDatabase />, label: 'Backup Status', path: '/backupStatus' },
-    { icon: <FaFileAlt />, label: 'Report Templates', path: '/reportTemplates' },
-    { icon: <FaBullhorn />, label: 'Bulk Communication', path: '/bulkCommunication' },
-    { icon: <FaChartPie />, label: 'Analytics Dashboard', path: '/analyticsDashboard' },
+   { icon: <FaClipboardList />, label: 'Audit Logs', path: '/dashboardLayout/auditLogs' },
+{ icon: <FaDatabase />, label: 'Backup Status', path: '/dashboardLayout/backupStatus' },
+{ icon: <FaFileAlt />, label: 'Report Templates', path: '/dashboardLayout/reportTemplates' },
+{ icon: <FaBullhorn />, label: 'Bulk Communication', path: '/dashboardLayout/bulkCommunication' },
+{ icon: <FaChartPie />, label: 'Analytics Dashboard', path: '/dashboardLayout/analyticsDashboard' },
   ];
 
   return (
@@ -58,12 +58,14 @@ const Sidebar = ({collapsed, setCollapsed}) => {
       <div className="flex items-center justify-between p-4">
 
         {!collapsed && (
-          <div className="flex items-center gap-3">
+          <Link to='/'>
+          <div className="flex items-center gap-3 cursor-pointer">
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
               <FaGraduationCap className="text-red-500 text-xl" />
             </div>
             <h1 className="text-white text-sm font-bold">EXCELLENCE</h1>
           </div>
+          </Link>
         )}
 
         <button onClick={() => setCollapsed(!collapsed)} className={collapsed ? 'mx-auto' : ''}>

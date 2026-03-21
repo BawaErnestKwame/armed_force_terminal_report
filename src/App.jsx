@@ -11,26 +11,33 @@ import TeacherLogin from './layout/TeacherLogin'
 import AdminLogin from './layout/AdminLogin'
 import ParentLogin from './layout/ParentLogin'
 
-
 import DashboardLayout from './admin/DashboardLayout'
 import ForgotPassword from './auth/ForgotPassword'
-import UserManagement from './admin/user-management/UserManagement'
 import MainLayout from './components/MainLayout'
+
+// Admin Pages
+import UserManagement from './admin/user-management/UserManagement'
+import AcademicYear from './admin/academic-setup/AcademicYear'
+import SchoolStructure from './admin/academic-setup/SchoolStructure'
+import GradingConfig from './admin/academic-setup/GradingConfig'
+import CommentBank from './admin/academic-setup/CommentBank'
+import AuditLogs from './admin/AuditLogs'
+import BackupStatus from './admin/BackupStatus'
+import ReportTemplates from './admin/reportTemplates/ReportTemplates'
+import BulkCommunication from './admin/bulkCommunication/BulkCommunication'
+import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard'
 
 const App = () => {
   return (
     <Routes>
 
       {/* Public Layout */}
-      <Route element={<MainLayout/>}>
-
+      <Route element={<MainLayout />}>
         <Route path='/' element={<Hero />} />
         <Route path='features' element={<Features />} />
         <Route path='about' element={<About />} />
         <Route path='contact' element={<Contact />} />
-
       </Route>
-
 
       {/* Login Pages */}
       <Route path='studentLogin' element={<StudentLogin />} />
@@ -39,11 +46,22 @@ const App = () => {
       <Route path='parentLogin' element={<ParentLogin />} />
       <Route path='forgotPassword' element={<ForgotPassword />} />
 
-
-      {/* Admin Dashboard Layout */}
+      {/* Admin Dashboard — all sidebar links are children so they render inside <Outlet /> */}
       <Route path='/dashboardLayout' element={<DashboardLayout />}>
 
-        <Route path='/userManagement' element={<UserManagement />} />
+        <Route path='userManagement' element={<UserManagement />} />
+
+        {/* Academic Setup submenu */}
+        <Route path='academicYear' element={<AcademicYear />} />
+        <Route path='schoolStructure' element={<SchoolStructure />} />
+        <Route path='gradingConfig' element={<GradingConfig />} />
+        <Route path='commentBank' element={<CommentBank />} />
+
+        <Route path='auditLogs' element={<AuditLogs />} />
+        <Route path='backupStatus' element={<BackupStatus />} />
+        <Route path='reportTemplates' element={<ReportTemplates />} />
+        <Route path='bulkCommunication' element={<BulkCommunication />} />
+        <Route path='analyticsDashboard' element={<AnalyticsDashboard />} />
 
       </Route>
 
