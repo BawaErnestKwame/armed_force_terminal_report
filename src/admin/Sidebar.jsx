@@ -67,7 +67,7 @@ const Sidebar = ({collapsed, setCollapsed}) => {
           </div>
           </Link>
         )}
-
+  
         <button onClick={() => setCollapsed(!collapsed)} className={collapsed ? 'mx-auto' : ''}>
           <FaBars className="text-white text-lg" />
         </button>
