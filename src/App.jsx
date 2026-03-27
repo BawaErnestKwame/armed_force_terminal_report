@@ -1,31 +1,34 @@
-import React from 'react'
-import { Routes, Route } from "react-router-dom"
+import React from 'react';
+import { Routes, Route } from "react-router-dom";
 
-import Hero from './components/Hero'
-import Features from './pages/features/Features'
-import Contact from './pages/contact/Contact'
-import About from './pages/about/About'
+import Hero from './components/Hero';
+import Features from './pages/features/Features';
+import Contact from './pages/contact/Contact';
+import About from './pages/about/About';
 
-import StudentLogin from './layout/StudentLogin'
-import TeacherLogin from './layout/TeacherLogin'
-import AdminLogin from './layout/AdminLogin'
-import ParentLogin from './layout/ParentLogin'
+import StudentLogin from './layout/StudentLogin';
+import TeacherLogin from './layout/TeacherLogin';
+import AdminLogin from './layout/AdminLogin';
+import ParentLogin from './layout/ParentLogin';
 
-import DashboardLayout from './admin/DashboardLayout'
-import ForgotPassword from './auth/ForgotPassword'
-import MainLayout from './components/MainLayout'
+// import DashboardLayout from './admin/DashboardLayout';
+import Dashboard from './admin/dashboard/Dashboard';
+import ForgotPassword from './auth/ForgotPassword';
+import MainLayout from './components/MainLayout';
 
 // Admin Pages
-import UserManagement from './admin/user-management/UserManagement'
-import AcademicYear from './admin/academic-setup/AcademicYear'
-import SchoolStructure from './admin/academic-setup/SchoolStructure'
-import GradingConfig from './admin/academic-setup/GradingConfig'
-import CommentBank from './admin/academic-setup/CommentBank'
-import AuditLogs from './admin/AuditLogs'
-import BackupStatus from './admin/BackupStatus'
-import ReportTemplates from './admin/reportTemplates/ReportTemplates'
-import BulkCommunication from './admin/bulkCommunication/BulkCommunication'
-import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard'
+import UserManagement from './admin/user-management/UserManagement';
+import AcademicYear from './admin/academic-setup/AcademicYear';
+import SchoolStructure from './admin/academic-setup/SchoolStructure';
+import GradingConfig from './admin/academic-setup/GradingConfig';
+import CommentBank from './admin/academic-setup/CommentBank';
+import AuditLogs from './admin/AuditLogs';
+import BackupStatus from './admin/BackupStatus';
+import ReportTemplates from './admin/reportTemplates/ReportTemplates';
+import BulkCommunication from './admin/bulkCommunication/BulkCommunication';
+import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard';
+import DashboardLayout from './admin/DashboardLayout';
+// import Sidebar from './common/Sidebar';
 
 const App = () => {
   return (
@@ -37,6 +40,7 @@ const App = () => {
         <Route path='features' element={<Features />} />
         <Route path='about' element={<About />} />
         <Route path='contact' element={<Contact />} />
+            <Route path='userManagement' element={<UserManagement />} />
       </Route>
 
       {/* Login Pages */}
@@ -46,27 +50,26 @@ const App = () => {
       <Route path='parentLogin' element={<ParentLogin />} />
       <Route path='forgotPassword' element={<ForgotPassword />} />
 
-      {/* Admin Dashboard — all sidebar links are children so they render inside <Outlet /> */}
-      <Route path='/dashboardLayout' element={<DashboardLayout />}>
+      {/* Admin Dashboard */}
+      <Route path='/' element={<DashboardLayout/> } >
+        {/* Index page of dashboard */}
+        <Route index element={<Dashboard/>} />
 
-        <Route path='userManagement' element={<UserManagement />} />
-
-        {/* Academic Setup submenu */}
+        {/* Nested pages */}
+  
         <Route path='academicYear' element={<AcademicYear />} />
         <Route path='schoolStructure' element={<SchoolStructure />} />
         <Route path='gradingConfig' element={<GradingConfig />} />
         <Route path='commentBank' element={<CommentBank />} />
-
         <Route path='auditLogs' element={<AuditLogs />} />
         <Route path='backupStatus' element={<BackupStatus />} />
         <Route path='reportTemplates' element={<ReportTemplates />} />
         <Route path='bulkCommunication' element={<BulkCommunication />} />
         <Route path='analyticsDashboard' element={<AnalyticsDashboard />} />
-
       </Route>
 
     </Routes>
-  )
-}
+  );
+};
 
-export default App
+export default App;
