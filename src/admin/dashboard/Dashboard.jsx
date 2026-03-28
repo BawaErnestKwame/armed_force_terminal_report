@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Outlet } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { FaGraduationCap } from "react-icons/fa";
 
 import {
@@ -70,7 +70,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex w-full min-h-screen font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
+    <div className=" font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
 
     
 
@@ -273,10 +273,7 @@ const Dashboard = () => {
 
         </div>
 
-        <div className="p-8">
-          <Outlet />
-        </div>
-
+     
       </div>
 
     </div>

@@ -11,7 +11,6 @@ import TeacherLogin from './layout/TeacherLogin';
 import AdminLogin from './layout/AdminLogin';
 import ParentLogin from './layout/ParentLogin';
 
-// import DashboardLayout from './admin/DashboardLayout';
 import Dashboard from './admin/dashboard/Dashboard';
 import ForgotPassword from './auth/ForgotPassword';
 import MainLayout from './components/MainLayout';
@@ -27,8 +26,8 @@ import BackupStatus from './admin/BackupStatus';
 import ReportTemplates from './admin/reportTemplates/ReportTemplates';
 import BulkCommunication from './admin/bulkCommunication/BulkCommunication';
 import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard';
+
 import DashboardLayout from './admin/DashboardLayout';
-// import Sidebar from './common/Sidebar';
 
 const App = () => {
   return (
@@ -40,7 +39,6 @@ const App = () => {
         <Route path='features' element={<Features />} />
         <Route path='about' element={<About />} />
         <Route path='contact' element={<Contact />} />
-            <Route path='userManagement' element={<UserManagement />} />
       </Route>
 
       {/* Login Pages */}
@@ -51,12 +49,9 @@ const App = () => {
       <Route path='forgotPassword' element={<ForgotPassword />} />
 
       {/* Admin Dashboard */}
-      <Route path='/' element={<DashboardLayout/> } >
-        {/* Index page of dashboard */}
-        <Route index element={<Dashboard/>} />
-
-        {/* Nested pages */}
-  
+      <Route path='/dashboard' element={<DashboardLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path='userManagement' element={<UserManagement />} />
         <Route path='academicYear' element={<AcademicYear />} />
         <Route path='schoolStructure' element={<SchoolStructure />} />
         <Route path='gradingConfig' element={<GradingConfig />} />

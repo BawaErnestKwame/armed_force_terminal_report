@@ -51,3 +51,32 @@
 .animate-float-two {
   animation: floatTwo 15s ease-in-out infinite;
 }
+
+/* .clip-shape {
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 20% 100%);
+} */
+
+/* 🔵 Animated Gradient */
+.animated-bg {
+  background: linear-gradient(-45deg, #1e3a8a, #1d4ed8, #1e40af, #172554);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 🔴 Slanted Shape */
+.clip-shape {
+  clip-path: polygon(96% 0, 100% 0, 100% 100%, 20% 100%);
+}
+
+/* 💡 Glow Effect */
+.glow-edge {
+  background: linear-gradient(to right, rgba(255,0,0,0.4), transparent);
+  filter: blur(30px);
+  opacity: 0.7;
+}
