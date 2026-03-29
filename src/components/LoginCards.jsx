@@ -116,16 +116,12 @@ const LoginCards = () => {
             {/* Footer links */}
             <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-4 border-t border-gray-200'>
          <Link to='/forgotPassword'>
-         <div className='flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium'>
+         <div className='flex items-center gap-2 text-[var(--accent-red)] font-medium'>
                 Forgot Password?
 
          </div>
          
          </Link>
-              <a href='#demo' className='flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium'>
-                <PlayArrowIcon/>
-                View Demo
-              </a>
             </div>
 
           </div>

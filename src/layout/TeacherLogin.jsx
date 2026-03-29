@@ -3,7 +3,7 @@ import bg from "../assets/mainbg.jpg"
 import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaCloud, FaUsers, FaCheckCircle, FaUser, FaLock, FaEye, FaEyeSlash, FaKey, FaChalkboardTeacher, FaUserShield, FaUserFriends } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
-const TeacherLogin = () => {
+const AdminLogin = () => {
   const [selectedRole, setSelectedRole] = useState('teacher');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -15,107 +15,101 @@ const TeacherLogin = () => {
     console.log('Login attempt:', { selectedRole, username, password, rememberMe });
   };
 
-  const handleDemoAccess = (role) => {
-    console.log(`Demo access for ${role}`);
-  };
+ 
 
   return (
     <div className="w-full min-h-screen flex flex-col lg:flex-row">
+{/* LEFT SIDE */}
+<div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-8 py-4 md:py-8 flex flex-col justify-between overflow-hidden">
 
-      {/* LEFT SIDE */}
-      <div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-16 py-6 md:py-12 flex flex-col justify-between overflow-hidden">
-      
-        {/* 🔵 BLUE BACKGROUND */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--royal-blue)] to-[var(--royal-blue-dark)]"></div>
-      
-        {/* 🔴 RED SLANTED SHAPE */}
-        <div className="absolute top-0 right-0 h-full w-[180px] bg-red-600 clip-shape"></div>
-      
-        {/* CONTENT */}
-        <div className="relative z-10">
-      
-          {/* Logo */}
-          <div className="text-white flex items-center gap-4 mb-6">
-            <Link to="/">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center">
-                <FaGraduationCap className="text-red-500 text-3xl md:text-4xl" />
-              </div>
-            </Link>
-            <div>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">EXCELLENCE ACADEMY</h1>
-              <p className="text-base md:text-lg italic mt-2">"Knowledge, Excellence, Integrity"</p>
-            </div>
-          </div>
-      
-          {/* System Features */}
-          <div className="bg-white/20 backdrop-blur-md mt-20 md:w-[98%] w-full rounded-2xl p-4 md:p-6 mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                <FaCheckCircle className="text-white text-sm" />
-              </div>
-              <h2 className="text-xl md:text-2xl font-semibold text-red-300">System Features</h2>
-            </div>
-      
-            <div className="space-y-2 text-white md:space-y-3">
-              <div className="flex items-center gap-2 md:gap-3">
-                <FaShieldAlt />
-                <span>Secure Grade Management</span>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <FaChartLine />
-                <span>Real-time Analytics</span>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <FaFileAlt />
-                <span>Digital Report Cards</span>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <FaComments />
-                <span>Parent-Teacher Communication</span>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <FaCloud />
-                <span>Cloud Backup & Recovery</span>
-              </div>
-            </div>
-          </div>
-      
-          {/* Stats */}
-          <div className="flex flex-col lg:mt-20 md:flex-row gap-3 md:gap-6 mb-6">
-            <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-              <FaUsers />
-              <span>1,250+ Active Users</span>
-            </div>
-      
-            <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-              <FaCheckCircle />
-              <span>99.8% Uptime</span>
-            </div>
-          </div>
-      
+  {/* 🔵 BLUE BACKGROUND */}
+  <div className="absolute inset-0 bg-gradient-to-b from-[var(--royal-blue)] to-[var(--royal-blue-dark)]"></div>
+
+  {/* 🔴 RED SLANTED SHAPE */}
+  <div className="absolute top-0 right-0 h-full w-[180px] bg-red-600 clip-shape"></div>
+
+  {/* CONTENT */}
+  <div className="relative z-10">
+
+    {/* Logo */}
+    <div className="text-white flex items-center gap-4 mb-6">
+      <Link to="/">
+        <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center">
+          <FaGraduationCap className="text-red-500 text-3xl md:text-4xl" />
         </div>
-      
-        {/* Footer */}
-        <div className="relative z-10 text-white text-xs md:text-sm">
-          <hr className="w-full bg-white/20 mb-3" />
-          <p className="flex items-center gap-2">
-            <FaShieldAlt /> Secure login powered by SSL encryption
-          </p>
-          <p className="mt-1">© 2024 Excellence Academy. All rights reserved.</p>
+      </Link>
+      <div>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">EXCELLENCE ACADEMY</h1>
+        <p className="text-base md:text-lg italic mt-2">"Knowledge, Excellence, Integrity"</p>
+      </div>
+    </div>
+
+    {/* System Features */}
+    <div className="bg-white/20 backdrop-blur-md mt-10 md:w-[90%] w-full rounded-2xl p-4 md:p-6 mb-6">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+          <FaCheckCircle className="text-white text-sm" />
         </div>
-      
+        <h2 className="text-xl md:text-2xl font-semibold text-red-300">System Features</h2>
       </div>
 
+      <div className="space-y-2 text-white md:space-y-3">
+        <div className="flex items-center gap-2 md:gap-3">
+          <FaShieldAlt />
+          <span>Secure Grade Management</span>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3">
+          <FaChartLine />
+          <span>Real-time Analytics</span>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3">
+          <FaFileAlt />
+          <span>Digital Report Cards</span>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3">
+          <FaComments />
+          <span>Parent-Teacher Communication</span>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3">
+          <FaCloud />
+          <span>Cloud Backup & Recovery</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Stats */}
+    <div className="flex flex-col lg:mt-10 md:flex-row gap-3 md:gap-6 mb-4">
+      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
+        <FaUsers />
+        <span>1,250+ Active Users</span>
+      </div>
+
+      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
+        <FaCheckCircle />
+        <span>99.8% Uptime</span>
+      </div>
+    </div>
+
+  </div>
+
+  {/* Footer */}
+  <div className="relative z-10 text-white text-xs md:text-sm">
+    <p className="flex items-center gap-2">
+      <FaShieldAlt /> Secure login powered by SSL encryption
+    </p>
+    <p className="mt-1">© 2024 Excellence Academy. All rights reserved.</p>
+  </div>
+
+</div>
       {/* RIGHT SIDE */}
-      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-6 md:p-8">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-6 md:p-8">
+      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-4 md:p-6">
+        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-4 md:p-6">
           {/* Login Header */}
-          <div className="text-center mb-6 md:mb-8">
+          <div className="text-center mb-4 md:mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
               <FaKey className="text-blue-700 text-2xl" />
               <h2 className="text-2xl md:text-3xl font-bold text-blue-700">Portal Login</h2>
             </div>
-            <p className="text-gray-600 text-sm md:text-base">Enter your credentials to access the academic portal</p>
           </div>
 
           {/* Role Selection */}
@@ -208,26 +202,6 @@ const TeacherLogin = () => {
               <FaKey /> Login to Portal
             </button>
           </form>
-
-          {/* Quick Demo */}
-          <div className="mt-4 md:mt-6">
-            <p className="text-center text-gray-600 text-sm mb-2">Quick Demo Access:</p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => handleDemoAccess('student')}
-                className="flex-1 py-2 px-4 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-blue-700 hover:text-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-              >
-                <FaGraduationCap /> Student Demo
-              </button>
-              <button
-                onClick={() => handleDemoAccess('teacher')}
-                className="flex-1 py-2 px-4 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-blue-700 hover:text-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-              >
-                <FaChalkboardTeacher /> Teacher Demo
-              </button>
-            </div>
-          </div>
-
           {/* Back to Home */}
           <div className="mt-4 text-center">
             <Link to="/" className="text-blue-700 font-semibold hover:underline inline-flex items-center gap-2">
@@ -235,28 +209,10 @@ const TeacherLogin = () => {
             </Link>
           </div>
 
-          {/* Security Alert */}
-          <div className="mt-4 md:mt-6 bg-red-50 border-l-4 border-red-500 p-3 md:p-4 rounded">
-            <div className="flex items-start gap-3">
-              <FaShieldAlt className="text-red-500 text-xl mt-1" />
-              <div>
-                <p className="font-semibold text-gray-800">Security Alert:</p>
-                <p className="text-sm text-gray-700">This is a protected system. Unauthorized access is prohibited.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Help Link */}
-          <div className="mt-2 md:mt-4 text-center">
-            <Link to="/help" className="text-gray-600 text-sm hover:text-blue-700 inline-flex items-center gap-1">
-              <span className="w-5 h-5 bg-gray-300 rounded-full flex items-center justify-center text-xs">?</span>
-              Need help logging in?
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default TeacherLogin
+export default AdminLogin

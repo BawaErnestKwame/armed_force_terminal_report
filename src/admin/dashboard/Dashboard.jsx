@@ -129,7 +129,58 @@ const Dashboard = () => {
           </div>
 
           {/* Middle Row */}
-          <div className="grid grid-cols-2 gap-6 mb-6">
+    
+
+          {/* Bottom Row */}
+          <div className="grid grid-cols-2 gap-6">
+
+            {/* Quick Actions */}
+            <div className="rounded-xl shadow-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
+                <FaBolt className="text-yellow-400" /> Quick Actions
+              </div>
+              <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
+                {quickActions.map((action, i) => (
+                  <button key={i} className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
+                    <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>{action.icon}</span>
+                    <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>{action.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Notifications + Events */}
+            <div className="space-y-6">
+
+              {/* Important Notifications */}
+              <div className="rounded-xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 text-white font-bold text-base px-6 py-4 w-full">
+                  <FaBell /> Important Notifications
+                </div>
+                <div className="flex items-center justify-between px-6 py-4">
+                  <span className="text-white text-sm font-semibold">3 New</span>
+                </div>
+                <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
+                  {notifications.map((n, i) => (
+                    <div key={i} className={`p-4 ${n.iconBg}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span>{n.icon}</span>
+                        <p className="font-bold text-gray-800 text-sm">{n.title}</p>
+                      </div>
+                      <p className="text-gray-500 text-xs mb-2">{n.desc}</p>
+                      <button className={`text-xs px-3 py-1 rounded ${n.action.style} hover:bg-gray-100`}>
+                        {n.action.label}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+                <div className="grid grid-cols-2 gap-6 mb-6">
 
             {/* System Health */}
             <div className="rounded-xl shadow-lg overflow-hidden">
@@ -195,55 +246,6 @@ const Dashboard = () => {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Bottom Row */}
-          <div className="grid grid-cols-2 gap-6">
-
-            {/* Quick Actions */}
-            <div className="rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
-                <FaBolt className="text-yellow-400" /> Quick Actions
-              </div>
-              <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
-                {quickActions.map((action, i) => (
-                  <button key={i} className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
-                    <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>{action.icon}</span>
-                    <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>{action.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Column: Notifications + Events */}
-            <div className="space-y-6">
-
-              {/* Important Notifications */}
-              <div className="rounded-xl shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 text-white font-bold text-base px-6 py-4 w-full">
-                  <FaBell /> Important Notifications
-                </div>
-                <div className="flex items-center justify-between px-6 py-4">
-                  <span className="text-white text-sm font-semibold">3 New</span>
-                </div>
-                <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
-                  {notifications.map((n, i) => (
-                    <div key={i} className={`p-4 ${n.iconBg}`}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span>{n.icon}</span>
-                        <p className="font-bold text-gray-800 text-sm">{n.title}</p>
-                      </div>
-                      <p className="text-gray-500 text-xs mb-2">{n.desc}</p>
-                      <button className={`text-xs px-3 py-1 rounded ${n.action.style} hover:bg-gray-100`}>
-                        {n.action.label}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
           </div>
 
           {/* Upcoming Events */}

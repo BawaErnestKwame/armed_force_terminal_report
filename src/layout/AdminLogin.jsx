@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import bg from "../assets/mainbg.jpg"
 import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaCloud, FaUsers, FaCheckCircle, FaUser, FaLock, FaEye, FaEyeSlash, FaKey, FaChalkboardTeacher, FaUserShield, FaUserFriends } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const AdminLogin = () => {
   const [selectedRole, setSelectedRole] = useState('admin');
@@ -10,19 +11,19 @@ const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate()
+
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { selectedRole, username, password, rememberMe });
+    navigate("/dashboard")
   };
 
-  const handleDemoAccess = (role) => {
-    console.log(`Demo access for ${role}`);
-  };
+ 
 
   return (
     <div className="w-full min-h-screen flex flex-col lg:flex-row">
 {/* LEFT SIDE */}
-<div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-16 py-6 md:py-12 flex flex-col justify-between overflow-hidden">
+<div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-8 py-4 md:py-8 flex flex-col justify-between overflow-hidden">
 
   {/* 🔵 BLUE BACKGROUND */}
   <div className="absolute inset-0 bg-gradient-to-b from-[var(--royal-blue)] to-[var(--royal-blue-dark)]"></div>
@@ -47,7 +48,7 @@ const AdminLogin = () => {
     </div>
 
     {/* System Features */}
-    <div className="bg-white/20 backdrop-blur-md mt-20 md:w-[98%] w-full rounded-2xl p-4 md:p-6 mb-6">
+    <div className="bg-white/20 backdrop-blur-md mt-10 md:w-[90%] w-full rounded-2xl p-4 md:p-6 mb-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
           <FaCheckCircle className="text-white text-sm" />
@@ -80,7 +81,7 @@ const AdminLogin = () => {
     </div>
 
     {/* Stats */}
-    <div className="flex flex-col lg:mt-20 md:flex-row gap-3 md:gap-6 mb-6">
+    <div className="flex flex-col lg:mt-10 md:flex-row gap-3 md:gap-6 mb-4">
       <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
         <FaUsers />
         <span>1,250+ Active Users</span>
@@ -96,7 +97,6 @@ const AdminLogin = () => {
 
   {/* Footer */}
   <div className="relative z-10 text-white text-xs md:text-sm">
-    <hr className="w-full bg-white/20 mb-3" />
     <p className="flex items-center gap-2">
       <FaShieldAlt /> Secure login powered by SSL encryption
     </p>
@@ -105,15 +105,14 @@ const AdminLogin = () => {
 
 </div>
       {/* RIGHT SIDE */}
-      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-6 md:p-8">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-6 md:p-8">
+      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-4 md:p-6">
+        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-4 md:p-6">
           {/* Login Header */}
-          <div className="text-center mb-6 md:mb-8">
+          <div className="text-center mb-4 md:mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
               <FaKey className="text-blue-700 text-2xl" />
               <h2 className="text-2xl md:text-3xl font-bold text-blue-700">Portal Login</h2>
             </div>
-            <p className="text-gray-600 text-sm md:text-base">Enter your credentials to access the academic portal</p>
           </div>
 
           {/* Role Selection */}
@@ -206,29 +205,6 @@ const AdminLogin = () => {
               <FaKey /> Login to Portal
             </button>
           </form>
-
-          {/* Quick Demo */}
-          <div className="mt-4 md:mt-6">
-            <p className="text-center text-gray-600 text-sm mb-2">Quick Demo Access:</p>
-            <div className="flex flex-col sm:flex-row gap-2">
-             <Link
-              to="/dashboard"
-              onClick={() => handleDemoAccess('student')}
-              className="flex-1 py-2 px-4 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-blue-700 hover:text-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-            >
-              <FaGraduationCap /> Student Demo
-            </Link>
-             
-             
-              <button
-                onClick={() => handleDemoAccess('teacher')}
-                className="flex-1 py-2 px-4 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-blue-700 hover:text-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-              >
-                <FaChalkboardTeacher /> Teacher Demo
-              </button>
-            </div>
-          </div>
-
           {/* Back to Home */}
           <div className="mt-4 text-center">
             <Link to="/" className="text-blue-700 font-semibold hover:underline inline-flex items-center gap-2">
@@ -236,24 +212,6 @@ const AdminLogin = () => {
             </Link>
           </div>
 
-          {/* Security Alert */}
-          <div className="mt-4 md:mt-6 bg-red-50 border-l-4 border-red-500 p-3 md:p-4 rounded">
-            <div className="flex items-start gap-3">
-              <FaShieldAlt className="text-red-500 text-xl mt-1" />
-              <div>
-                <p className="font-semibold text-gray-800">Security Alert:</p>
-                <p className="text-sm text-gray-700">This is a protected system. Unauthorized access is prohibited.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Help Link */}
-          <div className="mt-2 md:mt-4 text-center">
-            <Link to="/help" className="text-gray-600 text-sm hover:text-blue-700 inline-flex items-center gap-1">
-              <span className="w-5 h-5 bg-gray-300 rounded-full flex items-center justify-center text-xs">?</span>
-              Need help logging in?
-            </Link>
-          </div>
         </div>
       </div>
     </div>
