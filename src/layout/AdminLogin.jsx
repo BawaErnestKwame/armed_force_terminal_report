@@ -47,7 +47,7 @@ const AdminLogin = () => {
     </div>
 
     {/* System Features */}
-    <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6">
+    <div className="bg-white/20 backdrop-blur-md mt-20 md:w-[98%] w-full rounded-2xl p-4 md:p-6 mb-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
           <FaCheckCircle className="text-white text-sm" />
@@ -80,7 +80,7 @@ const AdminLogin = () => {
     </div>
 
     {/* Stats */}
-    <div className="flex flex-col md:flex-row gap-3 md:gap-6 mb-6">
+    <div className="flex flex-col lg:mt-20 md:flex-row gap-3 md:gap-6 mb-6">
       <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
         <FaUsers />
         <span>1,250+ Active Users</span>

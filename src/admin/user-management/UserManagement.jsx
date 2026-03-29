@@ -72,7 +72,7 @@ const UserManagement = () => {
               <nav className="text-sm text-gray-400 mt-1">
                 <span>Home</span> <span className="mx-1">/</span>
                 <span>Admin</span> <span className="mx-1">/</span>
-                <span className="text-blue-600 font-medium">User Management</span>
+                <span className="text-red-600 font-medium">User Management</span>
               </nav>
             </div>
             <div className="flex gap-2 mt-1">
@@ -109,7 +109,9 @@ const UserManagement = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4" style={{ background: "linear-gradient(90deg, #1a237e 0%, #1e3a8a 100%)" }}>
+            <div className="flex items-center justify-between px-6 py-4" style={{
+          background: 'linear-gradient(90deg, var(--royal-blue), var(--royal-blue-dark))'
+        }}>
               <div className="flex items-center gap-3 text-white font-bold text-base">
                 
                 <span className="text-red-500 bg-amber-50 w-10 h-10 rounded-full flex items-center justify-center"><GroupAddIcon/></span> System Users

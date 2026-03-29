@@ -85,17 +85,19 @@ const ForgotPassword = () => {
 
 <div className="absolute w-[200px] h-[200px] rounded-full bg-white/5 bottom-16 -left-16 animate-float-two"></div>
         {/* logo */}
-      <Link to='/'>
+      
         <div className="flex items-center gap-4 mb-4">
+          <Link to='/'>
           <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-2xl">
             <FaGraduationCap className="text-red-500 text-3xl md:text-4xl"/>
           </div>
+          </Link>
           <div>
             <div className="font-extrabold text-xl tracking-wide">EXCELLENCE</div>
             <div className="font-extrabold text-xl -mt-1 tracking-wide">ACADEMY</div>
           </div>
         </div>
-      </Link>
+      
 
         <p className="text-white/60 italic text-sm mb-10">
           Password Recovery Assistance
@@ -150,7 +152,7 @@ const ForgotPassword = () => {
 
         <div className="text-center mb-7 flex flex-col items-center ">
           
-          <h2 className="text-2xl flex items-center gap-2 font-extrabold text-[var(--royal-blue)]">
+          <h2 className="text-2xl flex items-center gap-2 font-extrabold text-[var(--accent-red)]">
              <HttpsIcon/>
             Password Recovery
           </h2>

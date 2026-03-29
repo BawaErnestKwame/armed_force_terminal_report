@@ -45,18 +45,7 @@ const Navbar = () => {
               Features
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/userManagement"
-              className={({ isActive }) =>
-                `text-white font-medium transition duration-200 ${
-                  isActive ? "text-blue-200" : "hover:text-blue-200"
-                }`
-              }
-            >
-              Useer Management
-            </NavLink>
-          </li>
+      
 
           <li>
             <NavLink
