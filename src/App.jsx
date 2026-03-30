@@ -21,17 +21,21 @@ import AcademicYear from './admin/academic-setup/AcademicYear';
 import SchoolStructure from './admin/academic-setup/SchoolStructure';
 import GradingConfig from './admin/academic-setup/GradingConfig';
 import CommentBank from './admin/academic-setup/CommentBank';
-import AuditLogs from './admin/AuditLogs';
-import BackupStatus from './admin/BackupStatus';
-import ReportTemplates from './admin/reportTemplates/ReportTemplates';
 import BulkCommunication from './admin/bulkCommunication/BulkCommunication';
 import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard';
 
 import DashboardLayout from './admin/DashboardLayout';
+import Students from './admin/students/Students';
+import Parents from './admin/parents/Parents';
+import Teacher from './admin/teacher/Teacher';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
+    <>  <ToastContainer />
     <Routes>
+      
 
       {/* Public Layout */}
       <Route element={<MainLayout />}>
@@ -56,14 +60,15 @@ const App = () => {
         <Route path='schoolStructure' element={<SchoolStructure />} />
         <Route path='gradingConfig' element={<GradingConfig />} />
         <Route path='commentBank' element={<CommentBank />} />
-        <Route path='auditLogs' element={<AuditLogs />} />
-        <Route path='backupStatus' element={<BackupStatus />} />
-        <Route path='reportTemplates' element={<ReportTemplates />} />
+        <Route path='teacher' element={<Teacher/> } />
+        <Route path='students' element={<Students/> } />
+        <Route path='parents' element={<Parents/>} />
         <Route path='bulkCommunication' element={<BulkCommunication />} />
         <Route path='analyticsDashboard' element={<AnalyticsDashboard />} />
       </Route>
 
     </Routes>
+    </>
   );
 };
 

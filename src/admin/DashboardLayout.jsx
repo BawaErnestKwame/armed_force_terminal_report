@@ -42,9 +42,9 @@ const DashboardLayout = () => {
         { label: "Comment Bank", path: "commentBank" },
       ]
     },
-    { icon: <FaClipboardList />, label: 'Audit Logs', path: 'auditLogs' },
-    { icon: <FaDatabase />, label: 'Backup Status', path: 'backupStatus' },
-    { icon: <FaFileAlt />, label: 'Report Templates', path: 'reportTemplates' },
+    { icon: <FaClipboardList />, label: 'View Teacher', path: 'teacher' },
+    { icon: <FaDatabase />, label: 'View Students', path: 'students' },
+    { icon: <FaFileAlt />, label: 'View Parents', path: 'parents' },
     { icon: <FaBullhorn />, label: 'Bulk Communication', path: 'bulkCommunication' },
     { icon: <FaChartPie />, label: 'Analytics Dashboard', path: 'analyticsDashboard' },
   ];

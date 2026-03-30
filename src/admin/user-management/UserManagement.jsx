@@ -3,6 +3,7 @@ import { useState } from "react";
      import FileUploadIcon from '@mui/icons-material/FileUpload';
      import SearchIcon from '@mui/icons-material/Search';
     import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import BulkUsers from "./BulkUsers";
 
 
 const users = [
@@ -60,7 +61,6 @@ const UserManagement = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100 font-sans">
-      {/* SIDEBAR */}
 
 
       {/* MAIN CONTENT */}
@@ -88,7 +88,11 @@ const UserManagement = () => {
           </div>
         </div>
 
+
         <div className="px-8 py-6 flex-1">
+          {/* Bulk usre */}
+          <BulkUsers/>
+
           <div className="flex items-center gap-3 mb-5 flex-wrap">
             <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 w-72">
               <span className="text-gray-400"><SearchIcon/></span>
@@ -97,7 +101,8 @@ const UserManagement = () => {
                 className="text-sm outline-none w-full text-gray-700 placeholder-gray-400" />
             </div>
             {[
-              { val: roleFilter, set: setRoleFilter, opts: ["All Roles", "STUDENT", "TEACHER", "HEAD OF DEPT", "PARENT", "ADMIN"] },
+              { val: roleFilter, set: setRoleFilter, 
+                opts: ["All Roles", "STUDENT", "TEACHER", "HEAD OF DEPT", "PARENT", "ADMIN"] },
               { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Active", "Pending"] },
               { val: deptFilter, set: setDeptFilter, opts: ["All Departments", "Form 2 Science A", "Mathematics Department", "Science Department", "IT Department"] },
             ].map((f, i) => (

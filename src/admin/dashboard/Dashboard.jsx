@@ -180,73 +180,7 @@ const Dashboard = () => {
 
           </div>
 
-                <div className="grid grid-cols-2 gap-6 mb-6">
-
-            {/* System Health */}
-            <div className="rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 px-4 py-6 flex items-center justify-between px-6 py-4">
-                <div className="flex items-center gap-2 text-white font-bold text-base">
-                  <FaHeart className="text-pink-400" /> System Health Status
-                </div>
-                <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">All Systems Operational</span>
-              </div>
-              <div className="bg-white mx-4 mb-4 rounded-lg p-5 space-y-5">
-                {/* Server Uptime */}
-                <div>
-                  <div className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                    <span>▤</span> Server Uptime
-                  </div>
-                  <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="absolute left-0 top-0 h-full rounded-full" style={{ width: '99.8%', background: 'linear-gradient(90deg, var(--royal-blue), #e53935)' }}></div>
-                  </div>
-                  <div className="text-right text-sm font-bold text-gray-700 mt-1">99.8%</div>
-                </div>
-                {/* DB Storage */}
-                <div>
-                  <div className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                    <span>🗄</span> Database Storage
-                  </div>
-                  <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="absolute left-0 top-0 h-full rounded-full" style={{ width: '65%', background: 'linear-gradient(90deg, var(--royal-blue), #e53935)' }}></div>
-                  </div>
-                  <div className="text-right text-sm font-bold text-gray-700 mt-1">65% (2.3GB/3.5GB)</div>
-                </div>
-                {/* Security */}
-                <div>
-                  <div className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                    <FaShieldAlt /> Security Status
-                  </div>
-                  <div className="flex items-center gap-2 text-green-600 font-semibold">
-                    <FaCheckCircle /> All Checks Passed
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent System Activity */}
-            <div className="rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 px-4 py-6 flex items-center gap-2 text-white font-bold text-base">
-                <FaClock className="text-blue-300" /> Recent System Activity
-              </div>
-              <div className="flex items-center justify-between px-6 py-4">
-                <button className="text-red-400 text-sm font-semibold hover:text-red-300">View All</button>
-              </div>
-              <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
-                {recentActivity.map((a, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4">
-                    <div className={`w-9 h-9 ${a.iconBg} rounded-lg flex items-center justify-center text-white text-sm flex-shrink-0`}>
-                      {a.icon}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{a.title}</p>
-                      <p className="text-gray-500 text-xs">{a.desc}</p>
-                      <p className={`text-xs font-medium mt-0.5 ${a.timeColor}`}>{a.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          
 
           {/* Upcoming Events */}
           <div className="shadow-lg w-full">
