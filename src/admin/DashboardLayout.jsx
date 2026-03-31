@@ -9,11 +9,12 @@ import {
   FaDatabase,
   FaFileAlt,
   FaBullhorn,
-  FaChartPie,
   FaSignOutAlt,
   FaAngleRight,
   FaBars,
-  FaTimes
+  FaTimes,
+  FaUser,
+  FaCog
 } from 'react-icons/fa';
 
 const DashboardLayout = () => {
@@ -34,19 +35,20 @@ const DashboardLayout = () => {
     { icon: <FaUsers />, label: 'User Management', path: 'userManagement' },
     {
       icon: <FaCalendarAlt />,
-      label: 'Academic Setup',
-      children: [
-        { label: "Academic Year/Term", path: "academicYear" },
-        { label: "School Structure", path: "schoolStructure" },
-        { label: "Grading Configuration", path: "gradingConfig" },
-        { label: "Comment Bank", path: "commentBank" },
-      ]
+      label: 'Academic Structure 1', path: 'academicStructure1',
     },
+    { icon: <FaClipboardList />, label: 'Academic Structure 2', path: 'academicStructure2' },
+    { icon: <FaClipboardList />, label: 'Report Template', path: 'reportTemplate' },
+    { icon: <FaClipboardList />, label: 'Additional Info', path: 'additionalInfo' },
     { icon: <FaClipboardList />, label: 'View Teacher', path: 'teacher' },
     { icon: <FaDatabase />, label: 'View Students', path: 'students' },
     { icon: <FaFileAlt />, label: 'View Parents', path: 'parents' },
-    { icon: <FaBullhorn />, label: 'Bulk Communication', path: 'bulkCommunication' },
-    { icon: <FaChartPie />, label: 'Analytics Dashboard', path: 'analyticsDashboard' },
+    { icon: <FaBullhorn />, label: 'Audit Logs ', path: 'auditLogs' },
+  ];
+
+  const otherItems = [
+    { icon: <FaUser />, label: 'Profile', path: 'profile' },
+    { icon: <FaCog />, label: 'Settings', path: 'settings' },
   ];
 
   return (
@@ -94,11 +96,7 @@ const DashboardLayout = () => {
               <FaBars className="text-white" />
             </button>
 
-            {/* MOBILE CLOSE */}
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="lg:hidden"
-            >
+            <button onClick={() => setMobileOpen(false)} className="lg:hidden">
               <FaTimes className="text-white" />
             </button>
           </div>
@@ -120,10 +118,10 @@ const DashboardLayout = () => {
         )}
 
         {/* NAVIGATION */}
-        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1">
+        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
 
+          {/* MAIN MENU */}
           {navItems.map((item, index) => {
-
             const isChildActive = item.children?.some(child =>
               location.pathname.includes(child.path)
             );
@@ -131,7 +129,6 @@ const DashboardLayout = () => {
             return (
               <div key={item.label} className="relative group">
 
-                {/* NORMAL LINK */}
                 {!item.children ? (
                   <NavLink
                     to={item.path}
@@ -150,8 +147,6 @@ const DashboardLayout = () => {
                   </NavLink>
                 ) : (
                   <div>
-
-                    {/* PARENT */}
                     <div
                       onClick={() =>
                         setOpenMenu(openMenu === index ? null : index)
@@ -165,8 +160,6 @@ const DashboardLayout = () => {
                       {!collapsed && (
                         <>
                           <span className="flex-1">{item.label}</span>
-
-                          {/* ROTATING ARROW */}
                           <FaAngleRight
                             className={`transition-transform duration-300 ${
                               openMenu === index ? 'rotate-90' : ''
@@ -176,7 +169,6 @@ const DashboardLayout = () => {
                       )}
                     </div>
 
-                    {/* SUBMENU */}
                     <div
                       className={`overflow-hidden transition-all duration-300 ${
                         openMenu === index && !collapsed ? 'max-h-40' : 'max-h-0'
@@ -201,22 +193,34 @@ const DashboardLayout = () => {
                         ))}
                       </div>
                     </div>
-
                   </div>
                 )}
-
-                {/* TOOLTIP */}
-                {collapsed && (
-                  <div className="absolute left-16 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                    <div className="bg-black text-white text-xs px-2 py-1 rounded shadow">
-                      {item.label}
-                    </div>
-                  </div>
-                )}
-
               </div>
             );
           })}
+
+          {/* OTHERS SECTION */}
+          {!collapsed && (
+            <p className="text-xs font-bold  text-gray-400 px-3 mt-4">OTHERS</p>
+          )}
+
+          {otherItems.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300
+                ${isActive
+                  ? 'bg-white/10 text-white border-l-4 border-red-500'
+                  : 'text-white hover:text-white hover:bg-white/10'
+                }`
+              }
+            >
+              <span className="text-lg">{item.icon}</span>
+              {!collapsed && <span>{item.label}</span>}
+            </NavLink>
+          ))}
+
         </nav>
 
         {/* FOOTER */}
@@ -237,8 +241,6 @@ const DashboardLayout = () => {
 
       {/* MAIN CONTENT */}
       <div className={`flex-1 transition-all duration-300 ${collapsed ? 'ml-20' : 'ml-64'}`}>
-
-        {/* TOPBAR */}
         <div className="lg:hidden flex items-center justify-between p-4 bg-white shadow">
           <button onClick={() => setMobileOpen(true)}>
             <FaBars />

@@ -17,29 +17,13 @@ const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const stats = [
-    { icon: <FaUserGraduate />, value: '1,245', label: 'Total Students', change: '↑ 5% from last term', changeColor: 'text-green-500', bg: 'bg-blue-400' },
-    { icon: <FaChalkboardTeacher />, value: '78', label: 'Teaching Staff', change: '— No change', changeColor: 'text-yellow-500', bg: 'bg-green-500' },
-    { icon: <FaSchool />, value: '42', label: 'Active Classes', change: '↑ 2 new classes', changeColor: 'text-green-500', bg: 'bg-purple-500' },
+    { icon: <FaUserGraduate />, value: '3,245+', label: 'Total Students', change: '↑ 5% from last term', changeColor: 'text-green-500', bg: 'bg-blue-400', Link:"/userManagement" },
+    { icon: <FaChalkboardTeacher />, value: '78+', label: 'Teaching Staff', change: '— No change', changeColor: 'text-yellow-500', bg: 'bg-green-500' },
+    { icon: <FaSchool />, value: '42+', label: 'Active Classes', change: '↑ 2 new classes', changeColor: 'text-green-500', bg: 'bg-purple-500' },
     { icon: <FaFileAlt />, value: '89%', label: 'Reports Completed', change: '! 11% pending', changeColor: 'text-red-500', bg: 'bg-red-500' },
   ];
 
-  const recentActivity = [
-    { icon: <FaUserPlus />, iconBg: 'bg-green-500', title: 'New teacher account created', desc: 'Mrs. Akosua Mensah added to Mathematics Department', time: '10 minutes ago', timeColor: 'text-blue-600' },
-    { icon: <FaExclamationTriangle />, iconBg: 'bg-yellow-500', title: 'Report submission deadline approaching', desc: '3 teachers have not submitted Term 3 grades', time: '1 hour ago', timeColor: 'text-blue-600' },
-    { icon: <FaDatabase />, iconBg: 'bg-blue-500', title: 'Automated backup completed', desc: 'Daily backup successful - 2.3GB of data secured', time: '2 hours ago', timeColor: 'text-blue-600' },
-    { icon: <FaFileAlt />, iconBg: 'bg-green-600', title: 'Report cards generated', desc: 'Form 2 Science reports exported for printing', time: '4 hours ago', timeColor: 'text-blue-600' },
-  ];
-
-  const quickActions = [
-    { icon: <FaUserPlus />, label: 'Add New User' },
-    { icon: <FaCalendarAlt />, label: 'Setup New Term' },
-    { icon: <FaBullhorn />, label: 'Send Announcement' },
-    { icon: <FaDownload />, label: 'Backup Now' },
-    { icon: <FaSitemap />, label: 'Manage Classes' },
-    { icon: <FaEdit />, label: 'Edit Report Template' },
-  ];
-
-  const notifications = [
+      const notifications = [
     {
       icon: <span className="text-red-500 text-xl">!</span>,
       iconBg: 'bg-red-100 border-l-4 border-red-500',
@@ -62,6 +46,24 @@ const Dashboard = () => {
       action: { label: 'Renew Now', style: 'border border-gray-400 text-gray-700' }
     },
   ];
+
+
+  const recentActivity = [
+    { icon: <FaUserPlus />, iconBg: 'bg-green-500', title: 'New teacher account created', desc: 'Mrs. Akosua Mensah added to Mathematics Department', time: '10 minutes ago', timeColor: 'text-blue-600' },
+    { icon: <FaExclamationTriangle />, iconBg: 'bg-yellow-500', title: 'Report submission deadline approaching', desc: '3 teachers have not submitted Term 3 grades', time: '1 hour ago', timeColor: 'text-blue-600' },
+    { icon: <FaDatabase />, iconBg: 'bg-blue-500', title: 'Automated backup completed', desc: 'Daily backup successful - 2.3GB of data secured', time: '2 hours ago', timeColor: 'text-blue-600' },
+    { icon: <FaFileAlt />, iconBg: 'bg-green-600', title: 'Report cards generated', desc: 'Form 2 Science reports exported for printing', time: '4 hours ago', timeColor: 'text-blue-600' },
+  ];
+
+  const quickActions = [
+    { icon: <FaUserPlus />, label: 'Add New User', Link:"/dashboard/userManagement" },
+    { icon: <FaCalendarAlt />, label: 'Setup New Term' },
+    { icon: <FaBullhorn />, label: 'Send Announcement' },
+    { icon: <FaDownload />, label: 'Backup Now' },
+    { icon: <FaSitemap />, label: 'Manage Classes' },
+    { icon: <FaEdit />, label: 'Edit Report Template' },
+  ];
+
 
   const events = [
     { day: '25', month: 'JUN', title: 'Term 3 Examinations Begin', desc: 'All classes | 8:00 AM - 3:00 PM', badge: 'Upcoming', badgeStyle: 'border border-blue-400 text-blue-500 rounded-full' },
@@ -139,14 +141,33 @@ const Dashboard = () => {
               <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
                 <FaBolt className="text-yellow-400" /> Quick Actions
               </div>
-              <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
-                {quickActions.map((action, i) => (
-                  <button key={i} className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
-                    <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>{action.icon}</span>
-                    <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>{action.label}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
+  {quickActions.map((action, i) => (
+    
+    action.Link ? (
+      <Link to={action.Link} key={i}>
+        <div className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
+          <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>
+            {action.icon}
+          </span>
+          <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>
+            {action.label}
+          </span>
+        </div>
+      </Link>
+    ) : (
+      <button key={i} className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
+        <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>
+          {action.icon}
+        </span>
+        <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>
+          {action.label}
+        </span>
+      </button>
+    )
+
+  ))}
+</div>
             </div>
 
             {/* Right Column: Notifications + Events */}

@@ -22,7 +22,7 @@ import SchoolStructure from './admin/academic-setup/SchoolStructure';
 import GradingConfig from './admin/academic-setup/GradingConfig';
 import CommentBank from './admin/academic-setup/CommentBank';
 import BulkCommunication from './admin/bulkCommunication/BulkCommunication';
-import AnalyticsDashboard from './admin/analyticsDashboard/AnalyticsDashboard';
+
 
 import DashboardLayout from './admin/DashboardLayout';
 import Students from './admin/students/Students';
@@ -30,6 +30,13 @@ import Parents from './admin/parents/Parents';
 import Teacher from './admin/teacher/Teacher';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Profile from './admin/profile/Profile';
+import Settings from './admin/settings/Settings';
+import AcademicStructure1 from './admin/academic-structure1/AcademicStructure1';
+import AcademicStructure2 from './admin/academic-structure2/AcademicStructure2';
+import ReportTemplate from './admin/reportTemplate/ReportTemplate';
+import AdditionalInfo from './admin/additional-info/AdditionalInfo';
+import AuditLogs from './admin/audit-logs/AuditLogs';
 
 const App = () => {
   return (
@@ -64,7 +71,14 @@ const App = () => {
         <Route path='students' element={<Students/> } />
         <Route path='parents' element={<Parents/>} />
         <Route path='bulkCommunication' element={<BulkCommunication />} />
-        <Route path='analyticsDashboard' element={<AnalyticsDashboard />} />
+        <Route path='profile' element={<Profile />} />
+        <Route path='settings' element={<Settings />} />
+        <Route path='academicStructure1' element={<AcademicStructure1 />} />
+        <Route path='academicStructure2' element={<AcademicStructure2 />} />
+        <Route path='reportTemplate' element={<ReportTemplate />} />
+        <Route path='additionalInfo' element={<AdditionalInfo />} />
+        <Route path='auditLogs' element={<AuditLogs />} />
+
       </Route>
 
     </Routes>
