@@ -4,6 +4,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import HttpsIcon from '@mui/icons-material/Https';
 import { Link } from "react-router-dom";
 import { FaGraduationCap} from "react-icons/fa";
+import logo from "../assets/logo.png";
 
 
 const ForgotPassword = () => {
@@ -85,23 +86,20 @@ const ForgotPassword = () => {
 
 <div className="absolute w-[200px] h-[200px] rounded-full bg-white/5 bottom-16 -left-16 animate-float-two"></div>
         {/* logo */}
-      
-        <div className="flex items-center gap-4 mb-4">
-          <Link to='/'>
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-2xl">
-            <FaGraduationCap className="text-red-500 text-3xl md:text-4xl"/>
-          </div>
-          </Link>
-          <div>
-            <div className="font-extrabold text-xl tracking-wide">EXCELLENCE</div>
-            <div className="font-extrabold text-xl -mt-1 tracking-wide">ACADEMY</div>
-          </div>
+      <Link to='/'>
+        <div className="flex items-center gap-4 mb-20">
+          
+           <div className="bg-white p-1 rounded-lg shadow-md">
+        <img src={logo} alt="Logo" className=" w-9 h-9" />
         </div>
-      
-
-        <p className="text-white/60 italic text-sm mb-10">
-          Password Recovery Assistance
-        </p>
+        
+       
+          <div>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">ARMED FORCES SHTS</h1>
+        <p className="text-base md:text-lg  italic">Service With Humanlity </p>
+      </div>
+        </div>
+         </Link>
 
         <h3 className="font-bold mb-5 flex items-center gap-2">
          Recovery Process

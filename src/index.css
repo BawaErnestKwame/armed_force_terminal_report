@@ -80,3 +80,7 @@
   filter: blur(30px);
   opacity: 0.7;
 }
+
+.features-spin {
+  animation: spin 10s linear infinite;
+}

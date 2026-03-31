@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png";
 
 const Navbar = () => {
   return (
@@ -9,14 +10,8 @@ const Navbar = () => {
         {/* Logo + Title */}
        <Link to='/'>
         <div className="flex items-center gap-4">
-          <div className="bg-red-600 p-3 rounded-lg shadow-md">
-            <svg
-              className="w-6 h-6 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 13.6L5.5 13 12 9.4l6.5 3.6-6.5 3.6zM7 14.5v3.6c0 1.4 2.2 2.4 5 2.4s5-1 5-2.4v-3.6l-5 2.7-5-2.7z" />
-            </svg>
+          <div className="bg-white p-1 rounded-lg shadow-md">
+            <img src={logo} alt="Logo" className=" w-9 h-9" />
           </div>
 
           <div className="leading-tight">

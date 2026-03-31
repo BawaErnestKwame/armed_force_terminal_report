@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import bg from "../assets/mainbg.jpg"
+
 import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaCloud, FaUsers, FaCheckCircle, FaUser, FaLock, FaEye, FaEyeSlash, FaKey, FaChalkboardTeacher, FaUserShield, FaUserFriends } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+import logo from "../assets/logo.png";
 
 const AdminLogin = () => {
   const [selectedRole, setSelectedRole] = useState('admin');
@@ -35,15 +36,15 @@ const AdminLogin = () => {
   <div className="relative z-10">
 
     {/* Logo */}
-    <div className="text-white flex items-center gap-4 mb-6">
+    <div className="text-white flex  gap-4 mb-6">
       <Link to="/">
-        <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center">
-          <FaGraduationCap className="text-red-500 text-3xl md:text-4xl" />
-        </div>
+         <div className="bg-white p-1 rounded-lg shadow-md">
+            <img src={logo} alt="Logo" className=" w-9 h-9" />
+          </div>
       </Link>
       <div>
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">EXCELLENCE ACADEMY</h1>
-        <p className="text-base md:text-lg italic mt-2">"Knowledge, Excellence, Integrity"</p>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">ARMED FORCES SHTS</h1>
+        <p className="text-base md:text-lg italic ">Service With Humanlity </p>
       </div>
     </div>
 

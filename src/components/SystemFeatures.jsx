@@ -11,7 +11,7 @@ const SystemFeatures = () => {
 
       {/* Header */}
       <div className="flex gap-2 mb-8 text-[var(--royal-blue)]">
-        <SettingsSuggestIcon sx={{ fontSize: 40 }} />
+       <span className="features-spin"> <SettingsSuggestIcon sx={{ fontSize: 40 }} /></span>
         <h1 className="text-3xl font-bold mt-2">System Features</h1>
       </div>
 
