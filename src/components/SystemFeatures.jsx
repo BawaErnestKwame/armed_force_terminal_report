@@ -6,6 +6,7 @@ import { GrDocumentPerformance } from "react-icons/gr";
 import { BiSolidReport } from "react-icons/bi";
 
 const SystemFeatures = () => {
+  
   return (
     <div className="flex flex-col items-center text-center justify-center w-full h-auto px-4 md:px-8 lg:px-24 py-8">
 

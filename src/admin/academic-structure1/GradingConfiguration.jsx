@@ -12,10 +12,8 @@ const GradingConfiguration = ({ formData, updateFormData, isPreviewMode }) => {
     { grade: 'E8', min: 40, max: 49, description: 'Pass' },
     { grade: 'F9', min: 0, max: 39, description: 'Fail' }
   ]);
-  
-  const [scope, setScope] = useState('whole-school');
+
   const [promotionThreshold, setPromotionThreshold] = useState('D7');
-  const [averageRule, setAverageRule] = useState('simple');
 
   const addGrade = () => {
     setGrades([...grades, { grade: '', min: 0, max: 0, description: '' }]);
@@ -32,138 +30,137 @@ const GradingConfiguration = ({ formData, updateFormData, isPreviewMode }) => {
     if (window.confirm('Remove this grade?')) {
       const updatedGrades = grades.filter((_, i) => i !== index);
       setGrades(updatedGrades);
-      if (updateFormData) updateFormData({ grades: updatedGrades });
     }
   };
 
-  const setDefault = () => {
-    setGrades([
-      { grade: 'A1', min: 80, max: 100, description: 'Excellent' },
-      { grade: 'B2', min: 75, max: 79, description: 'Very Good' },
-      { grade: 'B3', min: 70, max: 74, description: 'Good' },
-      { grade: 'C4', min: 65, max: 69, description: 'Credit' },
-      { grade: 'C5', min: 60, max: 64, description: 'Credit' },
-      { grade: 'C6', min: 55, max: 59, description: 'Credit' },
-      { grade: 'D7', min: 50, max: 54, description: 'Pass' },
-      { grade: 'E8', min: 40, max: 49, description: 'Pass' },
-      { grade: 'F9', min: 0, max: 39, description: 'Fail' }
-    ]);
-    setPromotionThreshold('D7');
-  };
-
   const previewLookupTable = () => {
-    alert('Preview Grade Lookup Table:\n\n' + grades.map(g => 
-      `${g.grade}: ${g.min}-${g.max} (${g.description})`
-    ).join('\n'));
+    alert(
+      grades
+        .map(g => `${g.grade}: ${g.min}-${g.max} (${g.description})`)
+        .join('\n')
+    );
   };
 
+  /* ================= PREVIEW ================= */
   if (isPreviewMode) {
     return (
-      <div style={previewContainerStyle}>
-        <h3 style={{ color: 'var(--royal-blue-dark)' }}>Grading Scale Preview</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--white)' }}>
-          <thead>
-            <tr style={{ background: 'var(--royal-blue)', color: 'var(--white)' }}>
-              <th style={tableHeaderStyle}>Grade</th>
-              <th style={tableHeaderStyle}>Range</th>
-              <th style={tableHeaderStyle}>Description</th>
+      <div className="p-6 bg-gray-100 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-900 mb-4">
+          Grading Scale Preview
+        </h3>
+
+        <table className="w-full border bg-white rounded-lg overflow-hidden">
+          <thead className="bg-blue-600 text-white">
+            <tr>
+              <th className="p-3 text-left">Grade</th>
+              <th className="p-3 text-left">Range</th>
+              <th className="p-3 text-left">Description</th>
             </tr>
           </thead>
           <tbody>
-            {grades.map((grade, idx) => (
-              <tr key={idx} style={{ borderBottom: '1px solid var(--medium-gray)' }}>
-                <td style={tableCellStyle}><strong>{grade.grade}</strong></td>
-                <td style={tableCellStyle}>{grade.min} - {grade.max}</td>
-                <td style={tableCellStyle}>{grade.description}</td>
+            {grades.map((g, idx) => (
+              <tr key={idx} className="border-t">
+                <td className="p-3 font-semibold">{g.grade}</td>
+                <td className="p-3">{g.min} - {g.max}</td>
+                <td className="p-3">{g.description}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p style={{ marginTop: '16px' }}><strong>Promotion Threshold:</strong> Minimum {promotionThreshold}</p>
+
+        <p className="mt-4">
+          <strong>Promotion Threshold:</strong> Minimum {promotionThreshold}
+        </p>
       </div>
     );
   }
 
+  /* ================= MAIN ================= */
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <h2 style={{ color: 'var(--royal-blue)', marginBottom: '20px' }}>Grading Configuration</h2>
-      
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
-        <div style={{ flex: 1 }}>
-          <label>Apply To</label>
-          <select value={scope} onChange={(e) => setScope(e.target.value)} style={inputStyle}>
-            <option value="whole-school">Whole School</option>
-            <option value="programme">Specific Programme</option>
-            <option value="level">Specific Level</option>
-          </select>
-        </div>
-        
-        <div style={{ flex: 1 }}>
-          <label>Promotion Threshold</label>
-          <select value={promotionThreshold} onChange={(e) => setPromotionThreshold(e.target.value)} style={inputStyle}>
-            {grades.map(grade => (
-              <option key={grade.grade} value={grade.grade}>{grade.grade}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div style={{ flex: 1 }}>
-          <label>Average Calculation</label>
-          <select value={averageRule} onChange={(e) => setAverageRule(e.target.value)} style={inputStyle}>
-            <option value="simple">Simple Average</option>
-            <option value="weighted">Weighted Average (Core subjects weight 2)</option>
-          </select>
-        </div>
+    <div className="max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold text-blue-700 mb-6">
+        Grading Configuration
+      </h2>
+
+      {/* Promotion Threshold */}
+      <div className="mb-6">
+        <label className="block mb-2 font-medium">Promotion Threshold</label>
+        <select
+          value={promotionThreshold}
+          onChange={(e) => setPromotionThreshold(e.target.value)}
+          className="w-full md:w-60 px-3 py-2 border rounded-md focus:outline-none"
+        >
+          {grades.map(g => (
+            <option key={g.grade} value={g.grade}>
+              {g.grade}
+            </option>
+          ))}
+        </select>
       </div>
-      
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--white)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <thead>
-            <tr style={{ background: 'var(--royal-blue)', color: 'var(--white)' }}>
-              <th style={tableHeaderStyle}>Grade</th>
-              <th style={tableHeaderStyle}>Min Score</th>
-              <th style={tableHeaderStyle}>Max Score</th>
-              <th style={tableHeaderStyle}>Description</th>
-              <th style={tableHeaderStyle}>Actions</th>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full border bg-white rounded-lg shadow-sm">
+          <thead className="bg-blue-600 text-white">
+            <tr>
+              <th className="p-3 text-left">Grade</th>
+              <th className="p-3 text-left">Min</th>
+              <th className="p-3 text-left">Max</th>
+              <th className="p-3 text-left">Description</th>
+              <th className="p-3 text-left">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {grades.map((grade, idx) => (
-              <tr key={idx} style={{ borderBottom: '1px solid var(--medium-gray)' }}>
-                <td style={tableCellStyle}>
+              <tr key={idx} className="border-t">
+                <td className="p-2">
                   <input
                     type="text"
                     value={grade.grade}
                     onChange={(e) => updateGrade(idx, 'grade', e.target.value)}
-                    style={inputStyle}
+                    className="w-full px-2 py-1 border rounded "
                   />
                 </td>
-                <td style={tableCellStyle}>
+
+                <td className="p-2">
                   <input
                     type="number"
                     value={grade.min}
-                    onChange={(e) => updateGrade(idx, 'min', parseInt(e.target.value))}
-                    style={inputStyle}
+                    onChange={(e) =>
+                      updateGrade(idx, 'min', parseInt(e.target.value))
+                    }
+                    className="w-full px-2 py-1 border rounded"
                   />
                 </td>
-                <td style={tableCellStyle}>
+
+                <td className="p-2">
                   <input
                     type="number"
                     value={grade.max}
-                    onChange={(e) => updateGrade(idx, 'max', parseInt(e.target.value))}
-                    style={inputStyle}
+                    onChange={(e) =>
+                      updateGrade(idx, 'max', parseInt(e.target.value))
+                    }
+                    className="w-full px-2 py-1 border rounded "
                   />
                 </td>
-                <td style={tableCellStyle}>
+
+                <td className="p-2">
                   <input
                     type="text"
                     value={grade.description}
-                    onChange={(e) => updateGrade(idx, 'description', e.target.value)}
-                    style={inputStyle}
+                    onChange={(e) =>
+                      updateGrade(idx, 'description', e.target.value)
+                    }
+                    className="w-full px-2 py-1 border rounded "
                   />
                 </td>
-                <td style={tableCellStyle}>
-                  <button onClick={() => removeGrade(idx)} style={{ ...buttonStyle('danger'), padding: '4px 8px' }}>
+
+                <td className="p-2">
+                  <button
+                    onClick={() => removeGrade(idx)}
+                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
                     Remove
                   </button>
                 </td>
@@ -172,58 +169,25 @@ const GradingConfiguration = ({ formData, updateFormData, isPreviewMode }) => {
           </tbody>
         </table>
       </div>
-      
-      <div style={{ display: 'flex', gap: '12px', marginTop: '20px', justifyContent: 'space-between' }}>
-        <button onClick={addGrade} style={{ ...buttonStyle('primary') }}>
+
+      {/* Actions */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={addGrade}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           + Add Grade Row
         </button>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={setDefault} style={{ ...buttonStyle('secondary') }}>
-            Set Default
-          </button>
-          <button onClick={previewLookupTable} style={{ ...buttonStyle('secondary') }}>
-            Preview Grade Lookup Table
-          </button>
-        </div>
+
+        <button
+          onClick={previewLookupTable}
+          className="px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          Preview Table
+        </button>
       </div>
     </div>
   );
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '6px 10px',
-  border: `1px solid var(--medium-gray)`,
-  borderRadius: '4px',
-  fontSize: '14px'
-};
-
-const buttonStyle = (type) => ({
-  padding: '8px 16px',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontWeight: '500',
-  backgroundColor: type === 'primary' ? 'var(--royal-blue)' : 
-                    type === 'danger' ? 'var(--danger)' : 'var(--light-gray)',
-  color: type === 'primary' || type === 'danger' ? 'var(--white)' : 'var(--dark-gray)'
-});
-
-const tableHeaderStyle = {
-  padding: '12px',
-  textAlign: 'left',
-  fontWeight: 'bold'
-};
-
-const tableCellStyle = {
-  padding: '10px',
-  textAlign: 'left'
-};
-
-const previewContainerStyle = {
-  padding: '20px',
-  background: 'var(--light-gray)',
-  borderRadius: '8px'
 };
 
 export default GradingConfiguration;

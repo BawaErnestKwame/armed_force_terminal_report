@@ -5,6 +5,7 @@ import DoubleTruckManagement from './DoubleTruckManagement';
 import GradingConfiguration from './GradingConfiguration';
 import AssessmentConfiguration from './AssessmentConfiguration';
 
+
 const AcademicStructure1 = () => {
   const [step, setStep] = useState(1);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -81,7 +82,7 @@ const AcademicStructure1 = () => {
 
   return (
     <div className="bg-white rounded-lg p-4 shadow-md overflow-hidden" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 style={{ color: 'var(--royal-blue)', marginBottom: '24px' }}>Academic Structure Setup</h1>
+      <h1 className='text-[var(--accent-red)] lg:text-4xl font-bold mb-6'>Academic Structure Setup</h1>
       
       {/* Step Indicator */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: `2px solid var(--medium-gray)`, paddingBottom: '16px' }}>
@@ -91,7 +92,7 @@ const AcademicStructure1 = () => {
             onClick={() => goToStep(stepItem.number)}
             style={{
               padding: '10px 20px',
-              borderRadius: '20px',
+
               cursor: 'pointer',
               backgroundColor: step === stepItem.number ? 'var(--royal-blue)' : 'var(--light-gray)',
               color: step === stepItem.number ? 'var(--white)' : 'var(--dark-gray)',

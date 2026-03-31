@@ -5,14 +5,12 @@ const AssessmentConfiguration = ({ formData, updateFormData, isPreviewMode }) =>
     { id: 1, name: 'Class Score', weight: 30, subComponents: [] },
     { id: 2, name: 'Exam', weight: 70, subComponents: [] }
   ]);
-  
-  const [scope, setScope] = useState('global');
+
   const [autoCalcRules, setAutoCalcRules] = useState({
     calculateTotal: true,
     calculateGrade: true,
     calculatePosition: true
   });
-  const [subjectOverride, setSubjectOverride] = useState('');
 
   const addComponent = () => {
     const newId = Math.max(...components.map(c => c.id), 0) + 1;
@@ -20,78 +18,71 @@ const AssessmentConfiguration = ({ formData, updateFormData, isPreviewMode }) =>
   };
 
   const updateComponent = (id, field, value) => {
-    const updatedComponents = components.map(comp =>
-      comp.id === id ? { ...comp, [field]: value } : comp
+    const updated = components.map(c =>
+      c.id === id ? { ...c, [field]: value } : c
     );
-    setComponents(updatedComponents);
-    if (updateFormData) updateFormData({ components: updatedComponents });
+    setComponents(updated);
+    updateFormData && updateFormData({ components: updated });
   };
 
   const removeComponent = (id) => {
-    if (window.confirm('Remove this assessment component?')) {
-      const updatedComponents = components.filter(comp => comp.id !== id);
-      setComponents(updatedComponents);
-      if (updateFormData) updateFormData({ components: updatedComponents });
+    if (window.confirm('Remove this component?')) {
+      const updated = components.filter(c => c.id !== id);
+      setComponents(updated);
+      updateFormData && updateFormData({ components: updated });
     }
   };
 
   const addSubComponent = (componentId) => {
-    const updatedComponents = components.map(comp => {
+    const updated = components.map(comp => {
       if (comp.id === componentId) {
-        const newSubId = (comp.subComponents.length + 1);
         return {
           ...comp,
-          subComponents: [...comp.subComponents, { id: newSubId, name: '', weight: 0 }]
+          subComponents: [
+            ...comp.subComponents,
+            { id: comp.subComponents.length + 1, name: '', weight: 0 }
+          ]
         };
       }
       return comp;
     });
-    setComponents(updatedComponents);
+    setComponents(updated);
   };
 
   const updateSubComponent = (componentId, subId, field, value) => {
-    const updatedComponents = components.map(comp => {
+    const updated = components.map(comp => {
       if (comp.id === componentId) {
-        const updatedSubs = comp.subComponents.map(sub =>
-          sub.id === subId ? { ...sub, [field]: value } : sub
-        );
-        return { ...comp, subComponents: updatedSubs };
+        return {
+          ...comp,
+          subComponents: comp.subComponents.map(sub =>
+            sub.id === subId ? { ...sub, [field]: value } : sub
+          )
+        };
       }
       return comp;
     });
-    setComponents(updatedComponents);
+    setComponents(updated);
   };
 
-  const calculateTotalWeight = () => {
-    return components.reduce((sum, comp) => sum + comp.weight, 0);
-  };
+  const totalWeight = components.reduce((sum, c) => sum + c.weight, 0);
+  const isValid = totalWeight === 100;
 
-  const applyToAllSubjects = () => {
-    alert('Configuration applied to all subjects!');
-  };
-
-  const resetSubjectDefaults = () => {
-    if (subjectOverride) {
-      alert(`Reset ${subjectOverride} to global defaults`);
-      setSubjectOverride('');
-    }
-  };
-
-  const totalWeight = calculateTotalWeight();
-  const isValidWeight = totalWeight === 100;
+  const inputClass =
+    "w-full px-3 py-2 border border-[var(--medium-gray)] rounded-md text-sm focus:outline-[var(--accent-red)] focus:ring-2 focus:ring-[var(--accent-red)]";
 
   if (isPreviewMode) {
     return (
-      <div style={previewContainerStyle}>
-        <h3 style={{ color: 'var(--royal-blue-dark)' }}>Assessment Configuration Preview</h3>
-        <div style={{ background: 'var(--white)', padding: '16px', borderRadius: '6px' }}>
-          <p><strong>Scope:</strong> {scope === 'global' ? 'Global' : 'Per Subject'}</p>
-          <h4>Components:</h4>
+      <div className="p-5 bg-[var(--light-gray)] rounded-lg">
+        <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-4">
+          Assessment Preview
+        </h3>
+
+        <div className="bg-white p-4 rounded-md shadow-sm">
           {components.map(comp => (
-            <div key={comp.id} style={{ marginBottom: '12px', paddingLeft: '16px' }}>
+            <div key={comp.id} className="mb-3">
               <strong>{comp.name || 'Unnamed'}:</strong> {comp.weight}%
               {comp.subComponents.length > 0 && (
-                <div style={{ paddingLeft: '20px', marginTop: '5px' }}>
+                <div className="ml-4 mt-1 text-sm">
                   {comp.subComponents.map(sub => (
                     <div key={sub.id}>- {sub.name}: {sub.weight}%</div>
                   ))}
@@ -99,174 +90,145 @@ const AssessmentConfiguration = ({ formData, updateFormData, isPreviewMode }) =>
               )}
             </div>
           ))}
-          <p><strong>Auto-Calculation:</strong> {Object.entries(autoCalcRules).filter(([_, v]) => v).map(([k]) => k).join(', ')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <h2 style={{ color: 'var(--royal-blue)', marginBottom: '20px' }}>Assessment Configuration</h2>
-      
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
-        <div style={{ flex: 1 }}>
-          <label>Scope</label>
-          <select value={scope} onChange={(e) => setScope(e.target.value)} style={inputStyle}>
-            <option value="global">Apply Globally</option>
-            <option value="subject">Override per Subject/Department</option>
-          </select>
-        </div>
-        
-        {scope === 'subject' && (
-          <div style={{ flex: 2 }}>
-            <label>Subject Override</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <select value={subjectOverride} onChange={(e) => setSubjectOverride(e.target.value)} style={inputStyle}>
-                <option value="">Select Subject</option>
-                <option>Mathematics</option>
-                <option>English</option>
-                <option>Science</option>
-                <option>Social Studies</option>
-              </select>
-              <button onClick={resetSubjectDefaults} style={{ ...buttonStyle('secondary') }}>
-                Reset to Default
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      
-      <div style={{ background: 'var(--light-gray)', padding: '20px', borderRadius: '8px' }}>
-        <h3 style={{ color: 'var(--royal-blue-dark)', marginBottom: '16px' }}>Assessment Components</h3>
-        
+    <div className="max-w-[900px] mx-auto">
+
+      <h2 className="text-[var(--royal-blue)] text-xl font-bold mb-5">
+        Assessment Configuration
+      </h2>
+
+      {/* Components */}
+      <div className="bg-[var(--light-gray)] p-5 rounded-lg">
+
         {components.map(component => (
-          <div key={component.id} style={{ marginBottom: '20px', padding: '16px', background: 'var(--white)', borderRadius: '6px' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
+          <div key={component.id} className="bg-white p-4 rounded-md mb-4 shadow-sm">
+
+            <div className="flex flex-col md:flex-row gap-3 items-center mb-3">
+              
               <input
                 type="text"
                 placeholder="Component Name"
                 value={component.name}
                 onChange={(e) => updateComponent(component.id, 'name', e.target.value)}
-                style={{ ...inputStyle, flex: 2 }}
+                className={`${inputClass} flex-1`}
               />
+
               <input
                 type="number"
                 placeholder="Weight %"
                 value={component.weight}
-                onChange={(e) => updateComponent(component.id, 'weight', parseInt(e.target.value) || 0)}
-                style={{ ...inputStyle, flex: 1 }}
+                onChange={(e) =>
+                  updateComponent(component.id, 'weight', parseInt(e.target.value) || 0)
+                }
+                className="w-32 px-3 py-2 border border-[var(--medium-gray)] rounded-md text-sm focus:outline-[var(--accent-red)] focus:ring-2 focus:ring-[var(--accent-red)]"
               />
-              <button onClick={() => removeComponent(component.id)} style={{ ...buttonStyle('danger'), padding: '6px 12px' }}>
+
+              <button
+                onClick={() => removeComponent(component.id)}
+                className="px-3 py-2 bg-[var(--danger)] text-white rounded-md hover:opacity-90 transition"
+              >
                 Remove
               </button>
             </div>
-            
-            {/* Sub-components */}
+
+            {/* Sub Components */}
             {component.subComponents.length > 0 && (
-              <div style={{ marginLeft: '24px', marginTop: '12px' }}>
-                <label style={{ fontSize: '13px', color: 'var(--dark-gray)' }}>Sub-Components</label>
+              <div className="ml-4 mt-3">
+                <p className="text-sm text-[var(--dark-gray)] mb-2">
+                  Sub-Components
+                </p>
+
                 {component.subComponents.map(sub => (
-                  <div key={sub.id} style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                  <div key={sub.id} className="flex gap-3 mb-2">
                     <input
                       type="text"
-                      placeholder="Sub-component name"
+                      placeholder="Sub name"
                       value={sub.name}
-                      onChange={(e) => updateSubComponent(component.id, sub.id, 'name', e.target.value)}
-                      style={{ ...inputStyle, flex: 2 }}
+                      onChange={(e) =>
+                        updateSubComponent(component.id, sub.id, 'name', e.target.value)
+                      }
+                      className={`${inputClass} flex-1`}
                     />
                     <input
                       type="number"
-                      placeholder="Weight %"
+                      placeholder="%"
                       value={sub.weight}
-                      onChange={(e) => updateSubComponent(component.id, sub.id, 'weight', parseInt(e.target.value) || 0)}
-                      style={{ ...inputStyle, flex: 1 }}
+                      onChange={(e) =>
+                        updateSubComponent(component.id, sub.id, 'weight', parseInt(e.target.value) || 0)
+                      }
+                      className="w-24 px-3 py-2 border border-[var(--medium-gray)] rounded-md text-sm focus:outline-[var(--accent-red)] focus:ring-2 focus:ring-[var(--accent-red)]"
                     />
                   </div>
                 ))}
               </div>
             )}
-            
-            <button onClick={() => addSubComponent(component.id)} style={{ ...buttonStyle('secondary'), marginTop: '8px', fontSize: '12px' }}>
+
+            <button
+              onClick={() => addSubComponent(component.id)}
+              className="mt-2 text-sm text-[var(--royal-blue)] hover:underline"
+            >
               + Add Sub-component
             </button>
           </div>
         ))}
-        
-        <button onClick={addComponent} style={{ ...buttonStyle('primary'), width: '100%' }}>
+
+        {/* Add Component */}
+        <button
+          onClick={addComponent}
+          className="w-full py-2 bg-[var(--royal-blue)] text-white rounded-md font-medium hover:opacity-90 transition"
+        >
           + Add Component
         </button>
-        
-        <div style={{ marginTop: '16px', padding: '10px', borderRadius: '4px', background: isValidWeight ? 'var(--success)' : 'var(--danger)', color: 'var(--white)', textAlign: 'center' }}>
-          Total Weight: {totalWeight}% {isValidWeight ? '✓ Valid' : '✗ Must total 100%'}
+
+        {/* Total Weight */}
+        <div
+          className={`
+            mt-4 py-2 rounded-md text-center text-white font-medium
+            ${isValid ? "bg-[var(--success)]" : "bg-[var(--danger)]"}
+          `}
+        >
+          Total Weight: {totalWeight}% {isValid ? "✓ Valid" : "✗ Must be 100%"}
         </div>
       </div>
-      
-      <div style={{ marginTop: '20px', padding: '16px', background: 'var(--light-gray)', borderRadius: '8px' }}>
-        <h3 style={{ color: 'var(--royal-blue-dark)', marginBottom: '12px' }}>Auto-Calculation Rules</h3>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <label>
-            <input
-              type="checkbox"
-              checked={autoCalcRules.calculateTotal}
-              onChange={(e) => setAutoCalcRules({ ...autoCalcRules, calculateTotal: e.target.checked })}
-              style={{ marginRight: '6px' }}
-            />
-            Calculate Total
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={autoCalcRules.calculateGrade}
-              onChange={(e) => setAutoCalcRules({ ...autoCalcRules, calculateGrade: e.target.checked })}
-              style={{ marginRight: '6px' }}
-            />
-            Calculate Grade
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={autoCalcRules.calculatePosition}
-              onChange={(e) => setAutoCalcRules({ ...autoCalcRules, calculatePosition: e.target.checked })}
-              style={{ marginRight: '6px' }}
-            />
-            Calculate Position
-          </label>
+
+      {/* Auto Rules */}
+      <div className="mt-5 p-4 bg-[var(--light-gray)] rounded-lg">
+        <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-3">
+          Auto Calculation
+        </h3>
+
+        <div className="flex flex-wrap gap-4">
+          {Object.entries(autoCalcRules).map(([key, value]) => (
+            <label key={key} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={value}
+                onChange={(e) =>
+                  setAutoCalcRules({ ...autoCalcRules, [key]: e.target.checked })
+                }
+                className="accent-[var(--accent-red)]"
+              />
+              {key}
+            </label>
+          ))}
         </div>
       </div>
-      
-      <div style={{ display: 'flex', gap: '12px', marginTop: '24px', justifyContent: 'flex-end' }}>
-        <button onClick={applyToAllSubjects} style={{ ...buttonStyle('primary') }}>
+
+      {/* Action */}
+      <div className="flex justify-end mt-6">
+        <button
+          className="px-5 py-2 bg-[var(--royal-blue)] text-white rounded-md hover:opacity-90 transition"
+        >
           Apply to All Subjects
         </button>
       </div>
     </div>
   );
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '8px 12px',
-  border: `1px solid var(--medium-gray)`,
-  borderRadius: '4px',
-  fontSize: '14px'
-};
-
-const buttonStyle = (type) => ({
-  padding: '8px 16px',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontWeight: '500',
-  backgroundColor: type === 'primary' ? 'var(--royal-blue)' : 
-                    type === 'danger' ? 'var(--danger)' : 'var(--light-gray)',
-  color: type === 'primary' || type === 'danger' ? 'var(--white)' : 'var(--dark-gray)'
-});
-
-const previewContainerStyle = {
-  padding: '20px',
-  background: 'var(--light-gray)',
-  borderRadius: '8px'
 };
 
 export default AssessmentConfiguration;

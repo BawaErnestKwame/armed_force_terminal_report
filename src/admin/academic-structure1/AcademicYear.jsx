@@ -20,11 +20,11 @@ const AcademicYear = ({ formData, updateFormData, isPreviewMode }) => {
   };
 
   const updateYear = (yearId, field, value) => {
-    const updatedYears = academicYears.map(year => 
+    const updatedYears = academicYears.map(year =>
       year.id === yearId ? { ...year, [field]: value } : year
     );
     setAcademicYears(updatedYears);
-    if (updateFormData) updateFormData({ academicYears: updatedYears });
+    updateFormData && updateFormData({ academicYears: updatedYears });
   };
 
   const updateTerm = (yearId, termId, field, value) => {
@@ -38,7 +38,7 @@ const AcademicYear = ({ formData, updateFormData, isPreviewMode }) => {
       return year;
     });
     setAcademicYears(updatedYears);
-    if (updateFormData) updateFormData({ academicYears: updatedYears });
+    updateFormData && updateFormData({ academicYears: updatedYears });
   };
 
   const activateTerm = (yearId, termId) => {
@@ -54,13 +54,19 @@ const AcademicYear = ({ formData, updateFormData, isPreviewMode }) => {
 
   if (isPreviewMode) {
     return (
-      <div style={previewContainerStyle}>
-        <h3 style={{ color: 'var(--royal-blue-dark)' }}>Academic Years Preview</h3>
+      <div className="p-5 bg-[var(--light-gray)] rounded-lg">
+        <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-4">
+          Academic Years Preview
+        </h3>
+
         {academicYears.map(year => (
-          <div key={year.id} style={previewCardStyle}>
-            <h4 style={{ color: 'var(--royal-blue)' }}>{year.title || 'Untitled Year'}</h4>
+          <div key={year.id} className="bg-white p-4 rounded-md mb-4 shadow-sm">
+            <h4 className="text-[var(--royal-blue)] font-semibold">
+              {year.title || 'Untitled Year'}
+            </h4>
+
             {year.terms.map(term => (
-              <div key={term.id} style={{ marginTop: '10px' }}>
+              <div key={term.id} className="mt-2 text-sm">
                 <strong>{term.name}:</strong> {term.startDate || 'TBD'} to {term.endDate || 'TBD'}
               </div>
             ))}
@@ -70,136 +76,140 @@ const AcademicYear = ({ formData, updateFormData, isPreviewMode }) => {
     );
   }
 
+  const inputClass =
+    "w-full px-3 py-2 border border-[var(--medium-gray)] rounded-md text-sm focus:outline-[var(--accent-red)] focus:ring-2 focus:ring-[var(--accent-red)]";
+
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: 'var(--royal-blue)' }}>Academic Year & Term Management</h2>
-        <button onClick={addAcademicYear} style={{ ...buttonStyle('primary') }}>
+    <div className="max-w-[1000px] mx-auto">
+
+      {/* Header */}
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-[var(--royal-blue)] text-xl font-bold">
+          Academic Year & Term Management
+        </h2>
+
+        <button
+          onClick={addAcademicYear}
+          className="px-4 py-2 rounded-md bg-[var(--royal-blue)] text-white font-medium hover:opacity-90 transition"
+        >
           + Create Academic Year
         </button>
       </div>
 
+      {/* Years */}
       {academicYears.map(year => (
-        <div key={year.id} style={{ background: 'var(--light-gray)', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div
+          key={year.id}
+          className="bg-[var(--light-gray)] p-5 rounded-lg mb-5"
+        >
+
+          {/* Year Header */}
+          <div className="flex justify-between items-center mb-4">
             <input
               type="text"
               value={year.title}
               onChange={(e) => updateYear(year.id, 'title', e.target.value)}
               placeholder="e.g., 2025/2026"
-              style={{ ...inputStyle, fontSize: '18px', fontWeight: 'bold', width: 'auto', minWidth: '200px' }}
+              className={`${inputClass} text-lg font-bold max-w-[250px]`}
             />
-            <button onClick={() => archiveYear(year.id)} style={{ ...buttonStyle('danger') }}>
+
+            <button
+              onClick={() => archiveYear(year.id)}
+              className="px-4 py-2 rounded-md bg-[var(--danger)] text-white hover:opacity-90 transition"
+            >
               Archive
             </button>
           </div>
 
-          <div style={{ display: 'grid', gap: '20px' }}>
+          {/* Terms */}
+          <div className="space-y-5">
             {year.terms.map(term => (
-              <div key={term.id} style={{ borderTop: `1px solid var(--medium-gray)`, paddingTop: '16px' }}>
-                <h3 style={{ color: 'var(--royal-blue-dark)', marginBottom: '12px' }}>{term.name}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div key={term.id} className="border-t border-[var(--medium-gray)] pt-4">
+
+                <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-3">
+                  {term.name}
+                </h3>
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
                   <div>
-                    <label>Start Date</label>
+                    <label className="text-sm">Start Date</label>
                     <input
                       type="date"
                       value={term.startDate}
                       onChange={(e) => updateTerm(year.id, term.id, 'startDate', e.target.value)}
-                      style={inputStyle}
+                      className={inputClass}
                     />
                   </div>
+
                   <div>
-                    <label>End Date</label>
+                    <label className="text-sm">End Date</label>
                     <input
                       type="date"
                       value={term.endDate}
                       onChange={(e) => updateTerm(year.id, term.id, 'endDate', e.target.value)}
-                      style={inputStyle}
+                      className={inputClass}
                     />
                   </div>
+
                   <div>
-                    <label>Vacation Date</label>
+                    <label className="text-sm">Vacation Date</label>
                     <input
                       type="date"
                       value={term.vacationDate}
                       onChange={(e) => updateTerm(year.id, term.id, 'vacationDate', e.target.value)}
-                      style={inputStyle}
+                      className={inputClass}
                     />
                   </div>
+
                   <div>
-                    <label>Next Term Reopening</label>
+                    <label className="text-sm">Next Term Reopening</label>
                     <input
                       type="date"
                       value={term.reopeningDate}
                       onChange={(e) => updateTerm(year.id, term.id, 'reopeningDate', e.target.value)}
-                      style={inputStyle}
+                      className={inputClass}
                     />
                   </div>
+
                 </div>
-                <div style={{ marginTop: '12px' }}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={term.cumulative}
-                      onChange={(e) => updateTerm(year.id, term.id, 'cumulative', e.target.checked)}
-                      style={{ marginRight: '8px' }}
-                    />
+
+                {/* Checkbox */}
+                <div className="mt-3 flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={term.cumulative}
+                    onChange={(e) => updateTerm(year.id, term.id, 'cumulative', e.target.checked)}
+                    className="mr-2 accent-[var(--accent-red)]"
+                  />
+                  <span className="text-sm">
                     Cumulative Reporting (include previous terms)
-                  </label>
+                  </span>
                 </div>
+
+                {/* Activate Button */}
                 <button
                   onClick={() => activateTerm(year.id, term.id)}
-                  style={{ ...buttonStyle('success'), marginTop: '12px' }}
+                  className="mt-3 px-4 py-2 rounded-md bg-[var(--success)] text-white hover:opacity-90 transition"
                 >
                   Activate {term.name}
                 </button>
+
               </div>
             ))}
           </div>
         </div>
       ))}
 
+      {/* Empty State */}
       {academicYears.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--dark-gray)' }}>
+        <div className="text-center py-10 text-[var(--dark-gray)]">
           No academic years created. Click "Create Academic Year" to start.
         </div>
       )}
     </div>
   );
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '8px 12px',
-  border: `1px solid var(--medium-gray)`,
-  borderRadius: '4px',
-  fontSize: '14px'
-};
-
-const buttonStyle = (type) => ({
-  padding: '8px 16px',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontWeight: '500',
-  backgroundColor: type === 'primary' ? 'var(--royal-blue)' : 
-                    type === 'success' ? 'var(--success)' : 
-                    type === 'danger' ? 'var(--danger)' : 'var(--light-gray)',
-  color: type === 'primary' || type === 'success' || type === 'danger' ? 'var(--white)' : 'var(--dark-gray)'
-});
-
-const previewContainerStyle = {
-  padding: '20px',
-  background: 'var(--light-gray)',
-  borderRadius: '8px'
-};
-
-const previewCardStyle = {
-  background: 'var(--white)',
-  padding: '16px',
-  borderRadius: '6px',
-  marginBottom: '16px',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
 };
 
 export default AcademicYear;
