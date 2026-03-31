@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import logo from "../assets/logo.png";
 import {
   FaGraduationCap,
   FaTachometerAlt,
@@ -80,13 +81,14 @@ const DashboardLayout = () => {
         <div className="flex items-center justify-between p-4">
           {!collapsed && (
             <NavLink to="/">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow">
-                  <FaGraduationCap className="text-red-500 text-xl" />
-                </div>
-                <h1 className="text-white text-sm font-bold tracking-wide">
-                  EXCELLENCE
-                </h1>
+              <div className="flex items-center gap-2 text-white">
+                <div className="bg-white p-1 rounded-lg shadow-md flex flex-col">
+               <img src={logo} alt="Logo" className=" w-6 h-6" />
+             </div>
+              <div>
+                <h1 className="text-sm font-bold">ARMED FORCES SHTS</h1>
+                <p className="text-sm  italic ">Service With Humanlity </p>
+              </div>
               </div>
             </NavLink>
           )}
