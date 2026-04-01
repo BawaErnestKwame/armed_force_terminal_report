@@ -34,6 +34,7 @@ const DashboardLayout = () => {
   const navItems = [
     { icon: <FaTachometerAlt />, label: 'Dashboard', path: '/dashboard' },
     { icon: <FaUsers />, label: 'User Management', path: 'userManagement' },
+    { icon: <FaUsers />, label: 'Student Management', path: 'studentManagement' },
     {
       icon: <FaCalendarAlt />,
       label: 'Academic Structure 1', path: 'academicStructure1',

@@ -37,6 +37,8 @@ import AcademicStructure2 from './admin/academic-structure2/AcademicStructure2';
 import ReportTemplate from './admin/reportTemplate/ReportTemplate';
 import AdditionalInfo from './admin/additional-info/AdditionalInfo';
 import AuditLogs from './admin/audit-logs/AuditLogs';
+import StudentManagement from './admin/studentManagement/StudentManagement';
+
 
 const App = () => {
   return (
@@ -63,6 +65,7 @@ const App = () => {
       <Route path='/dashboard' element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
         <Route path='userManagement' element={<UserManagement />} />
+        <Route path='studentManagement' element={<StudentManagement />} />
         <Route path='academicYear' element={<AcademicYear />} />
         <Route path='schoolStructure' element={<SchoolStructure />} />
         <Route path='gradingConfig' element={<GradingConfig />} />
