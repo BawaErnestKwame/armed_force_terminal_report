@@ -9,7 +9,7 @@ import BulkUsers from "./BulkUsers";
 const users = [
   { id: "STD2024001", name: "Kwame Asante", role: "STUDENT", dept: "Form 2 Science A", email: "k.asante@student.excellence.edu.gh", status: "Active" },
   { id: "TCH2024001", name: "Mrs. Akosua Mensah", role: "TEACHER", dept: "Mathematics Department", email: "a.mensah@excellence.edu.gh", status: "Active" },
-  { id: "HOD2024001", name: "Dr. Kwabena Owusu", role: "HEAD OF DEPT", dept: "Science Department", email: "k.owusu@excellence.edu.gh", status: "Active" },
+  { id: "HOD2024001", name: "Dr. Kwabena Owusu", role: "HOD", dept: "Science Department", email: "k.owusu@excellence.edu.gh", status: "Active" },
   { id: "PAR2024001", name: "Mr. Yaw Boateng", role: "PARENT", dept: "Parent of STD2024001", email: "y.boateng@email.com", status: "Pending" },
   { id: "ADM2024001", name: "System Administrator", role: "ADMIN", dept: "IT Department", email: "admin@excellence.edu.gh", status: "Active" },
 ];
@@ -17,7 +17,7 @@ const users = [
 const roleColors = {
   STUDENT: "border-cyan-400 text-cyan-600",
   TEACHER: "border-green-400 text-green-600",
-  "HEAD OF DEPT": "border-pink-400 text-pink-500",
+  HOD: "border-pink-400 text-pink-500",
   PARENT: "border-orange-400 text-orange-500",
   ADMIN: "border-red-400 text-red-500",
 };
@@ -30,7 +30,7 @@ const statusColors = {
 const roleIcons = {
   STUDENT: "🎓",
   TEACHER: "👩‍🏫",
-  "HEAD OF DEPT": "👤",
+  HOD: "👤",
   PARENT: "👨‍👧",
   ADMIN: "👥",
 };
@@ -102,7 +102,7 @@ const UserManagement = () => {
             </div>
             {[
               { val: roleFilter, set: setRoleFilter, 
-                opts: ["All Roles", "STUDENT", "TEACHER", "HEAD OF DEPT", "PARENT", "ADMIN"] },
+                opts: ["All Roles", "STUDENT", "TEACHER", "HOD", "PARENT", "ADMIN"] },
               { val: statusFilter, set: setStatusFilter, opts: ["All Status", "Active", "Pending"] },
               { val: deptFilter, set: setDeptFilter, opts: ["All Departments", "Form 2 Science A", "Mathematics Department", "Science Department", "IT Department"] },
             ].map((f, i) => (
