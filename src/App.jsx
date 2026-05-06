@@ -80,6 +80,8 @@ const App = () => {
           <Route path='reportTemplate' element={<ReportTemplateWrapper />} />
           <Route path='additionalInfo' element={<AdditionalInfo />} />
           <Route path='auditLogs' element={<AuditLogs />} />
+
+  
         </Route>
       </Routes>
     </StudentProvider>

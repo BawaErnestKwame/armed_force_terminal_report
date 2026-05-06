@@ -3,6 +3,7 @@ import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaClo
 import { Link } from 'react-router-dom';
 import logo from "../assets/logo.png";
 
+
 const AdminLogin = () => {
   const [selectedRole, setSelectedRole] = useState('teacher');
   const [showPassword, setShowPassword] = useState(false);
@@ -10,9 +11,12 @@ const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate()
+
   const handleLogin = (e) => {
     e.preventDefault();
     console.log('Login attempt:', { selectedRole, username, password, rememberMe });
+
   };
 
  
