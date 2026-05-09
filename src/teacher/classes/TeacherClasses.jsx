@@ -14,8 +14,8 @@ const TeacherClasses = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {CLASSES_DATA.map(cls => (
-          <div key={cls.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all">
-            <div className={`h-1.5 ${cls.track === 'A' ? 'bg-yellow-500' : 'bg-green-500'}`} />
+          <div key={cls.id} className="bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden hover:shadow-md transition-all">
+            <div className={`h-1.5 ${cls.track === 'A' ? 'bg-yellow-700' : 'bg-green-500'}`} />
             <div className="p-5">
 
               {/* Header */}
@@ -75,7 +75,7 @@ const TeacherClasses = () => {
               <div className="flex gap-2">
                 <button
                   onClick={() => navigate('/teacher/scores')}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 text-sm bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition"
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 text-sm bg-[var(--royal-blue)] text-white rounded-lg hover:bg-blue-800 transition"
                 >
                   <Edit3 size={13} /> Enter Scores
                 </button>
