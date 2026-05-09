@@ -64,7 +64,7 @@ const TeacherDashboardLayout = () => {
           ${collapsed ? 'w-20' : 'w-64'}
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
-        style={{ background: 'linear-gradient(180deg, #1e3a8a, #172554)' }}
+        style={{ background: 'linear-gradient(180deg, #0e07dd, #261481)' }}
       >
         {/* Branding */}
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
@@ -204,7 +204,7 @@ const TeacherDashboardLayout = () => {
               📅 {TERM_INFO.academicYear} · {TERM_INFO.term} · Track {TERM_INFO.track}
             </span>
             <span className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-1.5 rounded-lg font-medium">
-              🔁 Double Track School
+              Double Track School
             </span>
           </div>
         </header>

@@ -18,11 +18,11 @@ const TeacherHome = () => {
     <div className="space-y-6">
 
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 rounded-2xl p-5 sm:p-6 text-white relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-64 h-full opacity-10 pointer-events-none">
+      <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] rounded-2xl p-5 sm:p-6 text-white relative overflow-hidden border-b-4 border-[var(--accent-red)]">
+        {/* <div className="absolute right-0 top-0 w-64 h-full opacity-10 pointer-events-none">
           <div className="w-48 h-48 rounded-full bg-white absolute -right-12 -top-12" />
           <div className="w-32 h-32 rounded-full bg-white absolute right-8 bottom-4" />
-        </div>
+        </div> */}
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-blue-200 text-sm mb-1">Welcome back,</p>

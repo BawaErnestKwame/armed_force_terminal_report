@@ -63,7 +63,7 @@ const TeacherScores = () => {
               <button
                 key={val}
                 onClick={() => setScoreType(val)}
-                className={`px-3 sm:px-4 py-2 text-sm font-medium transition flex-1 sm:flex-none ${scoreType === val ? 'bg-blue-900 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+                className={`px-3 sm:px-4 py-2 text-sm font-medium transition flex-1 sm:flex-none ${scoreType === val ? 'bg-[var(--royal-blue)] text-white' : 'text-gray-600 hover:bg-gray-50'}`}
               >
                 {label}
               </button>
