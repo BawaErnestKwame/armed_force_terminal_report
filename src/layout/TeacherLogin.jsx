@@ -1,222 +1,119 @@
-import React, { useState } from 'react'
-import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaCloud, FaUsers, FaCheckCircle, FaUser, FaLock, FaEye, FaEyeSlash, FaKey, FaChalkboardTeacher, FaUserShield, FaUserFriends } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
+// src/layout/TeacherLogin.jsx
+import React, { useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { FaShieldAlt, FaEye, FaEyeSlash } from 'react-icons/fa';
 
+const TeacherLogin = () => {
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const { login, loading, error } = useAuth();
 
-const AdminLogin = () => {
-  const [selectedRole, setSelectedRole] = useState('teacher');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [username, setUsername] = useState('');
+  const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
+  const [showPw,   setShowPw]   = useState(false);
 
-  const navigate = useNavigate()
+  // Where to go after login — use the page they tried to visit, else /teacher
+  const from = location.state?.from?.pathname || '/teacher';
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { selectedRole, username, password, rememberMe });
-
+    const result = await login(email, password, 'teacher');
+    if (result.success) {
+      navigate(from, { replace: true });
+    }
   };
 
- 
-
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row">
-{/* LEFT SIDE */}
-<div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-8 py-4 md:py-8 flex flex-col justify-between overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
 
-  {/* 🔵 BLUE BACKGROUND */}
-  <div className="absolute inset-0 bg-gradient-to-b from-[var(--royal-blue)] to-[var(--royal-blue-dark)]"></div>
-
-  {/* 🔴 RED SLANTED SHAPE */}
-  <div className="absolute top-0 right-0 h-full w-[180px] bg-red-600 clip-shape"></div>
-
-  {/* CONTENT */}
-  <div className="relative z-10">
-
-    {/* Logo */}
-    <div className="text-white flex  gap-4 mb-6">
-      <Link to="/">
-        <div className="bg-white p-1 rounded-lg shadow-md">
-        <img src={logo} alt="Logo" className=" w-9 h-9" />
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 text-center border-b-4 border-red-600">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <FaShieldAlt className="text-yellow-400 text-3xl" />
+          </div>
+          <h1 className="text-xl font-bold">ARMED FORCES SHTS</h1>
+          <p className="text-blue-200 text-sm mt-1">Teacher / Staff Portal</p>
         </div>
-      </Link>
-      <div>
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">ARMED FORCES SHTS</h1>
-        <p className="text-base md:text-lg italic ">Service With Humanlity </p>
-      </div>
-    </div>
 
-    {/* System Features */}
-    <div className="bg-white/20 backdrop-blur-md mt-10 md:w-[90%] w-full rounded-2xl p-4 md:p-6 mb-6">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-          <FaCheckCircle className="text-white text-sm" />
-        </div>
-        <h2 className="text-xl md:text-2xl font-semibold text-red-300">System Features</h2>
-      </div>
+        {/* Form */}
+        <div className="p-6 space-y-4">
+          <h2 className="text-lg font-bold text-gray-800 text-center">Sign In</h2>
 
-      <div className="space-y-2 text-white md:space-y-3">
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaShieldAlt />
-          <span>Secure Grade Management</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaChartLine />
-          <span>Real-time Analytics</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaFileAlt />
-          <span>Digital Report Cards</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaComments />
-          <span>Parent-Teacher Communication</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaCloud />
-          <span>Cloud Backup & Recovery</span>
-        </div>
-      </div>
-    </div>
-
-    {/* Stats */}
-    <div className="flex flex-col lg:mt-10 md:flex-row gap-3 md:gap-6 mb-4">
-      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-        <FaUsers />
-        <span>1,250+ Active Users</span>
-      </div>
-
-      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-        <FaCheckCircle />
-        <span>99.8% Uptime</span>
-      </div>
-    </div>
-
-  </div>
-
-  {/* Footer */}
-  <div className="relative z-10 text-white text-xs md:text-sm">
-    <p className="flex items-center gap-2">
-      <FaShieldAlt /> Secure login powered by SSL encryption
-    </p>
-    <p className="mt-1">© 2024 Excellence Academy. All rights reserved.</p>
-  </div>
-
-</div>
-      {/* RIGHT SIDE */}
-      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-4 md:p-6">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-4 md:p-6">
-          {/* Login Header */}
-          <div className="text-center mb-4 md:mb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <FaKey className="text-blue-700 text-2xl" />
-              <h2 className="text-2xl md:text-3xl font-bold text-blue-700">Portal Login</h2>
-            </div>
+          {/* Demo hint */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
+            <strong>Demo:</strong> osei@afts.edu.gh / teacher123
           </div>
 
-          {/* Role Selection */}
-          <div className="mb-4 md:mb-6 grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-3">
-            {[
-              { role: 'student', icon: FaGraduationCap, label: 'Student' },
-              { role: 'teacher', icon: FaChalkboardTeacher, label: 'Teacher' },
-              { role: 'admin', icon: FaUserShield, label: 'Admin' },
-              { role: 'parent', icon: FaUserFriends, label: 'Parent' },
-            ].map(({ role, icon: Icon, label }) => (
-              <button
-                key={role}
-                onClick={() => setSelectedRole(role)}
-                className={`p-2 md:p-4 rounded-lg border-2 transition-all ${
-                  selectedRole === role
-                    ? 'bg-blue-700 text-white border-blue-700'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-                }`}
-              >
-                <Icon className="text-2xl md:text-3xl mx-auto mb-1 md:mb-2" />
-                <span className="font-semibold text-sm md:text-base">{label}</span>
-              </button>
-            ))}
-          </div>
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
-            {/* Username */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="flex items-center gap-2 mb-1 text-blue-700 font-semibold">
-                <FaUser /> Username/ID
-              </label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-700" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username or ID"
-                  className="w-full pl-10 pr-4 py-2 md:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-700 focus:outline-none"
-                />
-              </div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                placeholder="yourname@afts.edu.gh"
+                className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900"
+              />
             </div>
 
-            {/* Password */}
             <div>
-              <label className="flex items-center gap-2 mb-1 text-blue-700 font-semibold">
-                <FaLock /> Password
-              </label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Password</label>
               <div className="relative">
-                <FaKey className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-700" />
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPw ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
+                  required
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-12 py-2 md:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-700 focus:outline-none"
+                  className="w-full px-3 py-2.5 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-700"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPw ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
 
-            {/* Remember & Forgot */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 accent-blue-700"
-                />
-                <span className="text-gray-700 text-sm">Remember me</span>
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
+                <input type="checkbox" className="accent-blue-900" /> Remember me
               </label>
-              <Link to="/forgotPassword" className="text-red-500 text-sm font-semibold hover:underline flex items-center gap-1">
-                <FaKey className="text-xs" /> Forgot Password?
+              <Link to="/forgotPassword" className="text-blue-700 hover:underline text-xs">
+                Forgot password?
               </Link>
             </div>
 
-            {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-blue-700 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors flex items-center justify-center gap-2"
+              disabled={loading}
+              className="w-full py-2.5 bg-blue-900 text-white text-sm font-semibold rounded-lg hover:bg-blue-800 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              <FaKey /> Login to Portal
+              {loading ? (
+                <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Signing in...</>
+              ) : 'Sign In'}
             </button>
           </form>
-          {/* Back to Home */}
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-blue-700 font-semibold hover:underline inline-flex items-center gap-2">
-              ← Back to Home Page
-            </Link>
-          </div>
 
+          <p className="text-xs text-center text-gray-400 mt-4">
+            Not a teacher?{' '}
+            <Link to="/adminLogin" className="text-blue-700 hover:underline">Admin Login</Link>
+          </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminLogin
+export default TeacherLogin;
