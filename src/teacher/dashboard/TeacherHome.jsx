@@ -1,33 +1,26 @@
 // src/teacher/dashboard/TeacherHome.jsx
-// Renders the exact dashboard for the role the teacher chose at login.
-// No role switcher. No cross-role navigation.
+// Renders the exact dashboard for the role chosen at login.
+// 6 roles only. No switcher. No cross-role access.
 
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 
-import DashSubjectTeacher                                  from '../dashboards/DashSubjectTeacher';
-import DashSubjectFormTeacher                              from '../dashboards/DashSubjectFormTeacher';
-import { DashHOD, DashHODSubject, DashHODSubjectForm }    from '../dashboards/DashHOD';
-import { DashAssistantHOD, DashAssistantHODSubject }       from '../dashboards/DashAssistantHOD';
-import DashHouseMaster                                     from '../dashboards/DashHouseMaster';
-import { DashWorkshop, DashSports, DashCounsellor }        from '../dashboards/DashWorkshop';
-import { DashExamCoord, DashHODExamCoord, DashFormSports } from '../dashboards/DashExamCoord';
+import DashSubjectTeacher       from '../dashboards/DashSubjectTeacher';
+import DashSubjectFormTeacher   from '../dashboards/DashSubjectFormTeacher';
+import DashFormTeacherHOD       from '../dashboards/DashFormTeacherHOD';
+import { DashExamCoord }        from '../dashboards/DashExamCoord';
+import {
+  DashHODSubject,
+  DashHODSubjectForm,
+} from '../dashboards/DashHOD';
 
+// ─── 6 role combos → dashboard component ─────────────────────────────────────
 const DASHBOARDS = {
-  'Subject Teacher':                                DashSubjectTeacher,
-  'Subject Teacher + Form Teacher':                 DashSubjectFormTeacher,
-  'HOD':                                            DashHOD,
-  'HOD + Subject Teacher':                          DashHODSubject,
-  'HOD + Subject Teacher + Form Teacher':           DashHODSubjectForm,
-  'Assistant HOD':                                  DashAssistantHOD,
-  'Assistant HOD + Subject Teacher':                DashAssistantHODSubject,
-  'House Master/Mistress':                          DashHouseMaster,
-  'Workshop Supervisor':                            DashWorkshop,
-  'Sports Master/Mistress':                         DashSports,
-  'Guidance Counsellor':                            DashCounsellor,
-  'Exam Coordinator':                               DashExamCoord,
-  'Subject Teacher + HOD + Exam Coordinator':       DashHODExamCoord,
-  'Subject Teacher + Form Teacher + Sports Master': DashFormSports,
+  'Subject Teacher':                         DashSubjectTeacher,
+  'Subject Teacher + Form Teacher':          DashSubjectFormTeacher,
+  'Subject Teacher + HOD':                   DashHODSubject,
+  'Subject Teacher + Form Teacher + HOD':    DashHODSubjectForm,
+  'Examiner':                                DashExamCoord,
 };
 
 const TeacherHome = () => {
