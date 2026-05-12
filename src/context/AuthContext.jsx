@@ -1,9 +1,7 @@
 // src/context/AuthContext.jsx
-// activeRole is set once at login from the role the teacher chose.
-// It cannot be changed without logging out. No switchRole function.
-
 import React, { createContext, useContext, useState } from 'react';
 import { MOCK_TEACHERS } from '../teacher/data/teacherData';
+import { MOCK_STUDENTS } from '../student/data/studentData';
 
 const AuthContext = createContext();
 
@@ -13,15 +11,27 @@ export const useAuth = () => {
   return ctx;
 };
 
-const OTHER_USERS = [
-  { id: 100, role: 'admin',   name: 'System Administrator', email: 'admin@excellence.edu.gh', password: 'admin123',   redirectTo: '/dashboard' },
-  { id: 101, role: 'student', name: 'Kofi Asante',          email: 'kofi@afts.edu.gh',        password: 'student123', redirectTo: '/student'   },
-  { id: 102, role: 'parent',  name: 'Mr Asante',            email: 'parent@afts.edu.gh',      password: 'parent123',  redirectTo: '/parent'    },
+const ADMIN_USERS = [
+  {
+    id: 100, role: 'admin',
+    name: 'System Administrator',
+    email: 'admin@excellence.edu.gh',
+    password: 'admin123',
+    redirectTo: '/dashboard',
+  },
+  {
+    id: 102, role: 'parent',
+    name: 'Mr Asante',
+    email: 'parent@afts.edu.gh',
+    password: 'parent123',
+    redirectTo: '/parent',
+  },
 ];
 
 const ALL_USERS = [
   ...MOCK_TEACHERS.map(t => ({ ...t, role: 'teacher' })),
-  ...OTHER_USERS,
+  ...MOCK_STUDENTS,
+  ...ADMIN_USERS,
 ];
 
 export const AuthProvider = ({ children }) => {
@@ -30,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     catch { return null; }
   });
 
-  // activeRole — set at login, locked until logout
+  // activeRole is only used for teachers — set once at login, locked until logout
   const [activeRole, setActiveRole] = useState(() => {
     try { return localStorage.getItem('afts_active_role') || 'Subject Teacher'; }
     catch { return 'Subject Teacher'; }
@@ -39,8 +49,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
 
-  // chosenTeacherRole is passed from the login modal (the combo the teacher picked)
-  const login = async (email, password, role, chosenTeacherRole = 'Subject Teacher') => {
+  const login = async (email, password, role, chosenTeacherRole = 'Subject Teacher', studentId = '') => {
     setLoading(true);
     setError('');
     try {
@@ -51,14 +60,21 @@ export const AuthProvider = ({ children }) => {
       );
 
       if (!found) {
-        setError('Invalid email or password. Please try again.');
+        setError('Invalid credentials. Please try again.');
         setLoading(false);
         return { success: false };
       }
 
-      const { password: _, ...safe } = found;
+      // Extra check for students — must also match their Student ID
+      if (role === 'student' && studentId) {
+        if (found.studentId !== studentId) {
+          setError('Student ID does not match. Please check and try again.');
+          setLoading(false);
+          return { success: false };
+        }
+      }
 
-      // Lock the active role to what the teacher chose — cannot change after login
+      const { password: _, ...safe } = found;
       const lockedRole = role === 'teacher' ? chosenTeacherRole : '';
 
       setUser(safe);
@@ -86,7 +102,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{
       user,
-      activeRole,   // read-only after login — no setter exposed
+      activeRole,
       loading,
       error,
       login,

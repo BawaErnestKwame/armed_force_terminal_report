@@ -9,7 +9,7 @@ import { RiParentFill } from 'react-icons/ri';
 import {
   FaEye, FaEyeSlash, FaTimes, FaLock, FaEnvelope,
   FaArrowRight, FaChalkboardTeacher, FaAward, FaUsers,
-  FaCalendarCheck, FaCheck
+  FaCalendarCheck, FaCheck, FaUser, FaIdCard
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
@@ -341,11 +341,13 @@ const TeacherModal = ({ onClose }) => {
 const SimpleLoginModal = ({ role, onClose }) => {
   const navigate = useNavigate();
   const { login, loading, error } = useAuth();
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [showPw, setShowPw]     = useState(false);
-  const [localErr, setLocalErr] = useState('');
+  const [email,     setEmail]     = useState('');
+  const [password,  setPassword]  = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [showPw,    setShowPw]    = useState(false);
+  const [localErr,  setLocalErr]  = useState('');
   const { Icon } = role;
+  const isStudent = role.key === 'student';
 
   useEffect(() => {
     const h = e => { if (e.key === 'Escape') onClose(); };
@@ -360,8 +362,15 @@ const SimpleLoginModal = ({ role, onClose }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     setLocalErr('');
-    if (!email.trim() || !password.trim()) { setLocalErr('Please enter both email and password.'); return; }
-    const result = await login(email, password, role.key);
+    if (!email.trim() || !password.trim()) {
+      setLocalErr('Please enter your email and password.');
+      return;
+    }
+    if (isStudent && !studentId.trim()) {
+      setLocalErr('Please enter your Student ID.');
+      return;
+    }
+    const result = await login(email, password, role.key, undefined, isStudent ? studentId.trim() : undefined);
     if (result.success) { onClose(); navigate(role.redirect, { replace: true }); }
   };
 
@@ -404,7 +413,11 @@ const SimpleLoginModal = ({ role, onClose }) => {
         <div className="px-6 pb-5 pt-2 space-y-4">
           <p className="text-center font-bold text-base" style={{ color: 'var(--dark-gray)' }}>{role.label}</p>
           <div className="px-3 py-2.5 rounded-lg text-xs" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
-            <span className="font-bold">Demo: </span>{role.demo} / <span className="font-mono font-bold">{role.key}123</span>
+            {isStudent ? (
+              <><span className="font-bold">Demo: </span>kofi@afts.edu.gh · ID: <span className="font-mono font-bold">AFTS/2024/031</span> · pw: <span className="font-mono font-bold">student123</span></>
+            ) : (
+              <><span className="font-bold">Demo: </span>{role.demo} / <span className="font-mono font-bold">{role.key}123</span></>
+            )}
           </div>
           {(localErr || error) && (
             <div className="px-3 py-2.5 rounded-lg text-xs font-medium"
@@ -413,11 +426,36 @@ const SimpleLoginModal = ({ role, onClose }) => {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-3">
+
+            {/* Student ID — only for student role */}
+            {isStudent && (
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
+                  Student ID
+                </label>
+                <div className="relative">
+                  <FaUser size={12} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
+                  <input
+                    type="text"
+                    value={studentId}
+                    onChange={e => setStudentId(e.target.value)}
+                    required
+                    autoFocus
+                    placeholder="e.g. AFTS/2024/031"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all font-mono"
+                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
+                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
+                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
+                  />
+                </div>
+              </div>
+            )}
+
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>Email</label>
               <div className="relative">
                 <FaEnvelope size={12} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus placeholder={role.demo}
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus={!isStudent} placeholder={role.demo}
                   className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all"
                   style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
                   onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}

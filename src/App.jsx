@@ -49,6 +49,15 @@ import TeacherCounsellor      from './teacher/counsellor/TeacherCounsellor';
 import TeacherWAEC            from './teacher/waec/TeacherWAEC';
 import TeacherWorkshop        from './teacher/workshop/TeacherWorkshop';
 import TeacherSports          from './teacher/sports/TeacherSports';
+
+// ── Student Portal ────────────────────────────────────────────────────────────
+import StudentDashboardLayout from './student/StudentDashboardLayout';
+import StudentHome            from './student/dashboard/StudentHome';
+import StudentResults         from './student/results/StudentResults';
+import StudentReportCard      from './student/reportcard/StudentReportCard';
+import StudentAttendance      from './student/attendance/StudentAttendance';
+import StudentProfile         from './student/profile/StudentProfile';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -57,17 +66,23 @@ const App = () => (
     <StudentProvider>
       <ToastContainer />
       <Routes>
+
+        {/* Public */}
         <Route element={<MainLayout />}>
           <Route path='/'        element={<Hero />} />
           <Route path='features' element={<Features />} />
           <Route path='about'    element={<About />} />
           <Route path='contact'  element={<Contact />} />
         </Route>
+
+        {/* Login pages */}
         <Route path='/adminLogin'     element={<AdminLogin />} />
         <Route path='/teacherLogin'   element={<TeacherLogin />} />
         <Route path='/studentLogin'   element={<StudentLogin />} />
         <Route path='/parentLogin'    element={<ParentLogin />} />
         <Route path='/forgotPassword' element={<ForgotPassword />} />
+
+        {/* Admin */}
         <Route path='/dashboard' element={<ProtectedRoute allowedRole="admin"><DashboardLayout /></ProtectedRoute>}>
           <Route index                     element={<Dashboard />} />
           <Route path='userManagement'     element={<UserManagement />} />
@@ -87,6 +102,8 @@ const App = () => (
           <Route path='additionalInfo'     element={<AdditionalInfo />} />
           <Route path='auditLogs'          element={<AuditLogs />} />
         </Route>
+
+        {/* Teacher portal */}
         <Route path='/teacher' element={<ProtectedRoute allowedRole="teacher"><TeacherDashboardLayout /></ProtectedRoute>}>
           <Route index                element={<TeacherHome />} />
           <Route path='classes'       element={<TeacherClasses />} />
@@ -108,7 +125,19 @@ const App = () => (
           <Route path='workshop'      element={<TeacherWorkshop />} />
           <Route path='sports'        element={<TeacherSports />} />
         </Route>
+
+        {/* Student portal */}
+        <Route path='/student' element={<ProtectedRoute allowedRole="student"><StudentDashboardLayout /></ProtectedRoute>}>
+          <Route index                element={<StudentHome />}       />
+          <Route path='results'       element={<StudentResults />}    />
+          <Route path='reportcard'    element={<StudentReportCard />} />
+          <Route path='attendance'    element={<StudentAttendance />} />
+          <Route path='profile'       element={<StudentProfile />}    />
+        </Route>
+
+        {/* Fallback */}
         <Route path='*' element={<Navigate to='/' replace />} />
+
       </Routes>
     </StudentProvider>
   </AuthProvider>
