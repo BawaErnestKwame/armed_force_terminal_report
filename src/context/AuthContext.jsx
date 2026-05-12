@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { MOCK_TEACHERS } from '../teacher/data/teacherData';
 import { MOCK_STUDENTS } from '../student/data/studentData';
+import { MOCK_PARENTS }  from '../parent/data/parentData';
 
 const AuthContext = createContext();
 
@@ -19,18 +20,12 @@ const ADMIN_USERS = [
     password: 'admin123',
     redirectTo: '/dashboard',
   },
-  {
-    id: 102, role: 'parent',
-    name: 'Mr Asante',
-    email: 'parent@afts.edu.gh',
-    password: 'parent123',
-    redirectTo: '/parent',
-  },
 ];
 
 const ALL_USERS = [
   ...MOCK_TEACHERS.map(t => ({ ...t, role: 'teacher' })),
   ...MOCK_STUDENTS,
+  ...MOCK_PARENTS,
   ...ADMIN_USERS,
 ];
 
