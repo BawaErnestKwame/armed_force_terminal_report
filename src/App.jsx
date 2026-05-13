@@ -49,14 +49,17 @@ import TeacherCounsellor      from './teacher/counsellor/TeacherCounsellor';
 import TeacherWAEC            from './teacher/waec/TeacherWAEC';
 import TeacherWorkshop        from './teacher/workshop/TeacherWorkshop';
 import TeacherSports          from './teacher/sports/TeacherSports';
+import TeacherReports         from './teacher/reports/TeacherReports';
+import TeacherProfile         from './teacher/profile/TeacherProfile';
 
-// ── Student Portal
+// ── Student Portal 
 import StudentDashboardLayout from './student/StudentDashboardLayout';
 import StudentHome            from './student/dashboard/StudentHome';
 import StudentResults         from './student/results/StudentResults';
 import StudentReportCard      from './student/reportcard/StudentReportCard';
 import StudentAttendance      from './student/attendance/StudentAttendance';
 import StudentProfile         from './student/profile/StudentProfile';
+import StudentTimetable       from './student/timetable/StudentTimetable';
 
 // ── Parent Portal 
 import ParentDashboardLayout from './parent/ParentDashboardLayout';
@@ -65,6 +68,10 @@ import ParentResults         from './parent/results/ParentResults';
 import ParentReportCard      from './parent/reportcard/ParentReportCard';
 import ParentAttendance      from './parent/attendance/ParentAttendance';
 import ParentProfile         from './parent/profile/ParentProfile';
+
+// ── Admin extras 
+import AdminAnalytics  from './admin/analytics/AdminAnalytics';
+import SchoolCalendar  from './admin/calendar/SchoolCalendar';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,6 +116,9 @@ const App = () => (
           <Route path='reportTemplate'     element={<ReportTemplateWrapper />} />
           <Route path='additionalInfo'     element={<AdditionalInfo />} />
           <Route path='auditLogs'          element={<AuditLogs />} />
+          <Route path='analytics'          element={<AdminAnalytics />} />
+          <Route path='calendar'           element={<SchoolCalendar />} />
+          
         </Route>
 
         {/* Teacher portal */}
@@ -118,10 +128,10 @@ const App = () => (
           <Route path='scores'        element={<TeacherScores />} />
           <Route path='attendance'    element={<TeacherAttendance />} />
           <Route path='comments'      element={<TeacherComments />} />
-          <Route path='reports'       element={<TeacherHome />} />
-          <Route path='analytics'     element={<TeacherAnalytics />} />
-          <Route path='profile'       element={<Profile />} />
-          <Route path='settings'      element={<Settings />} />
+          <Route path='reports'       element={<TeacherReports />}     />
+          <Route path='analytics'     element={<TeacherAnalytics />}   />
+          <Route path='profile'       element={<TeacherProfile />}     />
+          <Route path='settings'      element={<Settings />}           />
           <Route path='hod'           element={<TeacherHODPanel />} />
           <Route path='formclass'     element={<TeacherFormClass />} />
           <Route path='assistant-hod' element={<TeacherAssistantHOD />} />
@@ -136,20 +146,22 @@ const App = () => (
 
         {/* Student portal */}
         <Route path='/student' element={<ProtectedRoute allowedRole="student"><StudentDashboardLayout /></ProtectedRoute>}>
-          <Route index                element={<StudentHome />}       />
-          <Route path='results'       element={<StudentResults />}    />
-          <Route path='reportcard'    element={<StudentReportCard />} />
-          <Route path='attendance'    element={<StudentAttendance />} />
-          <Route path='profile'       element={<StudentProfile />}    />
+          <Route index                element={<StudentHome />}        />
+          <Route path='results'       element={<StudentResults />}     />
+          <Route path='reportcard'    element={<StudentReportCard />}  />
+          <Route path='attendance'    element={<StudentAttendance />}  />
+          <Route path='timetable'     element={<StudentTimetable />}   />
+          <Route path='profile'       element={<StudentProfile />}     />
+
         </Route>
 
         {/* Parent portal */}
         <Route path='/parent' element={<ProtectedRoute allowedRole="parent"><ParentDashboardLayout /></ProtectedRoute>}>
-          <Route index                element={<ParentHome />}        />
-          <Route path='results'       element={<ParentResults />}     />
-          <Route path='reportcard'    element={<ParentReportCard />}  />
-          <Route path='attendance'    element={<ParentAttendance />}  />
-          <Route path='profile'       element={<ParentProfile />}     />
+          <Route index                element={<ParentHome />}         />
+          <Route path='results'       element={<ParentResults />}      />
+          <Route path='reportcard'    element={<ParentReportCard />}   />
+          <Route path='attendance'    element={<ParentAttendance />}   />
+          <Route path='profile'       element={<ParentProfile />}      />
         </Route>
 
         {/* Fallback */}

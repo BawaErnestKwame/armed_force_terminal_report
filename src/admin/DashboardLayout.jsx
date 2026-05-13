@@ -8,7 +8,8 @@ import {
   FaUserFriends, FaCalendarAlt, FaLayerGroup, FaFileAlt,
   FaClipboardList, FaBullhorn, FaInfoCircle, FaHistory,
   FaCog, FaUser, FaBars, FaTimes, FaSignOutAlt,
-  FaShieldAlt, FaBook, FaCommentDots
+  FaShieldAlt, FaBook, FaCommentDots, FaChartBar,
+  FaCalendar, FaDollarSign
 } from 'react-icons/fa';
 import { MdDashboard, MdSchool } from 'react-icons/md';
 
@@ -50,6 +51,14 @@ const NAV_SECTIONS = [
     section: 'Communication',
     items: [
       { icon: FaBullhorn,         label: 'Bulk Communication', path: '/dashboard/bulkCommunication'         },
+    ],
+  },
+  {
+    section: 'Analytics & Finance',
+    items: [
+      { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
+      { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
+      { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
     ],
   },
   {

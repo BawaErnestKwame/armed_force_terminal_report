@@ -1,218 +1,169 @@
-import React, { useState } from 'react'
-import { FaGraduationCap, FaShieldAlt, FaChartLine, FaFileAlt, FaComments, FaCloud, FaUsers, FaCheckCircle, FaUser, FaLock, FaEye, FaEyeSlash, FaKey, FaChalkboardTeacher, FaUserShield, FaUserFriends } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
+// src/layout/StudentLogin.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaIdCard, FaArrowRight } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 
 const StudentLogin = () => {
-  const [selectedRole, setSelectedRole] = useState('student');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { login, loading, error } = useAuth();
 
-  const handleLogin = (e) => {
+  const [studentId, setStudentId] = useState('');
+  const [email,     setEmail]     = useState('');
+  const [password,  setPassword]  = useState('');
+  const [showPw,    setShowPw]    = useState(false);
+  const [localErr,  setLocalErr]  = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { selectedRole, username, password, rememberMe });
+    setLocalErr('');
+    if (!studentId.trim()) { setLocalErr('Please enter your Student ID.'); return; }
+    if (!email.trim())     { setLocalErr('Please enter your email address.'); return; }
+    if (!password.trim())  { setLocalErr('Please enter your password.'); return; }
+
+    const result = await login(email, password, 'student', undefined, studentId.trim());
+    if (result.success) navigate('/student', { replace: true });
   };
 
- 
-
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row">
-{/* LEFT SIDE */}
-<div className="relative lg:w-1/2 w-full px-4 md:px-8 lg:px-8 py-4 md:py-8 flex flex-col justify-between overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4"
+      style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
 
-  {/* 🔵 BLUE BACKGROUND */}
-  <div className="absolute inset-0 bg-gradient-to-b from-[var(--royal-blue)] to-[var(--royal-blue-dark)]"></div>
-
-  {/* 🔴 RED SLANTED SHAPE */}
-  <div className="absolute top-0 right-0 h-full w-[180px] bg-red-600 clip-shape"></div>
-
-  {/* CONTENT */}
-  <div className="relative z-10">
-
-    {/* Logo */}
-    <div className="text-white flex  gap-4 mb-6">
-      <Link to="/">
-        <div className="bg-white p-1 rounded-lg shadow-md">
-                    <img src={logo} alt="Logo" className=" w-9 h-9" />
-                  </div>
-      </Link>
-      <div>
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">ARMED FORCES SHTS</h1>
-        <p className="text-base md:text-lg  italic">Service With Humanlity </p>
-      </div>
-    </div>
-
-    {/* System Features */}
-    <div className="bg-white/20 backdrop-blur-md mt-10 md:w-[90%] w-full rounded-2xl p-4 md:p-6 mb-6">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-          <FaCheckCircle className="text-white text-sm" />
-        </div>
-        <h2 className="text-xl md:text-2xl font-semibold text-red-300">System Features</h2>
+      {/* Logo watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <img src={logo} alt="" draggable={false} className="select-none"
+          style={{ width: '420px', height: '420px', objectFit: 'contain', opacity: 0.06, filter: 'brightness(0) invert(1)' }}
+        />
       </div>
 
-      <div className="space-y-2 text-white md:space-y-3">
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaShieldAlt />
-          <span>Secure Grade Management</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaChartLine />
-          <span>Real-time Analytics</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaFileAlt />
-          <span>Digital Report Cards</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaComments />
-          <span>Parent-Teacher Communication</span>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3">
-          <FaCloud />
-          <span>Cloud Backup & Recovery</span>
-        </div>
-      </div>
-    </div>
+      <div className="relative z-10 w-full max-w-md">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+          style={{ border: '2px solid rgba(255,255,255,0.15)' }}>
 
-    {/* Stats */}
-    <div className="flex flex-col lg:mt-10 md:flex-row gap-3 md:gap-6 mb-4">
-      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-        <FaUsers />
-        <span>1,250+ Active Users</span>
-      </div>
-
-      <div className="flex items-center gap-2 text-white bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg">
-        <FaCheckCircle />
-        <span>99.8% Uptime</span>
-      </div>
-    </div>
-
-  </div>
-
-  {/* Footer */}
-  <div className="relative z-10 text-white text-xs md:text-sm">
-    <p className="flex items-center gap-2">
-      <FaShieldAlt /> Secure login powered by SSL encryption
-    </p>
-    <p className="mt-1">© 2024 Excellence Academy. All rights reserved.</p>
-  </div>
-
-</div>
-      {/* RIGHT SIDE */}
-      <div className="lg:w-1/2 w-full bg-gray-50 flex items-center justify-center p-4 md:p-6">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-blue-700 p-4 md:p-6">
-          {/* Login Header */}
-          <div className="text-center mb-4 md:mb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <FaKey className="text-blue-700 text-2xl" />
-              <h2 className="text-2xl md:text-3xl font-bold text-blue-700">Portal Login</h2>
+          {/* Header */}
+          <div className="px-8 py-6 text-center"
+            style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center overflow-hidden"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+              <img src={logo} alt="AFTS" className="w-12 h-12 object-contain" />
             </div>
+            <h1 className="text-white font-black text-xl">ARMED FORCES SHTS</h1>
+            <p className="text-blue-200 text-sm mt-1">Student Portal Login</p>
+            <p className="text-blue-300 text-xs mt-0.5">Uaddara Barracks, Kumasi, Ghana</p>
           </div>
+          <div className="h-1" style={{ backgroundColor: 'var(--accent-red)' }} />
 
-          {/* Role Selection */}
-          <div className="mb-4 md:mb-6 grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-3">
-            {[
-              { role: 'student', icon: FaGraduationCap, label: 'Student' },
-              { role: 'teacher', icon: FaChalkboardTeacher, label: 'Teacher' },
-              { role: 'admin', icon: FaUserShield, label: 'Admin' },
-              { role: 'parent', icon: FaUserFriends, label: 'Parent' },
-            ].map(({ role, icon: Icon, label }) => (
-              <button
-                key={role}
-                onClick={() => setSelectedRole(role)}
-                className={`p-2 md:p-4 rounded-lg border-2 transition-all ${
-                  selectedRole === role
-                    ? 'bg-blue-700 text-white border-blue-700'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-                }`}
+          {/* Form */}
+          <div className="px-8 py-6 space-y-4">
+
+            {/* Demo hint */}
+            <div className="px-3 py-2.5 rounded-lg text-xs" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
+              <span className="font-bold">Demo: </span>
+              ID: <span className="font-mono font-bold">AFTS/2024/031</span> · kofi@afts.edu.gh · <span className="font-mono font-bold">student123</span>
+            </div>
+
+            {/* Error */}
+            {(localErr || error) && (
+              <div className="px-3 py-2.5 rounded-lg text-xs font-medium"
+                style={{ backgroundColor: '#fff1f2', color: 'var(--accent-red-dark)', border: '1px solid var(--accent-red-light)' }}>
+                {localErr || error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Student ID */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
+                  Student ID
+                </label>
+                <div className="relative">
+                  <FaIdCard size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
+                  <input type="text" value={studentId} onChange={e => setStudentId(e.target.value)}
+                    required autoFocus placeholder="e.g. AFTS/2024/031"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all font-mono"
+                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
+                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
+                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
+                  Email Address
+                </label>
+                <div className="relative">
+                  <FaEnvelope size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                    required placeholder="yourname@afts.edu.gh"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all"
+                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
+                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
+                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
+                  Password
+                </label>
+                <div className="relative">
+                  <FaLock size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
+                  <input type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
+                    required placeholder="Enter your password"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm rounded-lg border-2 outline-none transition-all"
+                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
+                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
+                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
+                  />
+                  <button type="button" onClick={() => setShowPw(!showPw)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }}>
+                    {showPw ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs">
+                <label className="flex items-center gap-2 cursor-pointer" style={{ color: 'var(--dark-gray)' }}>
+                  <input type="checkbox" className="accent-[var(--royal-blue)]" /> Remember me
+                </label>
+                <Link to="/forgotPassword" style={{ color: 'var(--accent-red)' }} className="font-medium">
+                  Forgot Password?
+                </Link>
+              </div>
+
+              <button type="submit" disabled={loading}
+                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-white rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ backgroundColor: 'var(--royal-blue)' }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--royal-blue-dark)'; }}
+                onMouseLeave={e => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--royal-blue)'; }}
               >
-                <Icon className="text-2xl md:text-3xl mx-auto mb-1 md:mb-2" />
-                <span className="font-semibold text-sm md:text-base">{label}</span>
+                {loading
+                  ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Signing in...</>
+                  : <>Sign In to Student Portal <FaArrowRight size={12} /></>
+                }
               </button>
-            ))}
-          </div>
+            </form>
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
-            {/* Username */}
-            <div>
-              <label className="flex items-center gap-2 mb-1 text-blue-700 font-semibold">
-                <FaUser /> Username/ID
-              </label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-700" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username or ID"
-                  className="w-full pl-10 pr-4 py-2 md:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-700 focus:outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="flex items-center gap-2 mb-1 text-blue-700 font-semibold">
-                <FaLock /> Password
-              </label>
-              <div className="relative">
-                <FaKey className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-700" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full pl-10 pr-12 py-2 md:py-3 border-2 border-gray-300 rounded-lg focus:border-blue-700 focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-700"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember & Forgot */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 accent-blue-700"
-                />
-                <span className="text-gray-700 text-sm">Remember me</span>
-              </label>
-              <Link to="/forgotPassword" className="text-red-500 text-sm font-semibold hover:underline flex items-center gap-1">
-                <FaKey className="text-xs" /> Forgot Password?
+            <div className="text-center pt-2">
+              <Link to="/" className="text-xs" style={{ color: 'var(--royal-blue)' }}>
+                ← Back to Home
               </Link>
             </div>
-
-            {/* Login Button */}
-            <button
-              type="submit"
-              className="w-full bg-blue-700 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <FaKey /> Login to Portal
-            </button>
-          </form>
-          {/* Back to Home */}
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-blue-700 font-semibold hover:underline inline-flex items-center gap-2">
-              ← Back to Home Page
-            </Link>
           </div>
-
         </div>
+
+        <p className="text-center text-white/40 text-xs mt-4">
+          ARMED FORCES SHTS · Uaddara Barracks, Kumasi, Ghana
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StudentLogin
+export default StudentLogin;

@@ -1,20 +1,21 @@
 // src/student/StudentDashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet,Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaClipboardList, FaFileAlt,
   FaCalendarCheck, FaUser, FaBars, FaTimes,
-  FaSignOutAlt, FaCog
+  FaSignOutAlt, FaCog, FaTable
 } from 'react-icons/fa';
 import { TERM_INFO } from './data/studentData';
 import logo from '../assets/logo.png';
 
 const NAV_ITEMS = [
-  { icon: FaTachometerAlt, label: 'Dashboard',   path: '/student',             end: true },
-  { icon: FaClipboardList, label: 'My Results',  path: '/student/results'                },
-  { icon: FaFileAlt,       label: 'Report Card', path: '/student/reportcard'             },
-  { icon: FaCalendarCheck, label: 'Attendance',  path: '/student/attendance'             },
+  { icon: FaTachometerAlt, label: 'Dashboard',   path: '/student',              end: true },
+  { icon: FaClipboardList, label: 'My Results',  path: '/student/results'                 },
+  { icon: FaFileAlt,       label: 'Report Card', path: '/student/reportcard'              },
+  { icon: FaCalendarCheck, label: 'Attendance',  path: '/student/attendance'              },
+  { icon: FaTable,         label: 'Timetable',   path: '/student/timetable'               },
 ];
 
 const OTHER_NAV = [
@@ -67,12 +68,10 @@ const StudentDashboardLayout = () => {
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
             <div className="flex items-center gap-2 text-white min-w-0">
-              <Link to="/" className="flex-shrink-0">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
                 <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
               </div>
-              </Link>
               <div className="min-w-0">
                 <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
                 <p className="text-xs text-blue-200 italic truncate">Student Portal</p>
