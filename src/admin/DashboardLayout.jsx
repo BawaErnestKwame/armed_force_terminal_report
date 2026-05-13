@@ -1,24 +1,80 @@
 // src/admin/DashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import logo from "../assets/logo.png";
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 import {
-  FaTachometerAlt, FaUsers, FaCalendarAlt, FaClipboardList,
-  FaDatabase, FaFileAlt, FaBullhorn, FaSignOutAlt,
-  FaBars, FaTimes, FaUser, FaCog
+  FaTachometerAlt, FaUsers, FaChalkboardTeacher, FaUserGraduate,
+  FaUserFriends, FaCalendarAlt, FaLayerGroup, FaFileAlt,
+  FaClipboardList, FaBullhorn, FaInfoCircle, FaHistory,
+  FaCog, FaUser, FaBars, FaTimes, FaSignOutAlt,
+  FaShieldAlt, FaBook, FaCommentDots
 } from 'react-icons/fa';
+import { MdDashboard, MdSchool } from 'react-icons/md';
 
+// ─── Sidebar nav sections ─────────────────────────────────────────────────────
+const NAV_SECTIONS = [
+  {
+    section: 'Main',
+    items: [
+      { icon: FaTachometerAlt,    label: 'Dashboard',          path: '/dashboard',              end: true  },
+      { icon: FaUsers,            label: 'User Management',    path: '/dashboard/userManagement'            },
+    ],
+  },
+  {
+    section: 'People',
+    items: [
+      { icon: FaChalkboardTeacher, label: 'Teachers',          path: '/dashboard/teacher'                   },
+      { icon: FaUserGraduate,      label: 'Students',          path: '/dashboard/students'                  },
+      { icon: FaUserFriends,       label: 'Parents',           path: '/dashboard/parents'                   },
+    ],
+  },
+  {
+    section: 'Academic Setup',
+    items: [
+      { icon: FaCalendarAlt,      label: 'Academic Year',      path: '/dashboard/academicYear'              },
+      { icon: FaLayerGroup,       label: 'Structure — Part 1', path: '/dashboard/academicStructure1'        },
+      { icon: FaLayerGroup,       label: 'Structure — Part 2', path: '/dashboard/academicStructure2'        },
+      { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
+      { icon: FaCommentDots,      label: 'Comment Bank',       path: '/dashboard/commentBank'               },
+    ],
+  },
+  {
+    section: 'Reports',
+    items: [
+      { icon: FaFileAlt,          label: 'Report Template',    path: '/dashboard/reportTemplate'            },
+      { icon: FaClipboardList,    label: 'Additional Info',    path: '/dashboard/additionalInfo'            },
+    ],
+  },
+  {
+    section: 'Communication',
+    items: [
+      { icon: FaBullhorn,         label: 'Bulk Communication', path: '/dashboard/bulkCommunication'         },
+    ],
+  },
+  {
+    section: 'System',
+    items: [
+      { icon: FaHistory,          label: 'Audit Logs',         path: '/dashboard/auditLogs'                 },
+    ],
+  },
+];
+
+const OTHER_NAV = [
+  { icon: FaUser, label: 'Profile',  path: '/dashboard/profile'  },
+  { icon: FaCog,  label: 'Settings', path: '/dashboard/settings' },
+];
+
+// ─── DashboardLayout ──────────────────────────────────────────────────────────
 const DashboardLayout = () => {
-  const location  = useLocation();
-  const navigate  = useNavigate();
-  const { logout, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [collapsed,  setCollapsed]  = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
-
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -29,114 +85,138 @@ const DashboardLayout = () => {
     navigate('/adminLogin', { replace: true });
   };
 
-  const navItems = [
-    { icon: <FaTachometerAlt />, label: 'Dashboard',           path: '/dashboard' },
-    { icon: <FaUsers />,         label: 'User Management',     path: 'userManagement' },
-    { icon: <FaCalendarAlt />,   label: 'Academic Structure 1', path: 'academicStructure1' },
-    { icon: <FaClipboardList />, label: 'Academic Structure 2', path: 'academicStructure2' },
-    { icon: <FaClipboardList />, label: 'Report Template',     path: 'reportTemplate' },
-    { icon: <FaClipboardList />, label: 'Additional Info',     path: 'additionalInfo' },
-    { icon: <FaClipboardList />, label: 'View Teacher',        path: 'teacher' },
-    { icon: <FaDatabase />,      label: 'View Students',       path: 'students' },
-    { icon: <FaFileAlt />,       label: 'View Parents',        path: 'parents' },
-    { icon: <FaBullhorn />,      label: 'Audit Logs',          path: 'auditLogs' },
-  ];
-
-  const otherItems = [
-    { icon: <FaUser />, label: 'Profile',  path: 'profile' },
-    { icon: <FaCog />,  label: 'Settings', path: 'settings' },
-  ];
-
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen" style={{ backgroundColor: 'var(--light-gray)' }}>
 
+      {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* Sidebar */}
+      {/* ── Sidebar ─────────────────────────────────────────────────── */}
       <div
         className={`
-          fixed top-0 left-0 h-screen z-50 flex flex-col shadow-2xl border-r-4 border-red-600
-          transition-all duration-300 ease-in-out
+          fixed top-0 left-0 h-screen z-50 flex flex-col
+          shadow-2xl border-r-4 transition-all duration-300 ease-in-out
           ${collapsed ? 'w-20' : 'w-64'}
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
-        style={{ background: 'linear-gradient(180deg, var(--royal-blue, #1e3a8a), var(--royal-blue-dark, #1e3a8a))' }}
+        style={{
+          background: `linear-gradient(180deg, var(--royal-blue), var(--royal-blue-dark))`,
+          borderRightColor: 'var(--accent-red)',
+        }}
       >
         {/* Branding */}
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
             <NavLink to="/" className="flex items-center gap-2 text-white min-w-0">
-              <div className="bg-white p-1 rounded-lg shadow-md flex-shrink-0">
-                <img src={logo} alt="Logo" className="w-6 h-6" />
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
+                style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+                <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-sm font-bold leading-tight truncate">ARMED FORCES SHTS</h1>
-                <p className="text-xs italic text-blue-200 truncate">Service With Humanity</p>
+                <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
+                <p className="text-xs text-blue-200 italic truncate">Service With Humanity</p>
               </div>
             </NavLink>
           )}
           <div className="flex items-center gap-2 ml-auto flex-shrink-0">
-            <button onClick={() => setCollapsed(!collapsed)} className="text-white hover:text-blue-200 p-1 transition">
+            {/* Desktop only — collapse/expand */}
+            <button onClick={() => setCollapsed(!collapsed)}
+              className="hidden lg:flex text-white hover:text-blue-200 p-1 transition">
               <FaBars />
             </button>
-            <button onClick={() => setMobileOpen(false)} className="lg:hidden text-white hover:text-blue-200 p-1 transition">
+            {/* Mobile only — close sidebar */}
+            <button onClick={() => setMobileOpen(false)}
+              className="lg:hidden text-white hover:text-blue-200 p-1 transition">
               <FaTimes />
             </button>
           </div>
         </div>
 
-        {/* Profile */}
+        {/* Admin profile */}
         {!collapsed && (
           <div className="flex flex-col items-center py-4 px-4 border-b border-white/20 flex-shrink-0">
-            <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center mb-2 shadow">
-              <FaUsers className="text-white text-xl" />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mb-2 shadow text-white font-black text-xl uppercase border-2 border-white/20"
+              style={{ backgroundColor: 'var(--accent-red)' }}>
+              {user?.name?.split(' ').map(n => n[0]).join('').slice(0,2) || 'AD'}
             </div>
-            <p className="text-white text-sm font-semibold text-center">
+            <p className="text-white text-sm font-bold text-center leading-tight">
               {user?.name || 'System Administrator'}
             </p>
-            <span className="text-xs text-blue-200 text-center mt-0.5">{user?.email}</span>
+            <p className="text-blue-200 text-xs text-center mt-0.5 truncate max-w-full px-2">
+              {user?.email || 'admin@afts.edu.gh'}
+            </p>
+            <div className="mt-2 px-2 py-1 rounded-lg"
+              style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <p className="text-xs font-bold text-yellow-300">🛡 Administrator</p>
+            </div>
           </div>
         )}
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === '/dashboard'}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                ${isActive ? 'bg-white/10 text-white border-l-4 border-red-500 shadow' : 'text-blue-200 hover:text-white hover:bg-white/10'}`
-              }
-            >
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
-              {!collapsed && <span className="text-sm truncate">{item.label}</span>}
-            </NavLink>
+        {/* Nav sections */}
+        <nav className="flex-1 overflow-y-auto px-2 py-3">
+          {NAV_SECTIONS.map((section, sIdx) => (
+            <div key={sIdx} className="mb-1">
+              {!collapsed && (
+                <p className="text-xs font-black px-3 pt-3 pb-1 uppercase tracking-widest"
+                  style={{ color: 'rgba(147,197,253,0.5)' }}>
+                  {section.section}
+                </p>
+              )}
+              {section.items.map(item => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 mb-0.5
+                      ${isActive
+                        ? 'bg-white/15 text-white border-l-4 shadow-sm'
+                        : 'text-blue-200 hover:text-white hover:bg-white/10'
+                      }`
+                    }
+                    style={({ isActive }) => isActive ? { borderLeftColor: 'var(--accent-red)' } : {}}
+                  >
+                    <Icon className="text-base flex-shrink-0" />
+                    {!collapsed && <span className="text-sm truncate">{item.label}</span>}
+                  </NavLink>
+                );
+              })}
+            </div>
           ))}
 
+          {/* Others */}
           {!collapsed && (
-            <p className="text-xs font-bold text-gray-400 px-3 pt-4 pb-1 uppercase tracking-wider">Others</p>
+            <p className="text-xs font-black px-3 pt-3 pb-1 uppercase tracking-widest"
+              style={{ color: 'rgba(147,197,253,0.5)' }}>
+              Others
+            </p>
           )}
-
-          {otherItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                ${isActive ? 'bg-white/10 text-white border-l-4 border-red-500' : 'text-blue-200 hover:text-white hover:bg-white/10'}`
-              }
-            >
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
-              {!collapsed && <span className="text-sm">{item.label}</span>}
-            </NavLink>
-          ))}
+          {OTHER_NAV.map(item => {
+            const Icon = item.icon;
+            return (
+              <NavLink key={item.path} to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 mb-0.5
+                  ${isActive
+                    ? 'bg-white/15 text-white border-l-4 shadow-sm'
+                    : 'text-blue-200 hover:text-white hover:bg-white/10'
+                  }`
+                }
+                style={({ isActive }) => isActive ? { borderLeftColor: 'var(--accent-red)' } : {}}
+              >
+                <Icon className="text-base flex-shrink-0" />
+                {!collapsed && <span className="text-sm">{item.label}</span>}
+              </NavLink>
+            );
+          })}
         </nav>
 
-        {/* Footer */}
+        {/* Logout */}
         <div className="p-4 border-t border-white/20 flex-shrink-0">
           {!collapsed && (
             <div className="flex items-center gap-2 mb-3">
@@ -144,33 +224,57 @@ const DashboardLayout = () => {
               <span className="text-green-300 text-xs">System Online</span>
             </div>
           )}
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 w-full text-white text-sm px-3 py-2 rounded-lg bg-white/10 hover:bg-red-600 transition-all"
-          >
+          <button onClick={handleLogout}
+            className="flex items-center gap-2 w-full text-white text-sm px-3 py-2 rounded-lg transition-all"
+            style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--accent-red)'}
+            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}>
             <FaSignOutAlt />
             {!collapsed && 'Logout'}
           </button>
         </div>
       </div>
 
-      {/* Main content */}
+      {/* ── Main content ──────────────────────────────────────────────── */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${collapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
+
         {/* Mobile top bar */}
-        <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
-          <button onClick={() => setMobileOpen(true)} className="text-gray-600 hover:text-blue-900 p-1">
+        <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm sticky top-0 z-30"
+          style={{ borderColor: 'var(--medium-gray)' }}>
+          <button onClick={() => setMobileOpen(true)} className="p-1" style={{ color: 'var(--dark-gray)' }}>
             <FaBars className="text-xl" />
           </button>
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Logo" className="w-6 h-6" />
-            <h2 className="font-bold text-blue-900 text-sm">Admin Dashboard</h2>
+            <img src={logo} alt="AFTS" className="w-6 h-6 object-contain" />
+            <span className="font-black text-sm" style={{ color: 'var(--royal-blue)' }}>Admin Portal</span>
           </div>
           <div className="w-8" />
         </div>
 
-        <div className="flex-1 p-4 sm:p-6">
+        {/* Desktop top bar */}
+        <header className="hidden lg:flex items-center justify-between px-6 py-3 bg-white border-b flex-shrink-0"
+          style={{ borderColor: 'var(--medium-gray)' }}>
+          <p className="text-xs" style={{ color: 'var(--dark-gray)', opacity: 0.7 }}>
+            ARMED FORCES SHTS · Admin Portal /{' '}
+            <span style={{ color: 'var(--royal-blue)', fontWeight: 700, opacity: 1 }}>
+              {user?.name || 'Administrator'}
+            </span>
+          </p>
+          <div className="flex items-center gap-3 text-xs">
+            <span className="px-3 py-1.5 rounded-lg font-semibold"
+              style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
+              📅 2024/2025 · Term 2
+            </span>
+            <span className="px-3 py-1.5 rounded-lg font-semibold"
+              style={{ backgroundColor: '#f0fdf4', color: 'var(--success-dark)' }}>
+              🔁 Double Track
+            </span>
+          </div>
+        </header>
+
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   );

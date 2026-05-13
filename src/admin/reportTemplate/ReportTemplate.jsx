@@ -149,25 +149,25 @@ const inputCls = (error = false) =>
   `w-full px-3 py-2 text-sm rounded-lg border outline-none transition-all duration-150 ${
     error
       ? "border-red-500 bg-red-50 focus:ring-2 focus:ring-red-200"
-      : "border-gray-300 bg-gray-50 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+      : "border-gray-300 bg-gray-50 text-gray-700"
   }`;
 
 // ─── Reusable Components ──────────────────────────────────────────────────────
 
 const SectionCard = ({ icon: Icon, title, description, badge, children }) => (
-  <div className="bg-white rounded-xl overflow-hidden mb-6 border border-gray-200 shadow-sm transition-all hover:shadow-md">
-    <div className="flex items-start justify-between px-5 py-3 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+  <div className="bg-white rounded-xl overflow-hidden mb-6 border shadow-sm transition-all hover:shadow-md" style={{ borderColor: 'var(--medium-gray)' }}>
+    <div className="flex items-start justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--medium-gray)', backgroundColor: 'var(--light-gray)' }}>
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-100 text-blue-600">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--royal-blue)', color: 'white' }}>
           <Icon size={18} />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-gray-800">{title}</h3>
+          <h3 className="text-sm font-semibold" style={{ color: 'var(--dark-gray)' }}>{title}</h3>
           {description && <p className="text-xs text-gray-400 mt-0.5">{description}</p>}
         </div>
       </div>
       {badge && (
-        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+        <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
           {badge}
         </span>
       )}
@@ -215,9 +215,8 @@ const Toggle = ({ checked, onChange, label, description, tooltip }) => (
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-        checked ? 'bg-blue-600' : 'bg-gray-300'
-      }`}
+      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none`}
+        style={{ backgroundColor: checked ? 'var(--royal-blue)' : '#d1d5db' }}
     >
       <span
         className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
@@ -263,7 +262,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
     return (
       <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
         <div className="text-center p-8 text-gray-500">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--royal-blue)' }}></div>
           <p>Loading student data...</p>
           <p className="text-xs mt-2">Please select a cadet</p>
         </div>
@@ -295,27 +294,27 @@ const LiveReportPreview = ({ settings, sections, student }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-      {/* Military-style header */}
-      <div className="bg-gradient-to-r from-red-900 to-red-800 text-white py-4 px-6 border-b-4 border-yellow-600">
+      {/* School header */}
+      <div className="text-white py-4 px-6 border-b-4" style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))', borderBottomColor: 'var(--accent-red)' }}>
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold tracking-wide">ARMED FORCES TECHNICAL SCHOOL</h1>
-            <p className="text-xs text-red-200 mt-1">Excellence Through Discipline - Uaddara Barracks, Kumasi</p>
+            <p className="text-xs text-blue-200 mt-1">Excellence Through Discipline - Uaddara Barracks, Kumasi</p>
           </div>
-          <Shield size={40} className="text-yellow-500" />
+          <Shield size={40} className="text-yellow-400" />
         </div>
-        <div className="mt-3 pt-2 border-t border-red-700 text-center">
+        <div className="mt-3 pt-2 border-t border-white/20 text-center">
           <p className="text-sm font-semibold">
             STUDENT ACADEMIC REPORT CARD - {settings.template?.academicYear || "2024/2025"} ACADEMIC YEAR
           </p>
-          <p className="text-xs text-red-200">WASSCE Standard • Technical/Vocational Track</p>
+          <p className="text-xs text-blue-200">WASSCE Standard • Technical/Vocational Track</p>
         </div>
       </div>
 
       <div className="p-5 space-y-5">
         {/* Student Information */}
         {visibleSections.find(s => s.id === "student-info") && (
-          <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-red-600">
+          <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--light-gray)', borderLeft: '4px solid var(--royal-blue)' }}>
             <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
               <User size={14} /> CADET'S INFORMATION
             </h3>
@@ -374,8 +373,8 @@ const LiveReportPreview = ({ settings, sections, student }) => {
         {/* Core Subjects Table */}
         {visibleSections.find(s => s.id === "core-subjects") && (
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2 pl-2 border-l-4 border-red-500">
-              <Flag size={14} className="text-red-600" /> CORE SUBJECTS (Compulsory)
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 pl-2" style={{ color: 'var(--dark-gray)', borderLeft: '4px solid var(--royal-blue)' }}>
+              <Flag size={14} style={{ color: 'var(--royal-blue)' }} /> CORE SUBJECTS (Compulsory)
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs border-collapse">
@@ -423,8 +422,8 @@ const LiveReportPreview = ({ settings, sections, student }) => {
         {/* Elective Subjects Table */}
         {visibleSections.find(s => s.id === "elective-subjects") && (
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2 pl-2 border-l-4 border-blue-500">
-              <Wrench size={14} className="text-blue-600" /> ELECTIVE/TECHNICAL SUBJECTS
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 pl-2" style={{ color: 'var(--dark-gray)', borderLeft: '4px solid var(--success-dark)' }}>
+              <Wrench size={14} style={{ color: 'var(--success-dark)' }} /> ELECTIVE/TECHNICAL SUBJECTS
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs border-collapse">
@@ -469,9 +468,9 @@ const LiveReportPreview = ({ settings, sections, student }) => {
 
         {/* Performance Summary */}
         {visibleSections.find(s => s.id === "performance-summary") && (
-          <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-lg p-4 border border-gray-200">
+          <div className="rounded-lg p-4 border" style={{ background: 'linear-gradient(135deg, #eef2ff, #f0fdf4)', borderColor: 'var(--medium-gray)' }}>
             <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-              <Award size={14} className="text-red-600" /> PERFORMANCE SUMMARY
+              <Award size={14} style={{ color: 'var(--royal-blue)' }} /> PERFORMANCE SUMMARY
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
               {settings.performance.showTotalMarks && (
@@ -899,17 +898,18 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--light-gray)' }}>
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-red-800 to-red-900 rounded-xl p-6 text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl p-6 text-white"
+            style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
             <div className="flex items-center gap-3">
               <Shield className="w-10 h-10 text-yellow-400" />
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-wide">AFTS Report Builder</h1>
-                <p className="text-red-200 text-sm mt-1">Armed Forces Technical School - Excellence Through Discipline</p>
+                <p className="text-blue-200 text-sm mt-1">Armed Forces Technical School - Excellence Through Discipline</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -954,9 +954,13 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                     activeTab === tab.id
-                      ? "text-red-600 border-b-2 border-red-600"
+                      ? "border-b-2"
                       : "text-gray-500 hover:text-gray-700"
                   }`}
+                  style={activeTab === tab.id
+                    ? { color: 'var(--royal-blue)', borderColor: 'var(--royal-blue)' }
+                    : {}
+                  }
                 >
                   <Icon size={16} />
                   <span className="hidden sm:inline">{tab.label}</span>
@@ -1237,7 +1241,10 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                         </div>
                       ))}
                     </div>
-                    <button onClick={handleAddCommentTemplate} className="mt-3 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition flex items-center gap-2">
+                    <button onClick={handleAddCommentTemplate} className="mt-3 px-4 py-2 text-sm rounded-lg transition flex items-center gap-2 border"
+                      style={{ color: 'var(--royal-blue)', borderColor: 'var(--royal-blue)' }}
+                      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#eef2ff'}
+                      onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
                       <Plus size={14} /> Add New Template
                     </button>
                   </SectionCard>
@@ -1270,14 +1277,14 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
           <div className="lg:w-96 xl:w-[480px] flex-shrink-0">
             <div className="sticky top-4">
               <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm mb-4">
-                <div className="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-red-50 to-white flex items-center justify-between">
+                <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--medium-gray)', backgroundColor: '#eef2ff' }}>
                   <div className="flex items-center gap-2">
-                    <Eye size={16} className="text-red-600" />
-                    <h3 className="text-sm font-semibold text-gray-700">Live Report Preview (SHS)</h3>
+                    <Eye size={16} style={{ color: 'var(--royal-blue)' }} />
+                    <h3 className="text-sm font-semibold" style={{ color: 'var(--dark-gray)' }}>Live Report Preview (SHS)</h3>
                   </div>
                   <Badge variant="military">AFTS Template</Badge>
                 </div>
-                <div className="p-3 max-h-[80vh] overflow-y-auto bg-gray-100">
+                <div className="p-3 max-h-[80vh] overflow-y-auto" style={{ backgroundColor: 'var(--light-gray)' }}>
                   <LiveReportPreview
                     settings={{ template, studentInfo, academicInfo, subjectTable, grading, performance, attendance, comments }}
                     sections={sections}
@@ -1292,13 +1299,20 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-gray-200 mt-6">
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setShowPreview(true)} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2 shadow-md">
+            <button onClick={() => setShowPreview(true)} className="px-4 py-2 text-sm text-white rounded-lg transition flex items-center gap-2 shadow-md"
+              style={{ backgroundColor: 'var(--royal-blue)' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--royal-blue-dark)'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--royal-blue)'}>
               <Eye size={14} /> Full Preview
             </button>
-            <button onClick={handleExport} className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center gap-2">
+            <button onClick={handleExport} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50 transition flex items-center gap-2"
+              style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}>
               <Download size={14} /> Export Template
             </button>
-            <button onClick={handleReset} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition flex items-center gap-2">
+            <button onClick={handleReset} className="px-4 py-2 text-sm rounded-lg transition flex items-center gap-2"
+              style={{ color: 'var(--dark-gray)' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--medium-gray)'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
               <RotateCcw size={14} /> Reset
             </button>
           </div>
@@ -1310,7 +1324,10 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
             {saved && (
               <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle2 size={12} />Saved ✓</span>
             )}
-            <button onClick={handleSave} className="px-6 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow-md flex items-center gap-2">
+            <button onClick={handleSave} className="px-6 py-2 text-sm text-white rounded-lg transition shadow-md flex items-center gap-2"
+              style={{ backgroundColor: 'var(--accent-red)' }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--accent-red-dark)'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--accent-red)'}>
               <Save size={14} /> Save AFTS Template
             </button>
           </div>
@@ -1320,26 +1337,32 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
         {showPreview && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+              <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center" style={{ borderColor: 'var(--medium-gray)' }}>
                 <div className="flex items-center gap-2">
-                  <Shield size={18} className="text-red-600" />
-                  <h3 className="text-lg font-semibold">AFTS Report Card Preview</h3>
+                  <Shield size={18} style={{ color: 'var(--royal-blue)' }} />
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--dark-gray)' }}>AFTS Report Card Preview</h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50 flex items-center gap-1"><Printer size={14} /> Print</button>
-                  <button onClick={() => setShowPreview(false)} className="p-1 text-gray-400 hover:text-gray-600"><X size={20} /></button>
+                  <button className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50 flex items-center gap-1" style={{ borderColor: 'var(--medium-gray)' }}>
+                    <Printer size={14} /> Print
+                  </button>
+                  <button onClick={() => setShowPreview(false)} className="p-1 rounded-lg transition" style={{ color: 'var(--dark-gray)' }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-red)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-gray)'}>
+                    <X size={20} />
+                  </button>
                 </div>
               </div>
-              <div className="p-6 bg-gray-100">
+              <div className="p-6" style={{ backgroundColor: 'var(--light-gray)' }}>
                 <LiveReportPreview
                   settings={{ template, studentInfo, academicInfo, subjectTable, grading, performance, attendance, comments }}
                   sections={sections}
                   student={currentStudent}
                 />
               </div>
-              <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 flex justify-end gap-2">
-                <button onClick={() => setShowPreview(false)} className="px-4 py-2 border rounded-lg">Close</button>
-                <button className="px-4 py-2 bg-red-600 text-white rounded-lg">Generate PDF Report</button>
+              <div className="sticky bottom-0 border-t p-4 flex justify-end gap-2" style={{ backgroundColor: 'var(--light-gray)', borderColor: 'var(--medium-gray)' }}>
+                <button onClick={() => setShowPreview(false)} className="px-4 py-2 border rounded-lg" style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}>Close</button>
+                <button className="px-4 py-2 text-white rounded-lg" style={{ backgroundColor: 'var(--accent-red)' }}>Generate PDF Report</button>
               </div>
             </div>
           </div>

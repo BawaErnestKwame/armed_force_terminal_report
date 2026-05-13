@@ -1,240 +1,406 @@
-import React, { useState } from 'react'
-import { Link} from 'react-router-dom';
-import { FaGraduationCap } from "react-icons/fa";
-
+// src/admin/dashboard/Dashboard.jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  FaTachometerAlt, FaUsers, FaCalendarAlt, FaClipboardList,
-  FaDatabase, FaFileAlt, FaBullhorn, FaChartPie,
-  FaBolt, FaBell, FaSearch, FaHeart, FaShieldAlt,
-  FaUserPlus, FaDownload, FaSitemap, FaEdit,
-  FaUserGraduate, FaChalkboardTeacher, FaSchool,
-  FaExclamationTriangle, FaClock, FaCheckCircle,
-  FaSignOutAlt, FaAngleRight
-} from 'react-icons/fa';
+  Users, GraduationCap, UserCheck, BookOpen,
+  TrendingUp, ClipboardList, AlertCircle, CheckCircle2,
+  ChevronRight, Calendar, Activity, Award, Bell, FileText
+} from 'lucide-react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  LineChart, Line, AreaChart, Area,
+} from 'recharts';
+import { useAuth } from '../../context/AuthContext';
 
+// ─── Mock school-wide data ────────────────────────────────────────────────────
+const STATS = {
+  totalStudents:  486,
+  trackA:         243,
+  trackB:         243,
+  totalTeachers:  42,
+  totalParents:   380,
+  totalClasses:   24,
+  attendanceRate: 91,
+  passRate:       87,
+  pendingScores:  14,
+  reportsGenerated: 320,
+};
 
+// Grade distribution (current term)
+const GRADE_DIST = [
+  { grade: 'A1', count: 142, color: '#16a34a' },
+  { grade: 'B2', count: 118, color: '#2563eb' },
+  { grade: 'B3', count: 96,  color: '#3b82f6' },
+  { grade: 'C4', count: 72,  color: '#ca8a04' },
+  { grade: 'C5', count: 48,  color: '#ea580c' },
+  { grade: 'C6', count: 36,  color: '#f97316' },
+  { grade: 'D7', count: 28,  color: '#dc2626' },
+  { grade: 'E8', count: 12,  color: '#b91c1c' },
+  { grade: 'F9', count: 8,   color: '#7f1d1d' },
+];
+
+// Term trend — avg score per term
+const TERM_TREND = [
+  { term: 'T1 23/24', avg: 62, attendance: 88 },
+  { term: 'T2 23/24', avg: 65, attendance: 90 },
+  { term: 'T3 23/24', avg: 64, attendance: 87 },
+  { term: 'T1 24/25', avg: 68, attendance: 91 },
+  { term: 'T2 24/25', avg: 71, attendance: 91 },
+];
+
+// Attendance by year group
+const YEAR_ATTENDANCE = [
+  { year: 'Form 1', present: 94, absent: 6  },
+  { year: 'Form 2', present: 90, absent: 10 },
+  { year: 'Form 3', present: 88, absent: 12 },
+];
+
+// Department performance
+const DEPT_PERF = [
+  { dept: 'Science',    avg: 74, teachers: 8  },
+  { dept: 'Maths',      avg: 70, teachers: 6  },
+  { dept: 'English',    avg: 72, teachers: 5  },
+  { dept: 'Social Std', avg: 68, teachers: 4  },
+  { dept: 'Technical',  avg: 65, teachers: 7  },
+  { dept: 'Business',   avg: 69, teachers: 5  },
+  { dept: 'Arts',       avg: 71, teachers: 7  },
+];
+
+// Track split pie
+const TRACK_DATA = [
+  { name: 'Track A (Gold)',  value: 243, color: '#ca8a04' },
+  { name: 'Track B (Green)', value: 243, color: '#16a34a' },
+];
+
+// Program split pie
+const PROGRAM_DATA = [
+  { name: 'General Science', value: 148, color: 'var(--royal-blue)'  },
+  { name: 'General Arts',    value: 124, color: '#7c3aed'            },
+  { name: 'Business',        value: 98,  color: 'var(--warning)'     },
+  { name: 'Technical',       value: 116, color: 'var(--accent-red)'  },
+];
+
+// Recent activity
+const RECENT_ACTIVITY = [
+  { icon: '📝', text: 'WOI Ama Mensah submitted Form 3A exam scores',        time: '5 min ago',  type: 'success' },
+  { icon: '⚠️', text: '14 score submissions still pending — deadline Friday', time: '1 hr ago',   type: 'warning' },
+  { icon: '👤', text: 'New teacher Cpt Ebo Darko added to Mathematics dept',  time: '2 hrs ago',  type: 'info'    },
+  { icon: '📋', text: 'Term 1 report cards approved for Form 3 Science B',   time: '3 hrs ago',  type: 'success' },
+  { icon: '🎓', text: '12 new students enrolled — Form 1 General Science',   time: '1 day ago',  type: 'info'    },
+  { icon: '📢', text: 'Bulk SMS sent to 380 parents re: Term 2 exams',       time: '2 days ago', type: 'info'    },
+];
+
+// Custom tooltips
+const BarTip = ({ active, payload, label }) => {
+  if (active && payload?.length) return (
+    <div className="bg-white rounded-xl shadow-lg border px-3 py-2 text-xs" style={{ borderColor: 'var(--medium-gray)' }}>
+      <p className="font-bold mb-1" style={{ color: 'var(--dark-gray)' }}>{label}</p>
+      {payload.map(p => (
+        <p key={p.name} style={{ color: p.color }}>{p.name}: <strong>{p.value}{p.unit||''}</strong></p>
+      ))}
+    </div>
+  );
+  return null;
+};
+
+// ─── Stat card ────────────────────────────────────────────────────────────────
+const StatCard = ({ icon: Icon, label, value, sub, color, onClick, alert }) => (
+  <div onClick={onClick}
+    className={`bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm ${onClick ? 'cursor-pointer hover:shadow-md' : ''} transition-all relative overflow-hidden`}
+    style={{ borderColor: 'var(--medium-gray)' }}>
+    {alert && (
+      <span className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
+        style={{ backgroundColor: 'var(--accent-red)' }} />
+    )}
+    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+      style={{ backgroundColor: color + '18' }}>
+      <Icon size={22} style={{ color }} />
+    </div>
+    <div className="min-w-0 flex-1">
+      <p className="text-2xl font-black" style={{ color: 'var(--dark-gray)' }}>{value}</p>
+      <p className="text-xs text-gray-500 truncate">{label}</p>
+      {sub && <p className="text-xs font-semibold truncate mt-0.5" style={{ color }}>{sub}</p>}
+    </div>
+  </div>
+);
+
+// ─── Section card ─────────────────────────────────────────────────────────────
+const Card = ({ title, subtitle, children, linkTo, linkLabel = 'View all', accentColor = 'var(--royal-blue)' }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: 'var(--medium-gray)' }}>
+      <div className="flex items-center justify-between px-5 py-3.5 border-b"
+        style={{ borderColor: 'var(--medium-gray)', backgroundColor: 'var(--light-gray)' }}>
+        <div>
+          <h3 className="font-semibold text-sm" style={{ color: 'var(--dark-gray)' }}>{title}</h3>
+          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+        </div>
+        {linkTo && (
+          <button onClick={() => navigate(linkTo)}
+            className="text-xs flex items-center gap-1 font-semibold"
+            style={{ color: accentColor }}>
+            {linkLabel} <ChevronRight size={12} />
+          </button>
+        )}
+      </div>
+      <div className="p-4">{children}</div>
+    </div>
+  );
+};
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
 const Dashboard = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const stats = [
-    { icon: <FaUserGraduate />, value: '3,245+', label: 'Total Students', change: '↑ 5% from last term', changeColor: 'text-green-500', bg: 'bg-blue-400', Link:"/userManagement" },
-    { icon: <FaChalkboardTeacher />, value: '78+', label: 'Teaching Staff', change: '— No change', changeColor: 'text-yellow-500', bg: 'bg-green-500' },
-    { icon: <FaSchool />, value: '42+', label: 'Active Classes', change: '↑ 2 new classes', changeColor: 'text-green-500', bg: 'bg-purple-500' },
-    { icon: <FaFileAlt />, value: '89%', label: 'Reports Completed', change: '! 11% pending', changeColor: 'text-red-500', bg: 'bg-red-500' },
-  ];
-
-      const notifications = [
-    {
-      icon: <span className="text-red-500 text-xl">!</span>,
-      iconBg: 'bg-red-100 border-l-4 border-red-500',
-      title: 'System Maintenance Scheduled',
-      desc: 'Scheduled for Saturday, 2:00 AM - 4:00 AM',
-      action: { label: 'Dismiss', style: 'border border-gray-400 text-gray-700' }
-    },
-    {
-      icon: <span className="text-blue-500 text-xl font-bold">i</span>,
-      iconBg: 'bg-blue-50 border-l-4 border-blue-500',
-      title: 'New Feature Available',
-      desc: 'Bulk SMS messaging now supports attachments',
-      action: { label: 'Learn More', style: 'border border-gray-400 text-gray-700' }
-    },
-    {
-      icon: <FaClock className="text-yellow-500" />,
-      iconBg: 'bg-yellow-50 border-l-4 border-yellow-500',
-      title: 'License Renewal Required',
-      desc: 'System license expires in 15 days',
-      action: { label: 'Renew Now', style: 'border border-gray-400 text-gray-700' }
-    },
-  ];
-
-
-  const recentActivity = [
-    { icon: <FaUserPlus />, iconBg: 'bg-green-500', title: 'New teacher account created', desc: 'Mrs. Akosua Mensah added to Mathematics Department', time: '10 minutes ago', timeColor: 'text-blue-600' },
-    { icon: <FaExclamationTriangle />, iconBg: 'bg-yellow-500', title: 'Report submission deadline approaching', desc: '3 teachers have not submitted Term 3 grades', time: '1 hour ago', timeColor: 'text-blue-600' },
-    { icon: <FaDatabase />, iconBg: 'bg-blue-500', title: 'Automated backup completed', desc: 'Daily backup successful - 2.3GB of data secured', time: '2 hours ago', timeColor: 'text-blue-600' },
-    { icon: <FaFileAlt />, iconBg: 'bg-green-600', title: 'Report cards generated', desc: 'Form 2 Science reports exported for printing', time: '4 hours ago', timeColor: 'text-blue-600' },
-  ];
-
-  const quickActions = [
-    { icon: <FaUserPlus />, label: 'Add New User', Link:"/dashboard/userManagement" },
-    { icon: <FaCalendarAlt />, label: 'Setup New Term' },
-    { icon: <FaBullhorn />, label: 'Send Announcement' },
-    { icon: <FaDownload />, label: 'Backup Now' },
-    { icon: <FaSitemap />, label: 'Manage Classes' },
-    { icon: <FaEdit />, label: 'Edit Report Template' },
-  ];
-
-
-  const events = [
-    { day: '25', month: 'JUN', title: 'Term 3 Examinations Begin', desc: 'All classes | 8:00 AM - 3:00 PM', badge: 'Upcoming', badgeStyle: 'border border-blue-400 text-blue-500 rounded-full' },
-    { day: '30', month: 'JUN', title: 'Grade Submission Deadline', desc: 'All teachers must submit final grades', badge: 'Deadline', badgeStyle: 'border border-red-400 text-red-500 rounded-full' },
-    { day: '05', month: 'JUL', title: 'Report Card Distribution', desc: "Parents' day for report collection", badge: 'Scheduled', badgeStyle: 'border border-blue-700 text-blue-800 rounded-full' },
-  ];
+  const navigate = useNavigate();
+  const { user }  = useAuth();
+  const termProgress = Math.round((9 / 14) * 100);
 
   return (
-    <div className=" font-sans" style={{ fontFamily: 'Segoe UI, sans-serif' }}>
+    <div className="space-y-6">
 
-    
-
-      {/* Spacer that matches the sidebar width so main content is never hidden behind it */}
-      <div
-        className="flex-shrink-0 transition-all duration-300 ease-in-out"
-        style={{ width: collapsed ? '80px' : '256px' }}
-      />
-
-      {/* Main Content — takes all remaining space */}
-      <div className="flex-1 min-w-0 bg-gray-50 overflow-y-auto">
-
-        {/* Top Bar */}
-        <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
+      {/* Welcome banner */}
+      <div className="rounded-2xl p-5 sm:p-6 text-white relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
+          <div className="w-56 h-56 rounded-full bg-white absolute -right-16 -top-16" />
+          <div className="w-36 h-36 rounded-full bg-white absolute right-10 bottom-4" />
+        </div>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold" style={{ color: 'var(--royal-blue-dark)' }}>Admin Dashboard</h2>
-            <p className="text-sm text-gray-500">Home / Admin / <span className="text-red-500 font-medium">Dashboard</span></p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100">
-              <FaBolt className="text-gray-600" />
-            </button>
-            <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center relative hover:bg-gray-100">
-              <FaBell className="text-gray-600" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-            </button>
-            <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100">
-              <FaSearch className="text-gray-600" />
-            </button>
-            <div className="flex items-center gap-2 text-white px-4 py-2 rounded-lg ml-2 bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-2 border-red-700">
-              <FaCalendarAlt />
-              <div className="text-xs leading-tight">
-                <div className="font-bold">Academic Year: 2023/2024</div>
-                <div>Term 3 | Track A</div>
-              </div>
+            <p className="text-blue-200 text-sm mb-1">Welcome back,</p>
+            <h2 className="text-xl sm:text-2xl font-black">{user?.name || 'Administrator'}</h2>
+            <p className="text-blue-300 text-xs mt-0.5">Armed Forces SHT School · Admin Portal</p>
+            <p className="text-blue-300 text-xs">Uaddara Barracks, Kumasi, Ghana</p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {[
+                { label: `${STATS.totalStudents} Students`, bg: 'rgba(255,255,255,0.15)' },
+                { label: `${STATS.totalTeachers} Teachers`, bg: 'rgba(255,255,255,0.15)' },
+                { label: `${STATS.pendingScores} Pending Scores`, bg: 'rgba(230,57,70,0.35)' },
+              ].map(b => (
+                <span key={b.label} className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                  style={{ backgroundColor: b.bg }}>
+                  {b.label}
+                </span>
+              ))}
             </div>
           </div>
+          {/* Term progress card */}
+          <div className="rounded-xl p-4 text-center min-w-[150px] flex-shrink-0"
+            style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+            <p className="text-blue-200 text-xs">2024/2025</p>
+            <p className="font-bold text-sm">Term 2</p>
+            <p className="text-blue-200 text-xs mt-1">Week 9 of 14</p>
+            <div className="mt-2 h-2 rounded-full overflow-hidden"
+              style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
+              <div className="h-full rounded-full"
+                style={{ width: `${termProgress}%`, backgroundColor: '#facc15' }} />
+            </div>
+            <p className="text-yellow-300 text-xs mt-1 font-bold">{termProgress}% complete</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Key stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={GraduationCap} label="Total Students"   value={STATS.totalStudents}  sub={`Track A: ${STATS.trackA} · B: ${STATS.trackB}`} color="var(--royal-blue)"   onClick={() => navigate('/dashboard/students')} />
+        <StatCard icon={Users}         label="Total Teachers"   value={STATS.totalTeachers}  sub={`${STATS.totalClasses} classes`}                  color="#7c3aed"             onClick={() => navigate('/dashboard/teacher')}  />
+        <StatCard icon={UserCheck}     label="Attendance Rate"  value={`${STATS.attendanceRate}%`} sub="This term"                                   color="var(--success-dark)" />
+        <StatCard icon={Award}         label="Overall Pass Rate" value={`${STATS.passRate}%`} sub="Credit & above"                                   color="var(--warning)"      />
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={BookOpen}      label="Total Classes"    value={STATS.totalClasses}    sub="24 active this term"    color="var(--info)"         onClick={() => navigate('/dashboard/academicStructure1')} />
+        <StatCard icon={ClipboardList} label="Pending Scores"   value={STATS.pendingScores}   sub="Chase up before Friday" color="var(--accent-red)"   alert onClick={() => navigate('/dashboard/teacher')} />
+        <StatCard icon={CheckCircle2}  label="Reports Generated" value={STATS.reportsGenerated} sub="This term"            color="var(--success-dark)" />
+        <StatCard icon={Users}         label="Total Parents"    value={STATS.totalParents}    sub="Registered on portal"   color="#0369a1"              onClick={() => navigate('/dashboard/parents')} />
+      </div>
+
+      {/* Charts row 1 — Grade distribution + Term trend */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {/* Grade distribution */}
+        <Card title="Grade Distribution" subtitle="Current Term · All students">
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={GRADE_DIST} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="grade" tick={{ fontSize: 11, fill: '#6b7280' }} />
+              <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} />
+              <Tooltip content={<BarTip />} />
+              <Bar dataKey="count" name="Students" radius={[6, 6, 0, 0]}>
+                {GRADE_DIST.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          {/* Credit pass summary */}
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="text-center p-3 rounded-xl" style={{ backgroundColor: '#f0fdf4' }}>
+              <p className="text-lg font-black" style={{ color: 'var(--success-dark)' }}>
+                {GRADE_DIST.filter(g => ['A1','B2','B3','C4','C5','C6'].includes(g.grade)).reduce((s,g) => s+g.count, 0)}
+              </p>
+              <p className="text-xs text-gray-500">Credit Passes (A1–C6)</p>
+            </div>
+            <div className="text-center p-3 rounded-xl" style={{ backgroundColor: '#fff1f2' }}>
+              <p className="text-lg font-black" style={{ color: 'var(--accent-red)' }}>
+                {GRADE_DIST.filter(g => ['D7','E8','F9'].includes(g.grade)).reduce((s,g) => s+g.count, 0)}
+              </p>
+              <p className="text-xs text-gray-500">Below Credit (D7–F9)</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Term trend */}
+        <Card title="Performance Trend" subtitle="Avg score & attendance — last 5 terms">
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={TERM_TREND} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+              <defs>
+                <linearGradient id="avgGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%"   stopColor="var(--royal-blue)" stopOpacity={0.25} />
+                  <stop offset="95%"  stopColor="var(--royal-blue)" stopOpacity={0}    />
+                </linearGradient>
+                <linearGradient id="attGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%"   stopColor="var(--success-dark)" stopOpacity={0.2} />
+                  <stop offset="95%"  stopColor="var(--success-dark)" stopOpacity={0}   />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="term" tick={{ fontSize: 10, fill: '#6b7280' }} />
+              <YAxis tick={{ fontSize: 10, fill: '#6b7280' }} domain={[50, 100]} />
+              <Tooltip content={<BarTip />} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Area type="monotone" dataKey="avg"        name="Avg Score (%)"   stroke="var(--royal-blue)"   fill="url(#avgGrad)" strokeWidth={2.5} dot={{ r: 4 }} />
+              <Area type="monotone" dataKey="attendance" name="Attendance (%)"  stroke="var(--success-dark)" fill="url(#attGrad)" strokeWidth={2.5} dot={{ r: 4 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
+
+      {/* Charts row 2 — Dept perf + Enrollment split */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {/* Department performance */}
+        <div className="lg:col-span-2">
+          <Card title="Department Average Scores" subtitle="Current term — all departments">
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={DEPT_PERF} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 10, fill: '#6b7280' }} domain={[0, 100]} />
+                <YAxis type="category" dataKey="dept" tick={{ fontSize: 11, fill: '#6b7280' }} width={70} />
+                <Tooltip content={<BarTip />} />
+                <Bar dataKey="avg" name="Avg Score (%)" radius={[0, 6, 6, 0]}>
+                  {DEPT_PERF.map((entry, i) => (
+                    <Cell key={i}
+                      fill={entry.avg >= 72 ? 'var(--success-dark)' : entry.avg >= 65 ? 'var(--royal-blue)' : 'var(--warning)'}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
         </div>
 
-        <div className="p-8">
+        {/* Enrollment by program */}
+        <Card title="Enrollment by Programme" subtitle="Total 486 students">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={PROGRAM_DATA} cx="50%" cy="50%" outerRadius={75}
+                paddingAngle={3} dataKey="value">
+                {PROGRAM_DATA.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(v, n) => [`${v} students`, n]}
+                contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-4 gap-5 mb-8">
-            {stats.map((stat, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
-                <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center text-white text-2xl shadow`}>
-                  {stat.icon}
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-900">{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
-                  <div className={`text-xs font-medium mt-1 ${stat.changeColor}`}>{stat.change}</div>
+      {/* Charts row 3 — Attendance + Track + Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {/* Attendance by year group */}
+        <Card title="Attendance by Year Group" subtitle="This term">
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={YEAR_ATTENDANCE} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#6b7280' }} />
+              <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} domain={[0, 100]} />
+              <Tooltip content={<BarTip />} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Bar dataKey="present" name="Present (%)" stackId="a" fill="var(--success-dark)" radius={[0,0,0,0]} />
+              <Bar dataKey="absent"  name="Absent (%)"  stackId="a" fill="var(--accent-red)"   radius={[4,4,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </Card>
+
+        {/* Track split */}
+        <Card title="Double Track Split" subtitle="Track A in session · Track B on vacation">
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Pie data={TRACK_DATA} cx="50%" cy="50%" innerRadius={50} outerRadius={75}
+                paddingAngle={4} dataKey="value">
+                {TRACK_DATA.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(v,n) => [`${v} students`, n]}
+                contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </Card>
+
+        {/* Recent activity */}
+        <Card title="Recent Activity" subtitle="Last 24 hours">
+          <div className="space-y-3">
+            {RECENT_ACTIVITY.slice(0, 5).map((a, i) => (
+              <div key={i} className="flex items-start gap-2.5">
+                <span className="text-base flex-shrink-0 mt-0.5">{a.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--dark-gray)' }}>{a.text}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{a.time}</p>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Middle Row */}
-    
-
-          {/* Bottom Row */}
-          <div className="grid grid-cols-2 gap-6">
-
-            {/* Quick Actions */}
-            <div className="rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 px-6 py-4 text-white font-bold text-base">
-                <FaBolt className="text-yellow-400" /> Quick Actions
-              </div>
-            <div className="bg-gray-50 mx-4 mb-4 rounded-lg grid grid-cols-2 gap-3 p-4">
-  {quickActions.map((action, i) => (
-    
-    action.Link ? (
-      <Link to={action.Link} key={i}>
-        <div className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
-          <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>
-            {action.icon}
-          </span>
-          <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>
-            {action.label}
-          </span>
-        </div>
-      </Link>
-    ) : (
-      <button key={i} className="flex flex-col items-center gap-2 bg-white rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-blue-50 transition-all">
-        <span className="text-2xl" style={{ color: 'var(--royal-blue-dark)' }}>
-          {action.icon}
-        </span>
-        <span className="text-sm font-medium text-center" style={{ color: 'var(--royal-blue-dark)' }}>
-          {action.label}
-        </span>
-      </button>
-    )
-
-  ))}
-</div>
-            </div>
-
-            {/* Right Column: Notifications + Events */}
-            <div className="space-y-6">
-
-              {/* Important Notifications */}
-              <div className="rounded-xl shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] border-b-4 border-red-700 flex items-center gap-2 text-white font-bold text-base px-6 py-4 w-full">
-                  <FaBell /> Important Notifications
-                </div>
-                <div className="flex items-center justify-between px-6 py-4">
-                  <span className="text-white text-sm font-semibold">3 New</span>
-                </div>
-                <div className="bg-white mx-4 mb-4 rounded-lg divide-y divide-gray-100">
-                  {notifications.map((n, i) => (
-                    <div key={i} className={`p-4 ${n.iconBg}`}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span>{n.icon}</span>
-                        <p className="font-bold text-gray-800 text-sm">{n.title}</p>
-                      </div>
-                      <p className="text-gray-500 text-xs mb-2">{n.desc}</p>
-                      <button className={`text-xs px-3 py-1 rounded ${n.action.style} hover:bg-gray-100`}>
-                        {n.action.label}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-          
-
-          {/* Upcoming Events */}
-          <div className="shadow-lg w-full">
-            <div className="bg-gradient-to-r from-[var(--royal-blue)] to-[var(--royal-blue-dark)] px-6 py-4 border-b-4 border-red-700 flex items-center justify-between rounded-t-2xl mt-20">
-              <div className="flex items-center gap-2 text-white font-bold text-base">
-                <FaCalendarAlt /> Upcoming Academic Events
-              </div>
-              <button className="text-red-400 text-sm font-semibold hover:text-red-300">Full Calendar</button>
-            </div>
-            <div className="mt-4 gap-4 mx-4 mb-4 rounded-lg divide-y divide-gray-100">
-              {events.map((ev, i) => (
-                <div key={i} className="flex items-center mb-2 gap-4 p-4">
-                  <div className="border-2 rounded-lg px-3 py-2 text-center min-w-[54px]" style={{ borderColor: 'var(--royal-blue-dark)' }}>
-                    <div className="text-lg font-bold leading-none" style={{ color: 'var(--royal-blue-dark)' }}>{ev.day}</div>
-                    <div className="text-xs font-semibold" style={{ color: 'var(--royal-blue)' }}>{ev.month}</div>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm" style={{ color: 'var(--royal-blue-dark)' }}>{ev.title}</p>
-                    <p className="text-gray-500 text-xs">{ev.desc}</p>
-                  </div>
-                  <span className={`text-xs px-3 py-1 ${ev.badgeStyle}`}>{ev.badge}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-
-     
+        </Card>
       </div>
 
+      {/* Quick actions */}
+      <div className="bg-white rounded-xl border shadow-sm p-5"
+        style={{ borderColor: 'var(--medium-gray)' }}>
+        <h3 className="font-semibold text-sm mb-4" style={{ color: 'var(--dark-gray)' }}>
+          Quick Actions
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {[
+            { label: 'Add Teacher',       icon: Users,        path: '/dashboard/teacher',          color: 'var(--royal-blue)'   },
+            { label: 'Add Student',       icon: GraduationCap,path: '/dashboard/students',         color: '#7c3aed'             },
+            { label: 'Report Template',   icon: FileText,     path: '/dashboard/reportTemplate',   color: 'var(--success-dark)' },
+            { label: 'Bulk Message',      icon: Bell,         path: '/dashboard/bulkCommunication', color: 'var(--warning)'     },
+            { label: 'User Management',   icon: UserCheck,    path: '/dashboard/userManagement',   color: 'var(--info)'         },
+            { label: 'Audit Logs',        icon: Activity,     path: '/dashboard/auditLogs',        color: 'var(--accent-red)'   },
+          ].map(({ label, icon: Icon, path, color }) => (
+            <button key={label} onClick={() => navigate(path)}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all hover:shadow-sm active:scale-95"
+              style={{ borderColor: color + '30', backgroundColor: color + '08' }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = color}
+              onMouseLeave={e => e.currentTarget.style.borderColor = color + '30'}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: color + '15' }}>
+                <Icon size={18} style={{ color }} />
+              </div>
+              <span className="text-xs font-semibold text-center leading-tight"
+                style={{ color: 'var(--dark-gray)' }}>{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

@@ -1,6 +1,6 @@
 // src/parent/ParentDashboardLayout.jsx
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { NavLink, Outlet,Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaClipboardList, FaFileAlt,
@@ -138,12 +138,10 @@ const ParentDashboardLayout = () => {
           <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
             {!collapsed && (
               <div className="flex items-center gap-2 text-white min-w-0">
-              <Link to='/' className="flex items-center gap-2">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
                   style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
                   <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
                 </div>
-              </Link>
                 <div className="min-w-0">
                   <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
                   <p className="text-xs text-blue-200 italic truncate">Parent Portal</p>
@@ -151,7 +149,7 @@ const ParentDashboardLayout = () => {
               </div>
             )}
             <div className="flex items-center gap-2 ml-auto flex-shrink-0">
-              <button onClick={() => setCollapsed(!collapsed)} className="text-white hover:text-blue-200 p-1 transition">
+              <button onClick={() => setCollapsed(!collapsed)} className="hidden lg:flex text-white hover:text-blue-200 p-1 transition">
                 <FaBars />
               </button>
               <button onClick={() => setMobileOpen(false)} className="lg:hidden text-white hover:text-blue-200 p-1 transition">

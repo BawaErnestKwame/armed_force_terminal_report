@@ -1,6 +1,6 @@
 // src/student/StudentDashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet,Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaClipboardList, FaFileAlt,
@@ -67,7 +67,7 @@ const StudentDashboardLayout = () => {
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
             <div className="flex items-center gap-2 text-white min-w-0">
-              <Link to="/" className="flex items-center gap-2">
+              <Link to="/" className="flex-shrink-0">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
                 <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
@@ -81,7 +81,7 @@ const StudentDashboardLayout = () => {
           )}
           <div className="flex items-center gap-2 ml-auto flex-shrink-0">
             <button onClick={() => setCollapsed(!collapsed)}
-              className="text-white hover:text-blue-200 p-1 transition">
+              className="hidden lg:flex text-white hover:text-blue-200 p-1 transition">
               <FaBars />
             </button>
             <button onClick={() => setMobileOpen(false)}
