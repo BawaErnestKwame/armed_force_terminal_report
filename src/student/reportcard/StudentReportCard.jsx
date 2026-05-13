@@ -72,7 +72,7 @@ const StudentReportCard = () => {
         <div className="p-6 text-center border-b"
           style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))', borderColor: 'var(--medium-gray)' }}>
           <p className="text-white font-black text-xl tracking-wide">ARMED FORCES SENIOR HIGH TECHNICAL SCHOOL</p>
-          <p className="text-blue-200 text-sm">Burma Camp, Accra, Ghana</p>
+          <p className="text-blue-200 text-sm">Uaddara Barracks, Kumasi, Ghana</p>
           <p className="text-blue-200 text-xs mt-0.5">Tel: +233 30 277 0000 · Email: info@afts.edu.gh</p>
           <div className="mt-3 inline-block px-4 py-1 rounded-full text-white font-black text-sm"
             style={{ backgroundColor: 'var(--accent-red)' }}>

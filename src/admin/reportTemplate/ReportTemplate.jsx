@@ -104,7 +104,7 @@ const SAMPLE_SHS_STUDENT = {
   gender: "Male",
   parent: "WOII Mensah & Mrs. Mensah",
   contact: "+233 24 123 4567",
-  address: "AFTS Barracks, Burma Camp, Accra",
+  address: "Uaddara Barracks, Kumasi, Ghana",
   email: "john.mensah@afts.edu.gh",
   program: "Technical",
   academicYear: "Form 1 - Technical",
@@ -300,7 +300,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold tracking-wide">ARMED FORCES TECHNICAL SCHOOL</h1>
-            <p className="text-xs text-red-200 mt-1">Excellence Through Discipline - Burma Camp, Accra</p>
+            <p className="text-xs text-red-200 mt-1">Excellence Through Discipline - Uaddara Barracks, Kumasi</p>
           </div>
           <Shield size={40} className="text-yellow-500" />
         </div>
@@ -590,7 +590,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
           <div className="flex justify-center items-center gap-4">
             <span>📅 Issued: {new Date().toLocaleDateString()}</span>
             <span>⚔️ "DISCIPLINE • EXCELLENCE • SERVICE"</span>
-            <span>🏫 AFTS - Burma Camp</span>
+            <span>🏫 AFTS - Uaddara Barracks, Kumasi</span>
           </div>
         </div>
       )}

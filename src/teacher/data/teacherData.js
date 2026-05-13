@@ -321,8 +321,8 @@ export const SPORTS_DATA = {
   ],
   upcomingEvents: [
     { event: 'Inter-House Sports', date: '2025-04-05', venue: 'School Field',     type: 'Internal' },
-    { event: 'Zone 3 Athletics',   date: '2025-04-12', venue: 'Accra Stadium',    type: 'External' },
-    { event: 'Regional Football',  date: '2025-04-20', venue: 'Burma Camp Field', type: 'External' },
+    { event: 'Zone 3 Athletics',   date: '2025-04-12', venue: 'Baba Yara Sports Stadium', type: 'External' },
+    { event: 'Regional Football',  date: '2025-04-20', venue: 'Uaddara Barracks Field',   type: 'External' },
   ],
 };
 

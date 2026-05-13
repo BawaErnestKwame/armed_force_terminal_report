@@ -22,7 +22,7 @@ const StudentProfile = () => {
   const [editMode, setEditMode] = useState(false);
   const [contact, setContact]   = useState({
     phone:   user?.phone   || '',
-    address: user?.address || 'Burma Camp, Accra',
+    address: user?.address || 'Uaddara Barracks, Kumasi',
   });
   const [draft, setDraft] = useState({ ...contact });
 

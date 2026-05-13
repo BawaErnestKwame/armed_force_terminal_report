@@ -10,7 +10,7 @@ export const TERM_INFO = {
   weeksGone: 9,
 };
 
-// Mock students (matched to AuthContext)
+// ─── Mock students (matched to AuthContext) ───────────────────────────────────
 export const MOCK_STUDENTS = [
   {
     id: 201,
@@ -31,10 +31,9 @@ export const MOCK_STUDENTS = [
     parentName: 'Mr Emmanuel Asante',
     parentPhone: '0244123456',
     parentEmail: 'e.asante@gmail.com',
-    address: 'Burma Camp, Accra',
+    address: 'Uaddara Barracks, Kumasi',
     redirectTo: '/student',
   },
-  
   {
     id: 202,
     studentId: 'AFTS/2024/045',
@@ -54,7 +53,7 @@ export const MOCK_STUDENTS = [
     parentName: 'Mrs Grace Owusu',
     parentPhone: '0277654321',
     parentEmail: 'g.owusu@gmail.com',
-    address: 'East Legon, Accra',
+    address: 'Adum, Kumasi',
     redirectTo: '/student',
   },
 ];
