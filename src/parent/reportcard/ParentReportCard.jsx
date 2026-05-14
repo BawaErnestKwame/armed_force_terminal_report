@@ -53,7 +53,7 @@ const ParentReportCard = () => {
       </div>
 
       {/* Report Card */}
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: 'var(--medium-gray)' }}>
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden print-area" style={{ borderColor: 'var(--medium-gray)' }}>
 
         {/* School header */}
         <div className="p-6 text-center border-b"

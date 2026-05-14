@@ -88,3 +88,81 @@ body {
 .features-spin {
   animation: spin 10s linear infinite;
 }
+
+
+/* ─── PRINT STYLES ───────────────────────────────────────────────────────────
+   Add this block to the bottom of your src/index.css
+   It hides all UI chrome and prints only the report card cleanly
+─────────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the report card */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Position the report card at top-left */
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Hide UI elements that should never print */
+  .no-print,
+  header,
+  nav,
+  aside,
+  footer,
+  button,
+  [class*="sidebar"],
+  [class*="DashboardLayout"],
+  [class*="modal-overlay"] {
+    display: none !important;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 12mm 10mm;
+  }
+
+  /* Remove shadows and rounded corners for print */
+  .print-area * {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* Preserve background colors (important for headers) */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* Table layout */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* Prevent page breaks inside the report */
+  .report-card {
+    page-break-inside: avoid;
+  }
+}

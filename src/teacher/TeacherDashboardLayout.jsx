@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaBookOpen, FaClipboardList, FaCheckSquare,
   FaCommentDots, FaFileAlt, FaChartBar, FaAward, FaUsers,
-  FaBars, FaTimes, FaSignOutAlt, FaCog, FaUser, FaCalendarCheck
+  FaBars, FaTimes, FaSignOutAlt, FaCog, FaUser, FaCalendarCheck, FaTable
 } from 'react-icons/fa';
 import { TERM_INFO } from './data/teacherData';
 import logo from '../assets/logo.png';
@@ -14,7 +14,8 @@ import logo from '../assets/logo.png';
 const N = {
   dashboard:  { icon: FaTachometerAlt, label: 'Dashboard',       path: '/teacher',               end: true },
   classes:    { icon: FaBookOpen,      label: 'My Classes',       path: '/teacher/classes'                  },
-  scores:     { icon: FaClipboardList, label: 'Score Entry',      path: '/teacher/scores'                   },
+  scores:     { icon: FaClipboardList, label: 'Score Entry',      path: '/teacher/scores'     },
+  timetable:  { icon: FaTable,         label: 'My Timetable',     path: '/teacher/timetable'  },
   attendance: { icon: FaCheckSquare,   label: 'Attendance',       path: '/teacher/attendance'               },
   comments:   { icon: FaCommentDots,   label: 'Comments',         path: '/teacher/comments'                 },
   reports:    { icon: FaFileAlt,       label: 'Report Cards',     path: '/teacher/reports'                  },
@@ -28,33 +29,33 @@ const N = {
 const SIDEBAR_CONFIG = {
 
   'Subject Teacher': [
-    { section: 'Main',     items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Main',     items: [N.dashboard, N.classes, N.scores, N.attendance, N.timetable] },
     { section: 'Academic', items: [N.comments, N.reports, N.analytics]             },
   ],
 
   'Subject Teacher + Form Teacher': [
-    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance, N.timetable] },
     { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
     { section: 'Form Teacher', items: [N.formclass]                                    },
   ],
 
   'Subject Teacher + HOD': [
-    { section: 'Main',       items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Main',       items: [N.dashboard, N.classes, N.scores, N.attendance, N.timetable] },
     { section: 'Department', items: [N.hod, N.analytics]                             },
     { section: 'Academic',   items: [N.comments, N.reports]                          },
   ],
 
   'Subject Teacher + Form Teacher + HOD': [
-    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance, N.timetable] },
     { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
     { section: 'Department',   items: [N.hod]                                          },
     { section: 'Form Teacher', items: [N.formclass]                                    },
   ],
 
   'Examiner': [
-    { section: 'Main',         items: [N.dashboard]               },
-    { section: 'Examinations', items: [N.examcoord]               },
-    { section: 'Academic',     items: [N.scores, N.analytics]     },
+    { section: 'Main',         items: [N.dashboard, N.timetable]       },
+    { section: 'Examinations', items: [N.examcoord]                    },
+    { section: 'Academic',     items: [N.scores, N.analytics]          },
   ],
 };
 

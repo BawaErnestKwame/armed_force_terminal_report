@@ -51,6 +51,7 @@ import TeacherWorkshop        from './teacher/workshop/TeacherWorkshop';
 import TeacherSports          from './teacher/sports/TeacherSports';
 import TeacherReports         from './teacher/reports/TeacherReports';
 import TeacherProfile         from './teacher/profile/TeacherProfile';
+import TeacherTimetable       from './teacher/timetable/TeacherTimetable';
 
 // ── Student Portal 
 import StudentDashboardLayout from './student/StudentDashboardLayout';
@@ -130,6 +131,7 @@ const App = () => (
           <Route path='comments'      element={<TeacherComments />} />
           <Route path='reports'       element={<TeacherReports />}     />
           <Route path='analytics'     element={<TeacherAnalytics />}   />
+          <Route path='timetable'     element={<TeacherTimetable />}   />
           <Route path='profile'       element={<TeacherProfile />}     />
           <Route path='settings'      element={<Settings />}           />
           <Route path='hod'           element={<TeacherHODPanel />} />
@@ -152,7 +154,6 @@ const App = () => (
           <Route path='attendance'    element={<StudentAttendance />}  />
           <Route path='timetable'     element={<StudentTimetable />}   />
           <Route path='profile'       element={<StudentProfile />}     />
-
         </Route>
 
         {/* Parent portal */}
