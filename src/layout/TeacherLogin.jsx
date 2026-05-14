@@ -20,7 +20,7 @@ const TeacherLogin = () => {
     e.preventDefault();
     const result = await login(email, password, 'teacher');
     if (result.success) {
-      navigate(from, { replace: true });
+      navigate(result.redirectTo || '/teacher', { replace: true });
     }
   };
 
@@ -43,7 +43,7 @@ const TeacherLogin = () => {
 
           {/* Demo hint */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
-            <strong>Demo:</strong> osei@afts.edu.gh / teacher123
+            <strong>Demo:</strong> k.adjei@afts.edu.gh / teacher123
           </div>
 
           {error && (

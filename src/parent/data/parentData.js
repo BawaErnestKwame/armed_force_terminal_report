@@ -1,267 +1,200 @@
 // src/parent/data/parentData.js
+// Re-exports from central data source + parent-specific data
+import {
+  SCHOOL_INFO       as _SI,
+  TERM_INFO         as _TI,
+  STUDENTS          as _STUDENTS,
+  PARENTS           as _PARENTS,
+  PARENT_CHILDREN   as _PC,
+  STUDENT_PARENT    as _SP,
+  GRADE_SCALE       as _GS,
+  getGradeFromScore as _gGFS,
+  getGradeLabel     as _gGL,
+  getGradeColor     as _gGC,
+  getGradeColorHex  as _gGCH,
+  getPerformanceBand as _gPB,
+  getAttendanceColor as _gAC,
+  ATTENDANCE_STATUS_STYLE as _ASS,
+} from '../../data/schoolData';
 
-// ─── Mock parents ─────────────────────────────────────────────────────────────
-export const MOCK_PARENTS = [
-  {
-    id: 301,
-    role: 'parent',
-    title: 'Mr',
-    firstName: 'Emmanuel',
-    lastName: 'Asante',
-    email: 'parent@afts.edu.gh',
-    password: 'parent123',
-    phone: '0244123456',
-    occupation: 'Civil Engineer',
-    address: 'Uaddara Barracks, Kumasi',
-    redirectTo: '/parent',
-    children: ['AFTS/2024/031', 'AFTS/2024/087'],
-  },
-  {
-    id: 302,
-    role: 'parent',
-    title: 'Mrs',
-    firstName: 'Grace',
-    lastName: 'Mensah',
-    email: 'grace@afts.edu.gh',
-    password: 'parent123',
-    phone: '0277654321',
-    occupation: 'Nurse',
-    address: 'Adum, Kumasi',
-    redirectTo: '/parent',
-    children: ['AFTS/2024/045'],
-  },
-];
+// ─── Re-exports ───────────────────────────────────────────────────────────────
+export const SCHOOL_INFO            = _SI;
+export const TERM_INFO              = _TI;
+export const STUDENTS               = _STUDENTS;
+export const PARENTS                = _PARENTS;
+export const PARENT_CHILDREN        = _PC;
+export const STUDENT_PARENT         = _SP;
+export const GRADE_SCALE            = _GS;
+export const getGradeFromScore      = _gGFS;
+export const getGradeLabel          = _gGL;
+export const getGradeColor          = _gGC;
+export const getGradeColorHex       = _gGCH;
+export const getPerformanceBand     = _gPB;
+export const getAttendanceColor     = _gAC;
+export const ATTENDANCE_STATUS_STYLE= _ASS;
+export const STATUS_STYLE           = _ASS;
 
-// ─── Children data (linked to parent by studentId) ────────────────────────────
-export const CHILDREN_DATA = {
-  'AFTS/2024/031': {
-    studentId:  'AFTS/2024/031',
+// ─── CHILDREN_DATA ────────────────────────────────────────────────────────────
+// Used by ParentDashboardLayout (child switcher) and ParentProfile
+// In a real app this comes from the logged-in parent's profile
+// Here we use the demo parent (id:1 — Mr Emmanuel Asante, 2 children)
+export const CHILDREN_DATA = [
+  {
+    id:         15,
+    studentId:  'AFTS/2024/001',
+    name:       'Kofi Asante',
     firstName:  'Kofi',
     lastName:   'Asante',
-    gender:     'Male',
-    dateOfBirth:'2007-03-15',
+    year:       'Form 2',
     formClass:  'Form 2 Science A',
     program:    'General Science',
     track:      'A',
-    year:       'Form 2',
-    houseName:  'Warrior House',
-    photo:      null,
-    results: {
-      current: {
-        academicYear: '2024/2025',
-        term: 'Term 2',
-        position: 4,
-        totalStudents: 42,
-        subjects: [
-          { name: 'Core Mathematics',   type: 'Core',     ca: 28, exam: 62, total: 90, grade: 'A1', points: 1 },
-          { name: 'English Language',   type: 'Core',     ca: 26, exam: 58, total: 84, grade: 'A1', points: 1 },
-          { name: 'Integrated Science', type: 'Core',     ca: 24, exam: 54, total: 78, grade: 'B2', points: 2 },
-          { name: 'Social Studies',     type: 'Core',     ca: 22, exam: 50, total: 72, grade: 'B3', points: 3 },
-          { name: 'ICT',                type: 'Core',     ca: 25, exam: 55, total: 80, grade: 'A1', points: 1 },
-          { name: 'Physics',            type: 'Elective', ca: 27, exam: 60, total: 87, grade: 'A1', points: 1 },
-          { name: 'Chemistry',          type: 'Elective', ca: 23, exam: 52, total: 75, grade: 'B2', points: 2 },
-          { name: 'Biology',            type: 'Elective', ca: 21, exam: 48, total: 69, grade: 'B3', points: 3 },
-        ],
-      },
-      previous: [
-        {
-          academicYear: '2024/2025',
-          term: 'Term 1',
-          position: 6,
-          totalStudents: 42,
-          subjects: [
-            { name: 'Core Mathematics',   type: 'Core',     ca: 25, exam: 58, total: 83, grade: 'A1', points: 1 },
-            { name: 'English Language',   type: 'Core',     ca: 24, exam: 54, total: 78, grade: 'B2', points: 2 },
-            { name: 'Integrated Science', type: 'Core',     ca: 22, exam: 50, total: 72, grade: 'B3', points: 3 },
-            { name: 'Social Studies',     type: 'Core',     ca: 20, exam: 46, total: 66, grade: 'B3', points: 3 },
-            { name: 'ICT',                type: 'Core',     ca: 23, exam: 52, total: 75, grade: 'B2', points: 2 },
-            { name: 'Physics',            type: 'Elective', ca: 24, exam: 56, total: 80, grade: 'A1', points: 1 },
-            { name: 'Chemistry',          type: 'Elective', ca: 21, exam: 48, total: 69, grade: 'B3', points: 3 },
-            { name: 'Biology',            type: 'Elective', ca: 19, exam: 44, total: 63, grade: 'C4', points: 4 },
-          ],
-        },
-      ],
-    },
-    attendance: {
-      summary: { totalDays: 45, present: 42, absent: 2, late: 1 },
-      records: [
-        { date: '2025-03-17', day: 'Monday',    status: 'present', remark: ''                    },
-        { date: '2025-03-14', day: 'Friday',    status: 'present', remark: ''                    },
-        { date: '2025-03-13', day: 'Thursday',  status: 'absent',  remark: 'No reason given'     },
-        { date: '2025-03-12', day: 'Wednesday', status: 'present', remark: ''                    },
-        { date: '2025-03-11', day: 'Tuesday',   status: 'late',    remark: 'Arrived 15 mins late'},
-        { date: '2025-03-10', day: 'Monday',    status: 'present', remark: ''                    },
-        { date: '2025-03-07', day: 'Friday',    status: 'present', remark: ''                    },
-        { date: '2025-03-06', day: 'Thursday',  status: 'present', remark: ''                    },
-        { date: '2025-03-05', day: 'Wednesday', status: 'present', remark: ''                    },
-        { date: '2025-03-04', day: 'Tuesday',   status: 'present', remark: ''                    },
-      ],
-    },
-    reportComments: {
-      formTeacher: 'Kofi is a focused and disciplined student who consistently demonstrates academic commitment. He is encouraged to pay more attention to his elective subjects.',
-      headmaster: 'A hardworking student with great potential. Keep up the good work.',
-      conduct: 'Excellent',
-      punctuality: 'Good',
-      nextTermBegins: '2025-04-14',
-    },
+    house:      'Warrior',
+    status:     'Active',
+    attendance: 94,
+    avgScore:   82,
+    gender:     'Male',
+    dob:        '2008-03-15',
   },
-
-  'AFTS/2024/087': {
-    studentId:  'AFTS/2024/087',
+  {
+    id:         17,
+    studentId:  'AFTS/2024/003',
+    name:       'Abena Asante',
     firstName:  'Abena',
     lastName:   'Asante',
-    gender:     'Female',
-    dateOfBirth:'2009-07-10',
+    year:       'Form 1',
     formClass:  'Form 1 Arts A',
     program:    'General Arts',
     track:      'A',
-    year:       'Form 1',
-    houseName:  'Eagle House',
-    photo:      null,
-    results: {
-      current: {
-        academicYear: '2024/2025',
-        term: 'Term 2',
-        position: 2,
-        totalStudents: 40,
-        subjects: [
-          { name: 'Core Mathematics',   type: 'Core',     ca: 26, exam: 60, total: 86, grade: 'A1', points: 1 },
-          { name: 'English Language',   type: 'Core',     ca: 28, exam: 64, total: 92, grade: 'A1', points: 1 },
-          { name: 'Integrated Science', type: 'Core',     ca: 25, exam: 58, total: 83, grade: 'A1', points: 1 },
-          { name: 'Social Studies',     type: 'Core',     ca: 27, exam: 61, total: 88, grade: 'A1', points: 1 },
-          { name: 'ICT',                type: 'Core',     ca: 24, exam: 55, total: 79, grade: 'B2', points: 2 },
-          { name: 'Literature',         type: 'Elective', ca: 27, exam: 62, total: 89, grade: 'A1', points: 1 },
-          { name: 'Economics',          type: 'Elective', ca: 23, exam: 54, total: 77, grade: 'B2', points: 2 },
-          { name: 'Government',         type: 'Elective', ca: 25, exam: 58, total: 83, grade: 'A1', points: 1 },
-        ],
-      },
-      previous: [],
-    },
-    attendance: {
-      summary: { totalDays: 45, present: 44, absent: 0, late: 1 },
-      records: [
-        { date: '2025-03-17', day: 'Monday',    status: 'present', remark: '' },
-        { date: '2025-03-14', day: 'Friday',    status: 'present', remark: '' },
-        { date: '2025-03-13', day: 'Thursday',  status: 'present', remark: '' },
-        { date: '2025-03-12', day: 'Wednesday', status: 'late',    remark: 'Traffic delay — parent informed' },
-        { date: '2025-03-11', day: 'Tuesday',   status: 'present', remark: '' },
-        { date: '2025-03-10', day: 'Monday',    status: 'present', remark: '' },
-      ],
-    },
-    reportComments: {
-      formTeacher: 'Abena is an exceptional student who excels in all areas. Her dedication and enthusiasm are commendable. She is a role model for her peers.',
-      headmaster: 'Outstanding performance. We are proud of Abena\'s achievements this term.',
-      conduct: 'Excellent',
-      punctuality: 'Very Good',
-      nextTermBegins: '2025-04-14',
-    },
-  },
-
-  'AFTS/2024/045': {
-    studentId:  'AFTS/2024/045',
-    firstName:  'Ama',
-    lastName:   'Owusu',
+    house:      'Eagle',
+    status:     'Active',
+    attendance: 98,
+    avgScore:   89,
     gender:     'Female',
-    dateOfBirth:'2007-08-22',
-    formClass:  'Form 2 Arts B',
-    program:    'General Arts',
-    track:      'B',
-    year:       'Form 2',
-    houseName:  'Eagle House',
-    photo:      null,
-    results: {
-      current: {
-        academicYear: '2024/2025',
-        term: 'Term 2',
-        position: 7,
-        totalStudents: 38,
-        subjects: [
-          { name: 'Core Mathematics',   type: 'Core',     ca: 20, exam: 46, total: 66, grade: 'B3', points: 3 },
-          { name: 'English Language',   type: 'Core',     ca: 24, exam: 56, total: 80, grade: 'A1', points: 1 },
-          { name: 'Integrated Science', type: 'Core',     ca: 18, exam: 44, total: 62, grade: 'C4', points: 4 },
-          { name: 'Social Studies',     type: 'Core',     ca: 22, exam: 52, total: 74, grade: 'B2', points: 2 },
-          { name: 'ICT',                type: 'Core',     ca: 19, exam: 48, total: 67, grade: 'B3', points: 3 },
-          { name: 'Literature',         type: 'Elective', ca: 25, exam: 58, total: 83, grade: 'A1', points: 1 },
-          { name: 'Economics',          type: 'Elective', ca: 21, exam: 50, total: 71, grade: 'B3', points: 3 },
-          { name: 'Government',         type: 'Elective', ca: 20, exam: 48, total: 68, grade: 'B3', points: 3 },
-        ],
-      },
-      previous: [],
-    },
-    attendance: {
-      summary: { totalDays: 45, present: 40, absent: 4, late: 1 },
-      records: [
-        { date: '2025-03-17', day: 'Monday',    status: 'present', remark: ''                    },
-        { date: '2025-03-14', day: 'Friday',    status: 'absent',  remark: 'No reason given'     },
-        { date: '2025-03-13', day: 'Thursday',  status: 'absent',  remark: 'No reason given'     },
-        { date: '2025-03-12', day: 'Wednesday', status: 'present', remark: ''                    },
-        { date: '2025-03-11', day: 'Tuesday',   status: 'late',    remark: 'Arrived 20 mins late'},
-        { date: '2025-03-10', day: 'Monday',    status: 'present', remark: ''                    },
-      ],
-    },
-    reportComments: {
-      formTeacher: 'Ama shows potential especially in the arts subjects. She needs to pay more attention to the sciences and improve her attendance record.',
-      headmaster: 'A good student who can do better with more focus and regular attendance.',
-      conduct: 'Good',
-      punctuality: 'Satisfactory',
-      nextTermBegins: '2025-04-14',
-    },
+    dob:        '2009-07-10',
   },
-};
-
-// ─── Term info ────────────────────────────────────────────────────────────────
-export const TERM_INFO = {
-  academicYear: '2024/2025',
-  term: 'Term 2',
-  track: 'A',
-  startDate: '2025-01-06',
-  endDate: '2025-04-11',
-  weeksTotal: 14,
-  weeksGone: 9,
-};
-
-// ─── School notices ───────────────────────────────────────────────────────────
-export const SCHOOL_NOTICES = [
-  { id: 1, type: 'info',    title: 'End of Term Exams',         message: 'Term 2 End of Term Examinations begin March 24, 2025. Ensure your ward is prepared.', date: '2025-03-10' },
-  { id: 2, type: 'warning', title: 'Fees Reminder',             message: 'Term 3 fees are due by April 14, 2025. Please clear all outstanding balances.', date: '2025-03-08' },
-  { id: 3, type: 'success', title: 'Term 1 Reports Available',  message: 'Term 1 report cards are now available on the portal. Log in to view your ward\'s performance.', date: '2025-02-28' },
-  { id: 4, type: 'info',    title: 'Track B Resumes',           message: 'Track B students resume on April 14, 2025. Report to school by 7:00 AM.', date: '2025-02-25' },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-export const getGradeColor = (grade) => {
-  const map = {
-    A1: 'text-green-700 bg-green-50',  B2: 'text-blue-700 bg-blue-50',
-    B3: 'text-blue-600 bg-blue-50',    C4: 'text-yellow-700 bg-yellow-50',
-    C5: 'text-orange-600 bg-orange-50',C6: 'text-orange-700 bg-orange-50',
-    D7: 'text-red-500 bg-red-50',      E8: 'text-red-600 bg-red-50',
-    F9: 'text-red-700 bg-red-50',
-  };
-  return map[grade] || 'text-gray-600 bg-gray-50';
+// ─── CHILD_RESULTS ────────────────────────────────────────────────────────────
+// Keyed by studentId — results for each child
+export const CHILD_RESULTS = {
+  'AFTS/2024/001': {
+    current: {
+      term: 'Term 2', academicYear: '2024/2025',
+      formClass: 'Form 2 Science A', position: 4, outOf: 40,
+      totalScore: 492, totalMax: 700, aggregate: 12,
+      subjects: [
+        { name:'Core Mathematics',   ca:24, exam:58, total:82, grade:'A1', remarks:'Excellent'  },
+        { name:'English Language',   ca:20, exam:53, total:73, grade:'B2', remarks:'Very Good'  },
+        { name:'Integrated Science', ca:22, exam:59, total:81, grade:'A1', remarks:'Excellent'  },
+        { name:'Social Studies',     ca:18, exam:49, total:67, grade:'B3', remarks:'Good'       },
+        { name:'ICT',                ca:23, exam:57, total:80, grade:'A1', remarks:'Excellent'  },
+        { name:'Physics',            ca:19, exam:51, total:70, grade:'B2', remarks:'Very Good'  },
+        { name:'Chemistry',          ca:16, exam:44, total:60, grade:'C4', remarks:'Credit'     },
+      ],
+    },
+    previous: [
+      {
+        term: 'Term 1', academicYear: '2024/2025',
+        formClass: 'Form 2 Science A', position: 5, outOf: 40,
+        totalScore: 475, totalMax: 700, aggregate: 14,
+        subjects: [
+          { name:'Core Mathematics',   ca:22, exam:55, total:77, grade:'B2', remarks:'Very Good' },
+          { name:'English Language',   ca:19, exam:50, total:69, grade:'B3', remarks:'Good'      },
+          { name:'Integrated Science', ca:21, exam:56, total:77, grade:'B2', remarks:'Very Good' },
+          { name:'Social Studies',     ca:17, exam:46, total:63, grade:'C4', remarks:'Credit'    },
+          { name:'ICT',                ca:22, exam:55, total:77, grade:'B2', remarks:'Very Good' },
+          { name:'Physics',            ca:18, exam:48, total:66, grade:'B3', remarks:'Good'      },
+          { name:'Chemistry',          ca:15, exam:46, total:61, grade:'C4', remarks:'Credit'    },
+        ],
+      },
+    ],
+  },
+  'AFTS/2024/003': {
+    current: {
+      term: 'Term 2', academicYear: '2024/2025',
+      formClass: 'Form 1 Arts A', position: 2, outOf: 35,
+      totalScore: 510, totalMax: 700, aggregate: 8,
+      subjects: [
+        { name:'Core Mathematics',   ca:23, exam:57, total:80, grade:'A1', remarks:'Excellent'  },
+        { name:'English Language',   ca:24, exam:60, total:84, grade:'A1', remarks:'Excellent'  },
+        { name:'Integrated Science', ca:21, exam:55, total:76, grade:'B2', remarks:'Very Good'  },
+        { name:'Social Studies',     ca:22, exam:58, total:80, grade:'A1', remarks:'Excellent'  },
+        { name:'Literature',         ca:23, exam:59, total:82, grade:'A1', remarks:'Excellent'  },
+        { name:'Government',         ca:20, exam:53, total:73, grade:'B2', remarks:'Very Good'  },
+        { name:'History',            ca:19, exam:50, total:69, grade:'B3', remarks:'Good'       },
+      ],
+    },
+    previous: [],
+  },
 };
 
-export const getGradeLabel = (grade) => {
-  const map = { A1:'Excellent', B2:'Very Good', B3:'Good', C4:'Credit', C5:'Credit', C6:'Credit', D7:'Pass', E8:'Weak Pass', F9:'Fail' };
-  return map[grade] || '';
+// ─── CHILD_ATTENDANCE ─────────────────────────────────────────────────────────
+export const CHILD_ATTENDANCE = {
+  'AFTS/2024/001': {
+    summary: { totalDays:55, present:52, absent:2, late:1, excused:0, percentage:94.5 },
+    records: [
+      { date:'2025-03-17', day:'Monday',    status:'present' },
+      { date:'2025-03-14', day:'Friday',    status:'present' },
+      { date:'2025-03-13', day:'Thursday',  status:'present' },
+      { date:'2025-03-12', day:'Wednesday', status:'late'    },
+      { date:'2025-03-11', day:'Tuesday',   status:'present' },
+      { date:'2025-03-10', day:'Monday',    status:'present' },
+      { date:'2025-03-07', day:'Friday',    status:'present' },
+      { date:'2025-03-06', day:'Thursday',  status:'absent'  },
+      { date:'2025-03-05', day:'Wednesday', status:'present' },
+      { date:'2025-03-04', day:'Tuesday',   status:'present' },
+      { date:'2025-03-03', day:'Monday',    status:'present' },
+      { date:'2025-02-28', day:'Friday',    status:'present' },
+      { date:'2025-02-27', day:'Thursday',  status:'present' },
+      { date:'2025-02-26', day:'Wednesday', status:'present' },
+      { date:'2025-02-25', day:'Tuesday',   status:'absent'  },
+    ],
+  },
+  'AFTS/2024/003': {
+    summary: { totalDays:55, present:54, absent:0, late:1, excused:0, percentage:98.2 },
+    records: [
+      { date:'2025-03-17', day:'Monday',    status:'present' },
+      { date:'2025-03-14', day:'Friday',    status:'present' },
+      { date:'2025-03-13', day:'Thursday',  status:'late'    },
+      { date:'2025-03-12', day:'Wednesday', status:'present' },
+      { date:'2025-03-11', day:'Tuesday',   status:'present' },
+      { date:'2025-03-10', day:'Monday',    status:'present' },
+      { date:'2025-03-07', day:'Friday',    status:'present' },
+      { date:'2025-03-06', day:'Thursday',  status:'present' },
+      { date:'2025-03-05', day:'Wednesday', status:'present' },
+      { date:'2025-03-04', day:'Tuesday',   status:'present' },
+    ],
+  },
 };
 
-export const getPerformanceBand = (pct) => {
-  if (pct >= 80) return { label: 'Distinction', color: 'var(--success-dark)' };
-  if (pct >= 70) return { label: 'Merit',       color: 'var(--info)'         };
-  if (pct >= 60) return { label: 'Credit',      color: 'var(--royal-blue)'   };
-  if (pct >= 50) return { label: 'Pass',        color: 'var(--warning)'      };
-  return              { label: 'Below Average', color: 'var(--accent-red)'  };
+// ─── CHILD_REPORT_COMMENTS ────────────────────────────────────────────────────
+export const CHILD_REPORT_COMMENTS = {
+  'AFTS/2024/001': {
+    formTeacher: 'Kofi is a dedicated and hardworking student who consistently gives his best. Encouraged to maintain this positive attitude and seek help in areas needing improvement.',
+    headmaster:  'A commendable performance. Kofi is reminded that excellence requires consistent effort and discipline. We look forward to even greater achievements next term.',
+  },
+  'AFTS/2024/003': {
+    formTeacher: 'Abena is an outstanding student who leads by example. Her commitment to academic excellence and school activities is commendable. Keep it up!',
+    headmaster:  'Excellent result. Abena embodies the values of Armed Forces SHTS — discipline, dedication and excellence. We are proud of her achievements.',
+  },
 };
 
-export const getAttendanceColor = (pct) => {
-  if (pct >= 95) return 'var(--success-dark)';
-  if (pct >= 85) return 'var(--warning)';
-  return 'var(--accent-red)';
-};
+// ─── PARENT_NOTIFICATIONS ─────────────────────────────────────────────────────
+export const PARENT_NOTIFICATIONS = [
+  { id:1, type:'info',    title:'End of Term Exams',    message:'Term 2 examinations for your ward begin March 24, 2025.',           time:'2 days ago',  read:false, child:'Kofi Asante'   },
+  { id:2, type:'success', title:'Results Available',    message:'Kofi\'s Term 2 results are now available in the results section.',  time:'1 week ago',  read:false, child:'Kofi Asante'   },
+  { id:3, type:'warning', title:'Attendance Notice',    message:'Kofi\'s attendance is at 94%. Minimum required is 95%.',           time:'3 days ago',  read:false, child:'Kofi Asante'   },
+  { id:4, type:'success', title:'Report Card Ready',    message:'Abena\'s Term 2 report card is ready to view and download.',       time:'1 week ago',  read:true,  child:'Abena Asante'  },
+  { id:5, type:'info',    title:'Fee Reminder',         message:'Term 3 fees are due by April 14, 2025. Contact the bursar.',       time:'2 weeks ago', read:true,  child:'All'           },
+];
 
-export const STATUS_STYLE = {
-  present: { bg: '#f0fdf4', color: 'var(--success-dark)', label: 'Present' },
-  absent:  { bg: '#fff1f2', color: 'var(--accent-red)',   label: 'Absent'  },
-  late:    { bg: '#fffbeb', color: 'var(--warning)',       label: 'Late'    },
-  excused: { bg: '#eef2ff', color: 'var(--royal-blue)',    label: 'Excused' },
-};
+// ─── SCHOOL_NOTICES ───────────────────────────────────────────────────────────
+export const SCHOOL_NOTICES = [
+  { id:1, type:'info',    title:'End of Term Examinations',    message:'Term 2 End of Term Exams begin March 24, 2025. Ensure your ward is well prepared.', date:'2025-03-15', important:true  },
+  { id:2, type:'warning', title:'Fee Payment Deadline',        message:'Term 3 school fees are due by April 14, 2025. Contact the bursar for payment plans.', date:'2025-03-10', important:true  },
+  { id:3, type:'success', title:'Inter-House Sports Day',      message:'Inter-House Sports Day was held on February 21. Warrior House placed 1st overall.',  date:'2025-02-22', important:false },
+  { id:4, type:'info',    title:'Parent-Teacher Conference',   message:'The next Parent-Teacher Conference is scheduled for April 5, 2025 from 9AM–3PM.',    date:'2025-02-20', important:true  },
+  { id:5, type:'info',    title:'Track B Resumption',          message:'Track B students resume on April 14, 2025. Report to school by 7:00 AM.',            date:'2025-02-18', important:false },
+  { id:6, type:'success', title:'WASSCE Registration',         message:'Form 3 WASSCE registration is complete. Exam begins May 12, 2025.',                   date:'2025-02-10', important:false },
+];

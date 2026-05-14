@@ -19,7 +19,7 @@ const AdminLogin = () => {
     e.preventDefault();
     const result = await login(email, password, 'admin');
     if (result.success) {
-      navigate(from, { replace: true });
+      navigate(result.redirectTo || '/dashboard', { replace: true });
     }
   };
 
@@ -42,7 +42,7 @@ const AdminLogin = () => {
 
           {/* Demo hint */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
-            <strong>Demo:</strong> admin@excellence.edu.gh / admin123
+            <strong>Demo:</strong> admin@afts.edu.gh / admin123
           </div>
 
           {error && (
@@ -59,7 +59,7 @@ const AdminLogin = () => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                placeholder="admin@excellence.edu.gh"
+                placeholder="admin@afts.edu.gh"
                 className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900"
               />
             </div>

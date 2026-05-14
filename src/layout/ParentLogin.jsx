@@ -22,7 +22,7 @@ const ParentLogin = () => {
       return;
     }
     const result = await login(email, password, 'parent');
-    if (result.success) navigate('/parent', { replace: true });
+    if (result.success) navigate(result.redirectTo || '/parent', { replace: true });
   };
 
   return (

@@ -4,25 +4,30 @@ import { Search, Printer, ChevronDown, FileText, Eye } from 'lucide-react';
 import { CLASSES_DATA, FORM_CLASS_STUDENTS, getGradeColor, getGradeFromTotal, TERM_INFO } from '../data/teacherData';
 import { useAuth } from '../../context/AuthContext';
 
-const MOCK_REPORT_STUDENTS = FORM_CLASS_STUDENTS.map(s => ({
+const ALL_CLASS_STUDENTS = Object.values(FORM_CLASS_STUDENTS).flat();
+
+const MOCK_REPORT_STUDENTS = ALL_CLASS_STUDENTS.map(s => ({
   ...s,
+  ca:    Math.round(50 + Math.random() * 25),
+  exam:  Math.round(40 + Math.random() * 25),
+  total: Math.round(75 + Math.random() * 20),
   subjects: [
-    { name: 'Core Mathematics',   type: 'Core',     ca: Math.round(s.ca * 0.93), exam: Math.round(s.exam * 0.9),  total: Math.round(s.total * 0.9)  },
-    { name: 'English Language',   type: 'Core',     ca: Math.round(s.ca * 0.97), exam: Math.round(s.exam * 0.95), total: Math.round(s.total * 0.95) },
-    { name: 'Integrated Science', type: 'Core',     ca: s.ca,                    exam: s.exam,                    total: s.total                    },
-    { name: 'Social Studies',     type: 'Core',     ca: Math.round(s.ca * 0.88), exam: Math.round(s.exam * 0.85), total: Math.round(s.total * 0.85) },
-    { name: 'ICT',                type: 'Core',     ca: Math.round(s.ca * 0.95), exam: Math.round(s.exam * 0.92), total: Math.round(s.total * 0.92) },
-    { name: 'Physics',            type: 'Elective', ca: Math.round(s.ca * 1.04), exam: Math.round(s.exam * 1.06), total: Math.min(100, Math.round(s.total * 1.05)) },
-    { name: 'Chemistry',          type: 'Elective', ca: Math.round(s.ca * 0.92), exam: Math.round(s.exam * 0.88), total: Math.round(s.total * 0.88) },
-    { name: 'Biology',            type: 'Elective', ca: Math.round(s.ca * 0.96), exam: Math.round(s.exam * 0.94), total: Math.round(s.total * 0.94) },
-  ].map(sub => ({ ...sub, grade: getGradeFromTotal(sub.total) })),
+    { name: 'Core Mathematics',   type: 'Core',     ca: Math.round(18 + Math.random()*10), exam: Math.round(42 + Math.random()*20) },
+    { name: 'English Language',   type: 'Core',     ca: Math.round(17 + Math.random()*10), exam: Math.round(40 + Math.random()*20) },
+    { name: 'Integrated Science', type: 'Core',     ca: Math.round(18 + Math.random()*10), exam: Math.round(43 + Math.random()*20) },
+    { name: 'Social Studies',     type: 'Core',     ca: Math.round(16 + Math.random()*10), exam: Math.round(38 + Math.random()*20) },
+    { name: 'ICT',                type: 'Core',     ca: Math.round(18 + Math.random()*10), exam: Math.round(41 + Math.random()*20) },
+    { name: 'Physics',            type: 'Elective', ca: Math.round(19 + Math.random()*10), exam: Math.round(44 + Math.random()*20) },
+    { name: 'Chemistry',          type: 'Elective', ca: Math.round(17 + Math.random()*10), exam: Math.round(40 + Math.random()*20) },
+    { name: 'Biology',            type: 'Elective', ca: Math.round(18 + Math.random()*10), exam: Math.round(42 + Math.random()*20) },
+  ].map(sub => ({ ...sub, total: sub.ca + sub.exam, grade: getGradeFromTotal(sub.ca + sub.exam) })),
   formTeacherComment: 'A dedicated student who demonstrates consistent effort and discipline. Encouraged to maintain this standard.',
   headmasterComment: 'Keep up the good work. Your performance reflects the school\'s values.',
   conduct: 'Excellent',
   punctuality: 'Good',
-  attendance: s.attendance,
-  position: FORM_CLASS_STUDENTS.indexOf(s) + 1,
-  totalStudents: FORM_CLASS_STUDENTS.length,
+  attendance: s.attendance || 92,
+  position: 1,
+  totalStudents: ALL_CLASS_STUDENTS.length,
 }));
 
 // ─── Single report card print view ───────────────────────────────────────────

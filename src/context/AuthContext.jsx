@@ -1,8 +1,6 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useState } from 'react';
-import { MOCK_TEACHERS } from '../teacher/data/teacherData';
-import { MOCK_STUDENTS } from '../student/data/studentData';
-import { MOCK_PARENTS }  from '../parent/data/parentData';
+import { TEACHERS, STUDENTS, PARENTS } from '../data/schoolData';
 
 const AuthContext = createContext();
 
@@ -12,30 +10,29 @@ export const useAuth = () => {
   return ctx;
 };
 
+// All admin accounts — add any email variant here
 const ADMIN_USERS = [
-  {
-    id: 100, role: 'admin',
-    name: 'System Administrator',
-    email: 'admin@excellence.edu.gh',
-    password: 'admin123',
-    redirectTo: '/dashboard',
-  },
+  { id:100, role:'admin', name:'System Administrator', email:'admin@afts.edu.gh',       password:'admin123', redirectTo:'/dashboard' },
+  { id:101, role:'admin', name:'System Administrator', email:'admin@excellence.edu.gh',  password:'admin123', redirectTo:'/dashboard' },
+  { id:102, role:'admin', name:'System Administrator', email:'admin@armedforces.edu.gh', password:'admin123', redirectTo:'/dashboard' },
 ];
 
+// Flat list of all users across all roles
 const ALL_USERS = [
-  ...MOCK_TEACHERS.map(t => ({ ...t, role: 'teacher' })),
-  ...MOCK_STUDENTS,
-  ...MOCK_PARENTS,
+  ...TEACHERS.map(t => ({ ...t, role:'teacher' })),
+  ...STUDENTS.map(s => ({ ...s, role:'student' })),
+  ...PARENTS.map(p => ({ ...p, role:'parent'  })),
   ...ADMIN_USERS,
 ];
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    try { const s = localStorage.getItem('afts_user'); return s ? JSON.parse(s) : null; }
-    catch { return null; }
+    try {
+      const s = localStorage.getItem('afts_user');
+      return s ? JSON.parse(s) : null;
+    } catch { return null; }
   });
 
-  // activeRole is only used for teachers — set once at login, locked until logout
   const [activeRole, setActiveRole] = useState(() => {
     try { return localStorage.getItem('afts_active_role') || 'Subject Teacher'; }
     catch { return 'Subject Teacher'; }
@@ -44,14 +41,23 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
 
-  const login = async (email, password, role, chosenTeacherRole = 'Subject Teacher', studentId = '') => {
+  const login = async (email, password, role, chosenTeacherRole = '', studentId = '') => {
     setLoading(true);
     setError('');
-    try {
-      await new Promise(r => setTimeout(r, 700));
 
-      const found = ALL_USERS.find(
-        u => u.email === email && u.password === password && u.role === role
+    try {
+      await new Promise(r => setTimeout(r, 600));
+
+      // Normalise inputs
+      const emailLower = (email || '').trim().toLowerCase();
+      const passTrim   = (password || '').trim();
+      const roleLower  = (role || '').trim().toLowerCase();
+
+      // Find user — match on email + password + role
+      const found = ALL_USERS.find(u =>
+        u.email.toLowerCase() === emailLower &&
+        u.password === passTrim &&
+        u.role === roleLower
       );
 
       if (!found) {
@@ -60,17 +66,15 @@ export const AuthProvider = ({ children }) => {
         return { success: false };
       }
 
-      // Extra check for students — must also match their Student ID
-      if (role === 'student' && studentId) {
-        if (found.studentId !== studentId) {
-          setError('Student ID does not match. Please check and try again.');
-          setLoading(false);
-          return { success: false };
-        }
-      }
-
       const { password: _, ...safe } = found;
-      const lockedRole = role === 'teacher' ? chosenTeacherRole : '';
+
+      // For teachers — lock their sidebar role
+      // Priority: chosen at login > assigned in data > default
+      const lockedRole = roleLower === 'teacher'
+        ? (chosenTeacherRole && chosenTeacherRole !== 'Subject Teacher'
+            ? chosenTeacherRole
+            : safe.teacherRole || 'Subject Teacher')
+        : '';
 
       setUser(safe);
       setActiveRole(lockedRole || 'Subject Teacher');
@@ -78,9 +82,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('afts_active_role', lockedRole || 'Subject Teacher');
 
       setLoading(false);
-      return { success: true, redirectTo: safe.redirectTo };
+      return { success: true, redirectTo: safe.redirectTo || `/${roleLower}` };
 
-    } catch {
+    } catch (err) {
       setError('Something went wrong. Please try again.');
       setLoading(false);
       return { success: false };

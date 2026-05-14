@@ -23,7 +23,7 @@ const StudentLogin = () => {
     if (!password.trim())  { setLocalErr('Please enter your password.'); return; }
 
     const result = await login(email, password, 'student', undefined, studentId.trim());
-    if (result.success) navigate('/student', { replace: true });
+    if (result.success) navigate(result.redirectTo || '/student', { replace: true });
   };
 
   return (
@@ -61,7 +61,7 @@ const StudentLogin = () => {
             {/* Demo hint */}
             <div className="px-3 py-2.5 rounded-lg text-xs" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
               <span className="font-bold">Demo: </span>
-              ID: <span className="font-mono font-bold">AFTS/2024/031</span> · kofi@afts.edu.gh · <span className="font-mono font-bold">student123</span>
+              ID: <span className="font-mono font-bold">AFTS/2024/001</span> · kofi@afts.edu.gh · <span className="font-mono font-bold">student123</span>
             </div>
 
             {/* Error */}
