@@ -60,7 +60,7 @@ const PARENT_USERS = [
 
 const ALL_USERS = [...ADMIN_USERS, ...TEACHER_USERS, ...STUDENT_USERS, ...PARENT_USERS];
 
-// ─── Config ───────────────────────────────────────────────────────────────────
+// ─── Config
 const ROLE_CONFIG = {
   admin:   { label:'Admin',   color:'var(--accent-red)',   bg:'#fff1f2', icon:Shield,        plural:'Admins'   },
   teacher: { label:'Teacher', color:'var(--royal-blue)',   bg:'#eef2ff', icon:Users,         plural:'Teachers' },
