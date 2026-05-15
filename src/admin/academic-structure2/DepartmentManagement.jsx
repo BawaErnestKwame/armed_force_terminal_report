@@ -1,235 +1,232 @@
+// src/admin/academic-structure2/DepartmentManagement.jsx
 import React, { useState } from 'react';
+import { Plus, Edit3, Trash2, Save, X, CheckCircle2, BookOpen, Users } from 'lucide-react';
+import { TEACHERS } from '../data/adminData';
 
-const DepartmentManagement = ({ formData, updateFormData, isPreviewMode }) => {
-  const [departments, setDepartments] = useState(formData?.departments || [
-    { 
-      id: 1, 
-      name: 'Mathematics', 
-      hod: 'Mr. John Mensah', 
-      subjects: ['Mathematics', 'Additional Mathematics'],
-      teachers: ['Mr. John Mensah', 'Mrs. Sarah Addo'],
-      analytics: { students: 450, avgScore: 72, passRate: 85 }
+const INITIAL_DEPARTMENTS = [
+  { id:1, name:'Mathematics',    code:'MTH', color:'var(--royal-blue)', bg:'#eef2ff', hodId:15, subjects:['Core Mathematics','Elective Mathematics'] },
+  { id:2, name:'English',        code:'ENG', color:'#7c3aed',           bg:'#f5f3ff', hodId:13, subjects:['English Language','Literature in English'] },
+  { id:3, name:'Science',        code:'SCI', color:'var(--accent-red)', bg:'#fff1f2', hodId:3,  subjects:['Integrated Science','Physics','Chemistry','Biology'] },
+  { id:4, name:'Social Studies', code:'SOC', color:'#ca8a04',           bg:'#fefce8', hodId:5,  subjects:['Social Studies','History','Geography','Government'] },
+  { id:5, name:'Technical',      code:'TCH', color:'var(--success-dark)',bg:'#f0fdf4', hodId:4,  subjects:['Technical Drawing','ICT','Auto Mechanics','Welding & Fabrication','Electronics'] },
+  { id:6, name:'Business',       code:'BUS', color:'#0369a1',           bg:'#f0f9ff', hodId:9,  subjects:['Accounting','Economics','Business Management'] },
+];
+
+const EMPTY = { name:'', code:'', color:'var(--royal-blue)', bg:'#eef2ff', hodId:'', subjects:[] };
+
+const DepartmentManagement = () => {
+  const [depts,    setDepts]   = useState(INITIAL_DEPARTMENTS);
+  const [showForm, setShowForm]= useState(false);
+  const [editDept, setEditD]   = useState(null);
+  const [form,     setForm]    = useState(EMPTY);
+  const [toast,    setToast]   = useState(null);
+  const [subInput, setSubInput]= useState('');
+  const [openDept, setOpenDept]= useState(null);
+
+  const showToast = (msg, type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const handleSave = () => {
+    if (!form.name.trim()) return;
+    if (editDept) {
+      setDepts(ds=>ds.map(d=>d.id===editDept.id?{...d,...form}:d));
+      showToast(`${form.name} updated`);
+    } else {
+      setDepts(ds=>[...ds,{...form,id:Date.now()}]);
+      showToast(`${form.name} created`);
     }
-  ]);
-
-  const [availableTeachers] = useState([
-    'Mr. John Mensah', 'Mrs. Ama Serwaa', 'Dr. Kofi Asare', 'Mrs. Sarah Addo',
-    'Mr. Kwame Asare', 'Mrs. Abena Ofori', 'Mr. Michael Tetteh', 'Ms. Grace Amoah'
-  ]);
-
-  const [availableSubjects] = useState([
-    'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 
-    'Literature', 'Economics', 'History', 'Geography', 'Accounting'
-  ]);
-
-  const addDepartment = () => {
-    setDepartments([...departments, {
-      id: Date.now(),
-      name: '',
-      hod: '',
-      subjects: [],
-      teachers: [],
-      analytics: { students: 0, avgScore: 0, passRate: 0 }
-    }]);
+    setShowForm(false); setEditD(null); setForm(EMPTY);
   };
 
-  const updateDepartment = (id, field, value) => {
-    const updated = departments.map(d =>
-      d.id === id ? { ...d, [field]: value } : d
-    );
-    setDepartments(updated);
-    updateFormData && updateFormData({ departments: updated });
+  const handleDelete = (dept) => {
+    setDepts(ds=>ds.filter(d=>d.id!==dept.id));
+    showToast(`${dept.name} removed`,'error');
   };
 
-  const removeDepartment = (id) => {
-    if (window.confirm('Remove this department?')) {
-      const updated = departments.filter(d => d.id !== id);
-      setDepartments(updated);
-      updateFormData && updateFormData({ departments: updated });
-    }
+  const addSub = () => {
+    const s = subInput.trim();
+    if (s && !form.subjects.includes(s)) { set('subjects',[...form.subjects,s]); setSubInput(''); }
   };
 
-  const addToDepartment = (id, type, item) => {
-    const updated = departments.map(d => {
-      if (d.id === id && !d[type].includes(item)) {
-        return { ...d, [type]: [...d[type], item] };
-      }
-      return d;
-    });
-    setDepartments(updated);
-  };
+  const removeSub = (s) => set('subjects', form.subjects.filter(x=>x!==s));
 
-  const removeFromDepartment = (id, type, item) => {
-    const updated = departments.map(d => {
-      if (d.id === id) {
-        return { ...d, [type]: d[type].filter(i => i !== item) };
-      }
-      return d;
-    });
-    setDepartments(updated);
-  };
-
-  if (isPreviewMode) {
-    return (
-      <div className="p-6 bg-gray-100 rounded-xl">
-        <h3 className="text-lg font-semibold mb-4">Departments Preview</h3>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {departments.map(dept => (
-            <div key={dept.id} className="bg-white p-4 rounded-lg shadow">
-              <h4 className="font-bold text-lg">{dept.name}</h4>
-              <p className="text-sm text-gray-500">HOD: {dept.hod || 'N/A'}</p>
-
-              <p className="text-sm mt-2">
-                <strong>Subjects:</strong> {dept.subjects.join(', ') || 'None'}
-              </p>
-
-              <p className="text-sm">
-                <strong>Teachers:</strong> {dept.teachers.join(', ') || 'None'}
-              </p>
-
-              <div className="mt-3 text-xs text-gray-500 border-t pt-2">
-                Students: {dept.analytics.students} | Avg: {dept.analytics.avgScore}% | Pass: {dept.analytics.passRate}%
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const getTeacher = (id) => TEACHERS.find(t=>t.id===id||t.id===parseInt(id));
+  const getDeptTeachers = (name) => TEACHERS.filter(t=>t.department===name);
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="space-y-5">
+      {toast && (
+        <div className="fixed top-4 right-4 z-[60] px-4 py-3 rounded-xl shadow-xl text-white text-sm font-semibold flex items-center gap-2"
+          style={{ backgroundColor:toast.type==='error'?'var(--accent-red)':'var(--success-dark)' }}>
+          <CheckCircle2 size={14}/> {toast.msg}
+        </div>
+      )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Department Management</h2>
-        <button
-          onClick={addDepartment}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          + Add Department
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Department Management</h1>
+          <p className="text-xs text-gray-400 mt-0.5">{depts.length} departments · assign HODs and subjects</p>
+        </div>
+        <button type="button" onClick={()=>{ setEditD(null); setForm(EMPTY); setShowForm(true); }}
+          className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl text-white"
+          style={{ backgroundColor:'var(--royal-blue)' }}>
+          <Plus size={14}/> Add Department
         </button>
       </div>
 
-      {/* Cards */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {departments.map(dept => (
-          <div key={dept.id} className="bg-white rounded-xl shadow p-5 border">
-
-            {/* Title */}
-            <div className="flex justify-between mb-4">
-              <input
-                type="text"
-                value={dept.name}
-                onChange={(e) => updateDepartment(dept.id, 'name', e.target.value)}
-                placeholder="Department Name"
-                className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-semibold"
-              />
-              <button
-                onClick={() => removeDepartment(dept.id)}
-                className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-              >
-                Remove
-              </button>
-            </div>
-
-            {/* HOD */}
-            <div className="mb-4">
-              <label className="text-sm font-medium">Head of Department</label>
-              <select
-                value={dept.hod}
-                onChange={(e) => updateDepartment(dept.id, 'hod', e.target.value)}
-                className="w-full mt-1 border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select HOD</option>
-                {availableTeachers.map(t => (
-                  <option key={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Subjects */}
-            <div className="mb-4">
-              <label className="text-sm font-medium">Subjects</label>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                {dept.subjects.map(s => (
-                  <span key={s} className="bg-blue-100 text-blue-700 px-2 py-1 rounded flex items-center gap-1 text-sm">
-                    {s}
-                    <button onClick={() => removeFromDepartment(dept.id, 'subjects', s)}>×</button>
-                  </span>
-                ))}
-              </div>
-
-              <select
-                onChange={(e) => {
-                  if (e.target.value) {
-                    addToDepartment(dept.id, 'subjects', e.target.value);
-                    e.target.value = '';
-                  }
-                }}
-                className="w-full mt-2 border px-3 py-2 rounded-lg"
-              >
-                <option value="">Add Subject</option>
-                {availableSubjects.filter(s => !dept.subjects.includes(s)).map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Teachers */}
-            <div className="mb-4">
-              <label className="text-sm font-medium">Teachers</label>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                {dept.teachers.map(t => (
-                  <span key={t} className="bg-green-100 text-green-700 px-2 py-1 rounded flex items-center gap-1 text-sm">
-                    {t}
-                    <button onClick={() => removeFromDepartment(dept.id, 'teachers', t)}>×</button>
-                  </span>
-                ))}
-              </div>
-
-              <select
-                onChange={(e) => {
-                  if (e.target.value) {
-                    addToDepartment(dept.id, 'teachers', e.target.value);
-                    e.target.value = '';
-                  }
-                }}
-                className="w-full mt-2 border px-3 py-2 rounded-lg"
-              >
-                <option value="">Add Teacher</option>
-                {availableTeachers.filter(t => !dept.teachers.includes(t)).map(t => (
-                  <option key={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Analytics */}
-            <div className="grid grid-cols-3 gap-3 text-center mt-4 border-t pt-4">
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <p className="text-xl font-bold">{dept.analytics.students}</p>
-                <p className="text-xs text-gray-500">Students</p>
-              </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <p className="text-xl font-bold">{dept.analytics.avgScore}%</p>
-                <p className="text-xs text-gray-500">Avg Score</p>
-              </div>
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <p className="text-xl font-bold">{dept.analytics.passRate}%</p>
-                <p className="text-xs text-gray-500">Pass Rate</p>
-              </div>
-            </div>
-
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label:'Departments',   value:depts.length,               color:'var(--royal-blue)'   },
+          { label:'Total Staff',   value:TEACHERS.length,            color:'#7c3aed'             },
+          { label:'Total Subjects',value:depts.reduce((s,d)=>s+d.subjects.length,0), color:'var(--success-dark)' },
+          { label:'Avg Staff/Dept',value:Math.round(TEACHERS.length/depts.length),   color:'var(--warning)'      },
+        ].map(({label,value,color})=>(
+          <div key={label} className="bg-white rounded-xl border p-4 text-center shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
+            <p className="text-2xl font-black" style={{ color }}>{value}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
           </div>
         ))}
       </div>
 
-      {departments.length === 0 && (
-        <div className="text-center text-gray-500 mt-10">
-          No departments yet. Click "Add Department"
+      {/* Department cards */}
+      <div className="space-y-3">
+        {depts.map(dept=>{
+          const hod = getTeacher(dept.hodId);
+          const staff = getDeptTeachers(dept.name);
+          const isOpen = openDept===dept.id;
+          return (
+            <div key={dept.id} className="bg-white rounded-2xl border shadow-sm overflow-hidden"
+              style={{ borderColor:isOpen?dept.color:'var(--medium-gray)', borderWidth:isOpen?2:1 }}>
+              <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                onClick={()=>setOpenDept(isOpen?null:dept.id)}>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-black"
+                    style={{ backgroundColor:dept.color }}>{dept.code}</div>
+                  <div>
+                    <p className="font-black text-sm" style={{ color:'var(--dark-gray)' }}>{dept.name} Department</p>
+                    <p className="text-xs text-gray-400">
+                      {staff.length} staff · {dept.subjects.length} subjects
+                      {hod ? ` · HOD: ${hod.title} ${hod.lastName}` : ''}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={e=>{e.stopPropagation();setEditD(dept);setForm({...dept,subjects:[...dept.subjects]});setShowForm(true);}}
+                    style={{ color:'var(--warning)' }}><Edit3 size={15}/></button>
+                  <button type="button" onClick={e=>{e.stopPropagation();handleDelete(dept);}}
+                    style={{ color:'var(--accent-red)' }}><Trash2 size={15}/></button>
+                </div>
+              </div>
+
+              {isOpen && (
+                <div className="border-t px-4 pb-4 pt-3 space-y-4"
+                  style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Subjects */}
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color:'var(--dark-gray)',opacity:0.5 }}>Subjects</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {dept.subjects.map(s=>(
+                          <span key={s} className="text-xs px-2 py-1 rounded-lg font-medium"
+                            style={{ backgroundColor:dept.bg, color:dept.color, border:`1px solid ${dept.color}30` }}>{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Staff */}
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color:'var(--dark-gray)',opacity:0.5 }}>Staff ({staff.length})</p>
+                      <div className="space-y-1.5">
+                        {staff.map(t=>(
+                          <div key={t.id} className="flex items-center gap-2 text-xs bg-white rounded-lg p-2 border" style={{ borderColor:'var(--medium-gray)' }}>
+                            <div className="w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
+                              style={{ backgroundColor:dept.color }}>
+                              {t.firstName[0]}{t.lastName[0]}
+                            </div>
+                            <span className="font-semibold flex-1" style={{ color:'var(--dark-gray)' }}>{t.title} {t.firstName} {t.lastName}</span>
+                            {dept.hodId===t.id && <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor:dept.bg,color:dept.color }}>HOD</span>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Add/Edit Modal */}
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ background:'linear-gradient(135deg,var(--royal-blue),var(--royal-blue-dark))' }}>
+              <p className="text-white font-black">{editDept?'Edit Department':'Add Department'}</p>
+              <button type="button" onClick={()=>{setShowForm(false);setEditD(null);}} className="text-white"><X size={18}/></button>
+            </div>
+            <div className="h-1 flex-shrink-0" style={{ backgroundColor:'var(--accent-red)' }}/>
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {[
+                { label:'Department Name', field:'name'  },
+                { label:'Code (3 letters)',field:'code'  },
+              ].map(({label,field})=>(
+                <div key={field}>
+                  <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>{label}</label>
+                  <input value={form[field]||''} onChange={e=>set(field,e.target.value)}
+                    className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none"
+                    style={{ borderColor:'var(--medium-gray)' }}
+                    onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
+                    onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}/>
+                </div>
+              ))}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>HOD</label>
+                <select value={form.hodId||''} onChange={e=>set('hodId',parseInt(e.target.value)||'')}
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none bg-white"
+                  style={{ borderColor:'var(--medium-gray)' }}>
+                  <option value="">-- Select HOD --</option>
+                  {TEACHERS.filter(t=>t.status==='Active').map(t=>(
+                    <option key={t.id} value={t.id}>{t.title} {t.firstName} {t.lastName}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Subjects</label>
+                <div className="flex gap-2 mb-2">
+                  <input value={subInput} onChange={e=>setSubInput(e.target.value)}
+                    onKeyDown={e=>e.key==='Enter'&&addSub()}
+                    placeholder="Add subject..."
+                    className="flex-1 px-3 py-2 text-sm rounded-xl border-2 outline-none"
+                    style={{ borderColor:'var(--medium-gray)' }}/>
+                  <button type="button" onClick={addSub}
+                    className="px-3 py-2 text-sm font-bold text-white rounded-xl"
+                    style={{ backgroundColor:'var(--royal-blue)' }}>Add</button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {form.subjects.map(s=>(
+                    <span key={s} className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
+                      style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>
+                      {s}
+                      <button type="button" onClick={()=>removeSub(s)}><X size={10}/></button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 px-5 py-4 border-t flex-shrink-0"
+              style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
+              <button type="button" onClick={()=>{setShowForm(false);setEditD(null);}}
+                className="px-4 py-2 text-sm rounded-xl border font-semibold"
+                style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}>Cancel</button>
+              <button type="button" onClick={handleSave}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white rounded-xl"
+                style={{ backgroundColor:'var(--royal-blue)' }}>
+                <Save size={13}/> {editDept?'Save':'Add'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

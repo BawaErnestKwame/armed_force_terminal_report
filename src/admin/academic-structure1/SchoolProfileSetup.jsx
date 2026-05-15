@@ -1,166 +1,125 @@
-import React, { useState } from 'react';
+// src/admin/academic-structure1/SchoolProfileSetup.jsx
+import React, { useState, useRef } from 'react';
+import { Save, Camera, CheckCircle2, Upload } from 'lucide-react';
+import { SCHOOL_INFO } from '../data/adminData';
 
-const SchoolProfileSetup = ({ formData, updateFormData, isPreviewMode }) => {
-  const [localData, setLocalData] = useState(formData || {
-    schoolName: '',
-    motto: '',
-    address: '',
-    location: '',
-    region: '',
-    district: '',
-    gesCode: '',
-    phone: '',
-    email: '',
-    nextTermReopening: '',
-    vacationDate: ''
+const SchoolProfileSetup = () => {
+  const [profile, setProfile] = useState({
+    ...SCHOOL_INFO,
+    principalName:  'Col. Emmanuel Kwame Asante (Rtd)',
+    principalPhone: '0244 000 000',
+    founded:        '1998',
+    ownership:      'Ghana Armed Forces',
+    accreditation:  'Ghana Education Service (GES)',
+    postal:         'P.O. Box 1234, Kumasi',
   });
+  const [logo,   setLogo]   = useState(null);
+  const [toast,  setToast]  = useState(null);
+  const fileRef = useRef();
+  const set = (k,v) => setProfile(p=>({...p,[k]:v}));
+  const showToast = (msg) => { setToast(msg); setTimeout(()=>setToast(null),3000); };
 
-  const regions = [
-    'Greater Accra', 'Ashanti', 'Western', 'Eastern', 'Central', 
-    'Volta', 'Northern', 'Upper East', 'Upper West', 'Bono', 
-    'Ahafo', 'Bono East', 'Oti', 'North East', 'Savannah', 'Western North'
-  ];
-
-  const handleChange = (field, value) => {
-    const updatedData = { ...localData, [field]: value };
-    setLocalData(updatedData);
-    if (updateFormData) updateFormData(updatedData);
-  };
-
-  const handleFileUpload = (field, file) => {
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        handleChange(field, reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const previewReportHeader = () => {
-    alert('Preview Report Header - Shows how logo and header will appear on reports');
-  };
-
-  if (isPreviewMode) {
-    return (
-      <div className="p-6 bg-light-gray rounded-lg">
-        <h3 className="text-royal-blue-dark text-4xl font-semibold mb-4">School Profile Preview</h3>
-        <div className="text-center mb-5">
-          {localData.logo && (
-            <img src={localData.logo} alt="Logo" className="max-w-[100px] mx-auto mb-2" />
-          )}
-          {localData.headerImage && (
-            <img src={localData.headerImage} alt="Header" className="w-full max-h-[100px] object-cover" />
-          )}
-          <h2 className="text-royal-blue mt-2 text-xl font-bold">
-            {localData.schoolName || 'School Name Not Set'}
-          </h2>
-          <p className="text-dark-gray italic">{localData.motto || 'Motto Not Set'}</p>
-        </div>
-        <div className="space-y-2">
-          <p><strong>GES Code:</strong> {localData.gesCode || 'N/A'}</p>
-          <p><strong>Address:</strong> {localData.address || 'N/A'}</p>
-          <p><strong>Location:</strong> {localData.location || 'N/A'}</p>
-          <p><strong>Region/District:</strong> {localData.region} / {localData.district}</p>
-          <p><strong>Contact:</strong> {localData.phone} | {localData.email}</p>
-          <p><strong>Next Term:</strong> {localData.nextTermReopening || 'Not set'}</p>
-        </div>
-      </div>
-    );
-  }
+  const FInput = ({ label, field, placeholder, type='text', span=false }) => (
+    <div className={span ? 'sm:col-span-2' : ''}>
+      <label className="text-xs font-bold uppercase tracking-wider block mb-1.5" style={{ color:'var(--dark-gray)' }}>{label}</label>
+      <input type={type} value={profile[field]||''} onChange={e=>set(field,e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none"
+        style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}
+        onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
+        onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}
+      />
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h2 className="text-royal-blue text-2xl font-bold mb-5 ">School Profile Setup</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* School Name */}
-        <div className="md:col-span-2">
-          <label className="block mb-2 font-medium text-dark-gray">School Name <span className='text-[var(--accent-red)]'>*</span>
-          </label>
-
-          <input
-            type="text"
-            value={localData.schoolName}
-            onChange={(e) => handleChange('schoolName', e.target.value)}
-            placeholder="Enter school name"
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:ring-2 focus:ring-royal-blue focus:border-transparent"
-          />
+    <div className="space-y-6">
+      {toast && (
+        <div className="fixed top-4 right-4 z-[60] px-4 py-3 rounded-xl shadow-xl text-white text-sm font-semibold flex items-center gap-2"
+          style={{ backgroundColor:'var(--success-dark)' }}>
+          <CheckCircle2 size={14}/> {toast}
         </div>
+      )}
 
-       
-
-        {/* Address */}
-        <div className="md:col-span-2">
-          <label className="block mb-2 font-medium text-dark-gray">Address <span className='text-[var(--accent-red)]'>*</span></label>
-          <textarea
-            value={localData.address}
-            onChange={(e) => handleChange('address', e.target.value)}
-            placeholder="Enter school address"
-            rows="3"
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:outline-none focus:ring-2 focus:ring-royal-blue resize-vertical"
-          />
-        </div>
-
-        {/* Location */}
+      <div className="flex items-center justify-between">
         <div>
-          <label className="block mb-2 font-medium text-dark-gray">Location <span className='text-[var(--accent-red)]'>*</span></label>
-          <input
-            type="text"
-            value={localData.location}
-            onChange={(e) => handleChange('location', e.target.value)}
-            placeholder="Town/City"
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:outline-none focus:ring-2 focus:ring-royal-blue"
-          />
+          <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>School Profile Setup</h1>
+          <p className="text-xs text-gray-400 mt-0.5">School identity, contact details and official information</p>
         </div>
+        <button type="button" onClick={()=>showToast('School profile saved successfully')}
+          className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl text-white"
+          style={{ backgroundColor:'var(--royal-blue)' }}>
+          <Save size={14}/> Save Profile
+        </button>
+      </div>
 
-        {/* Region */}
-        <div>
-          <label className="block mb-2 font-medium text-dark-gray">Region <span className='text-[var(--accent-red)]'>*</span></label>
-          <select
-            value={localData.region}
-            onChange={(e) => handleChange('region', e.target.value)}
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:outline-none focus:ring-2 focus:ring-royal-blue"
-          >
-            <option value="">Select Region</option>
-            {regions.map(region => (
-              <option key={region} value={region}>{region}</option>
-            ))}
-          </select>
+      {/* Logo + Name banner */}
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="h-24 relative"
+          style={{ background:'linear-gradient(135deg,var(--royal-blue),var(--royal-blue-dark))' }}>
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage:'repeating-linear-gradient(45deg,white 0,white 1px,transparent 0,transparent 50%)', backgroundSize:'20px 20px' }}/>
         </div>
-
-        {/* District */}
-        <div>
-          <label className="block mb-2 font-medium text-dark-gray">District <span className='text-[var(--accent-red)]'>*</span> </label>
-          <input
-            type="text"
-            value={localData.district}
-            onChange={(e) => handleChange('district', e.target.value)}
-            placeholder="Enter district"
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:outline-none focus:ring-2 focus:ring-royal-blue"
-          />
-        </div>
-
-        {/* GES Code */}
-        <div>
-          <label className="block mb-2 font-medium text-dark-gray">GES Code <span className='text-[var(--accent-red)]'>*</span></label>
-          <input
-            type="text"
-            value={localData.gesCode}
-            onChange={(e) => handleChange('gesCode', e.target.value)}
-            placeholder="e.g., GES-12345"
-            className="w-full px-3 py-2 border border-medium-gray rounded-md focus:outline-none focus:ring-2 focus:ring-royal-blue"
-          />
+        <div className="relative px-6 pb-6">
+          <div className="flex items-end gap-5 -mt-10">
+            <div className="relative flex-shrink-0">
+              <div className="w-20 h-20 rounded-2xl border-4 border-white shadow-lg overflow-hidden flex items-center justify-center text-white font-black text-2xl"
+                style={{ backgroundColor:'var(--accent-red)' }}>
+                {logo ? <img src={logo} alt="logo" className="w-full h-full object-cover"/> : profile.shortName}
+              </div>
+              <button type="button" onClick={()=>fileRef.current?.click()}
+                className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-white shadow-md"
+                style={{ backgroundColor:'var(--royal-blue)' }}>
+                <Camera size={12}/>
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" className="hidden"
+                onChange={e=>{ const f=e.target.files?.[0]; if(f){ const r=new FileReader(); r.onloadend=()=>setLogo(r.result); r.readAsDataURL(f); } }}/>
+            </div>
+            <div className="pb-1">
+              <h2 className="text-lg font-black" style={{ color:'var(--dark-gray)' }}>{profile.name}</h2>
+              <p className="text-sm text-gray-400">{profile.motto}</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-3 mt-6 justify-end">
-        <button 
-          onClick={previewReportHeader} 
-          className="px-5 py-2 border border-medium-gray rounded-md bg-light-gray text-dark-gray hover:bg-medium-gray transition-colors"
-        >
-          Preview Report Header
-        </button>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Identity */}
+        <div className="bg-white rounded-2xl border shadow-sm p-5" style={{ borderColor:'var(--medium-gray)' }}>
+          <h3 className="font-black text-sm mb-4" style={{ color:'var(--dark-gray)' }}>School Identity</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FInput label="Full School Name"  field="name"      placeholder="Full name" span/>
+            <FInput label="Short Name"        field="shortName" placeholder="e.g. AFTS"/>
+            <FInput label="School Motto"      field="motto"     placeholder="School motto" span/>
+            <FInput label="School Type"       field="type"      placeholder="e.g. Senior High Technical School"/>
+            <FInput label="WAEC Centre Code"  field="waecCode"  placeholder="e.g. GH0042"/>
+            <FInput label="Founded"           field="founded"   placeholder="e.g. 1998"/>
+            <FInput label="Ownership"         field="ownership" placeholder="e.g. Ghana Armed Forces"/>
+            <FInput label="Accreditation"     field="accreditation" placeholder="e.g. GES"/>
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div className="bg-white rounded-2xl border shadow-sm p-5" style={{ borderColor:'var(--medium-gray)' }}>
+          <h3 className="font-black text-sm mb-4" style={{ color:'var(--dark-gray)' }}>Contact Information</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FInput label="Physical Address" field="address"  placeholder="School address" span/>
+            <FInput label="Postal Address"   field="postal"   placeholder="P.O. Box..." span/>
+            <FInput label="Phone Number"     field="phone"    placeholder="+233 32 200 0001"/>
+            <FInput label="Email"            field="email"    placeholder="info@school.edu.gh" type="email"/>
+            <FInput label="Website"          field="website"  placeholder="www.school.edu.gh"/>
+            <FInput label="Region"           field="region"   placeholder="e.g. Ashanti Region"/>
+          </div>
+        </div>
+
+        {/* Leadership */}
+        <div className="bg-white rounded-2xl border shadow-sm p-5 lg:col-span-2" style={{ borderColor:'var(--medium-gray)' }}>
+          <h3 className="font-black text-sm mb-4" style={{ color:'var(--dark-gray)' }}>School Leadership</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FInput label="Headmaster / Principal Name" field="principalName"  placeholder="Full name with title"/>
+            <FInput label="Principal Phone"             field="principalPhone" placeholder="0244..."/>
+          </div>
+        </div>
       </div>
     </div>
   );
