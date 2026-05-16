@@ -1,6 +1,6 @@
 // src/teacher/TeacherDashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaBookOpen, FaClipboardList, FaCheckSquare,
@@ -75,7 +75,8 @@ const TeacherDashboardLayout = () => {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
-  const handleLogout = () => { logout(); navigate('/teacherLogin', { replace: true }); };
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const handleLogout = () => { logout(); navigate('/teacherLogout', { replace: true }); };
 
   const navSections = SIDEBAR_CONFIG[activeRole] || DEFAULT_NAV;
   const otherNav    = [
@@ -101,10 +102,12 @@ const TeacherDashboardLayout = () => {
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
             <div className="flex items-center gap-2 text-white min-w-0">
+              <Link to="/" className="flex items-center gap-2 text-white min-w-0">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
                 <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
               </div>
+              </Link>
               <div className="min-w-0">
                 <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
                 <p className="text-xs text-blue-200 italic truncate">Service With Humanity</p>
@@ -203,7 +206,7 @@ const TeacherDashboardLayout = () => {
               <span className="text-green-300 text-xs">System Online</span>
             </div>
           )}
-          <button onClick={handleLogout}
+          <button onClick={() => setShowLogoutModal(true)}
             className="flex items-center gap-2 w-full text-white text-sm px-3 py-2 rounded-lg transition-all"
             style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
             onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--accent-red)'}
@@ -252,6 +255,53 @@ const TeacherDashboardLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+            style={{ animation:'slideUp .2s ease' }}>
+            <div className="px-6 py-5 text-center"
+              style={{ background:'linear-gradient(135deg,var(--royal-blue),var(--royal-blue-dark))' }}>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                style={{ backgroundColor:'rgba(255,255,255,0.15)' }}>
+                <FaSignOutAlt size={22} className="text-white"/>
+              </div>
+              <p className="text-white font-black text-lg">Sign Out</p>
+              <p className="text-blue-200 text-xs mt-1">AFTS Teacher Portal</p>
+            </div>
+            <div className="h-1" style={{ backgroundColor:'var(--royal-blue)' }}/>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor:'var(--light-gray)' }}>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-sm flex-shrink-0"
+                  style={{ backgroundColor:'var(--royal-blue)' }}>
+                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-sm truncate" style={{ color:'var(--dark-gray)' }}>
+                    {user?.title} {user?.firstName} {user?.lastName}
+                  </p>
+                  <p className="text-xs text-gray-400 truncate">{user?.staffId} · {activeRole}</p>
+                </div>
+              </div>
+              <p className="text-sm text-center text-gray-500">Are you sure you want to sign out?</p>
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setShowLogoutModal(false)}
+                  className="flex-1 py-2.5 text-sm font-semibold rounded-xl border-2"
+                  style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}>
+                  Cancel
+                </button>
+                <button type="button" onClick={handleLogout}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold text-white rounded-xl"
+                  style={{ backgroundColor:'var(--accent-red)' }}>
+                  <FaSignOutAlt size={13}/> Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <style>{`@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </div>
   );
 };

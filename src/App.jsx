@@ -10,6 +10,8 @@ import Features      from './pages/features/Features';
 import Contact       from './pages/contact/Contact';
 import About         from './pages/about/About';
 import AdminLogin    from './layout/AdminLogin';
+import AdminLogout   from './layout/AdminLogout';
+import LogoutPage    from './layout/LogoutPage';
 import TeacherLogin  from './layout/TeacherLogin';
 import StudentLogin  from './layout/StudentLogin';
 import ParentLogin   from './layout/ParentLogin';
@@ -53,7 +55,7 @@ import TeacherReports         from './teacher/reports/TeacherReports';
 import TeacherProfile         from './teacher/profile/TeacherProfile';
 import TeacherTimetable       from './teacher/timetable/TeacherTimetable';
 
-// ── Student Portal 
+// ── Student Portal ────────────────────────────────────────────────────────────
 import StudentDashboardLayout from './student/StudentDashboardLayout';
 import StudentHome            from './student/dashboard/StudentHome';
 import StudentResults         from './student/results/StudentResults';
@@ -62,7 +64,7 @@ import StudentAttendance      from './student/attendance/StudentAttendance';
 import StudentProfile         from './student/profile/StudentProfile';
 import StudentTimetable       from './student/timetable/StudentTimetable';
 
-// ── Parent Portal 
+// ── Parent Portal ─────────────────────────────────────────────────────────────
 import ParentDashboardLayout from './parent/ParentDashboardLayout';
 import ParentHome            from './parent/dashboard/ParentHome';
 import ParentResults         from './parent/results/ParentResults';
@@ -70,7 +72,7 @@ import ParentReportCard      from './parent/reportcard/ParentReportCard';
 import ParentAttendance      from './parent/attendance/ParentAttendance';
 import ParentProfile         from './parent/profile/ParentProfile';
 
-// ── Admin extras 
+// ── Admin extras ──────────────────────────────────────────────────────────────
 import AdminAnalytics  from './admin/analytics/AdminAnalytics';
 import SchoolCalendar  from './admin/calendar/SchoolCalendar';
 
@@ -93,6 +95,10 @@ const App = () => (
 
         {/* Login pages */}
         <Route path='/adminLogin'     element={<AdminLogin />} />
+        <Route path='/adminLogout'    element={<AdminLogout />} />
+        <Route path='/teacherLogout'  element={<LogoutPage role="teacher" />} />
+        <Route path='/studentLogout'  element={<LogoutPage role="student" />} />
+        <Route path='/parentLogout'   element={<LogoutPage role="parent"  />} />
         <Route path='/teacherLogin'   element={<TeacherLogin />} />
         <Route path='/studentLogin'   element={<StudentLogin />} />
         <Route path='/parentLogin'    element={<ParentLogin />} />
@@ -119,7 +125,6 @@ const App = () => (
           <Route path='auditLogs'          element={<AuditLogs />} />
           <Route path='analytics'          element={<AdminAnalytics />} />
           <Route path='calendar'           element={<SchoolCalendar />} />
-          
         </Route>
 
         {/* Teacher portal */}
