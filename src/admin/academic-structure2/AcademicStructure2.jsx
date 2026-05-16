@@ -1,161 +1,85 @@
+// src/admin/academic-structure2/AcademicStructure2.jsx
 import React, { useState } from 'react';
-import ClassStreamSetup from '../academic-structure2/ClassStreamSetup';
-import ProgramTrackManagement from '../academic-structure2/ProgramTrackManagement';
-import SubjectManagement from '../academic-structure2/SubjectManagement';
-import DepartmentManagement from '../academic-structure2/DepartmentManagement';
+import { CheckCircle2 } from 'lucide-react';
+import ProgramTrackManagement from './ProgramTrackManagement';
+import ClassStreamSetup       from './ClassStreamSetup';
+import SubjectManagement      from './SubjectManagement';
+import DepartmentManagement   from './DepartmentManagement';
+
+const STEPS = [
+  { id:1, title:'Programmes & Tracks', desc:'Courses & track assignment'  },
+  { id:2, title:'Class Streams',       desc:'Form classes & capacity'     },
+  { id:3, title:'Subjects',            desc:'Core & elective subjects'    },
+  { id:4, title:'Departments',         desc:'Depts, HODs & staff'         },
+];
 
 const AcademicStructure2 = () => {
   const [step, setStep] = useState(1);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [visited, setVisited] = useState(new Set([1]));
+  const goTo = (s) => { setStep(s); setVisited(v=>new Set([...v,s])); };
+  const next = () => goTo(Math.min(step+1, 4));
+  const prev = () => goTo(Math.max(step-1, 1));
 
-  const [allFormData, setAllFormData] = useState({
-    form1: {},
-    form2: {},
-    form3: {},
-    form4: {}
-  });
-
-  const updateFormData = (formId, data) => {
-    setAllFormData(prev => ({
-      ...prev,
-      [formId]: { ...prev[formId], ...data }
-    }));
-  };
-
-  const goToNext = () => {
-    if (step < 4) setStep(step + 1);
-  };
-
-  const goToPrev = () => {
-    if (step > 1) setStep(step - 1);
-  };
-
-  const goToStep = (num) => setStep(num);
-
-  const enterPreviewMode = () => setIsPreviewMode(true);
-  const exitPreviewMode = () => setIsPreviewMode(false);
-
-  const saveAllChanges = () => {
-    console.log(allFormData);
-    alert('All changes saved successfully!');
-  };
-
-  const renderCurrentStep = () => {
-    const commonProps = {
-      formData: allFormData[`form${step}`],
-      updateFormData: (data) => updateFormData(`form${step}`, data),
-      isPreviewMode
-    };
-
-    switch (step) {
-      case 1:
-        return <ProgramTrackManagement {...commonProps} />;
-      case 2:
-        return <ClassStreamSetup {...commonProps} />;
-      case 3:
-        return <SubjectManagement {...commonProps} />;
-      case 4:
-        return <DepartmentManagement {...commonProps} />;
-      default:
-        return null;
+  const renderStep = () => {
+    switch(step) {
+      case 1: return <ProgramTrackManagement/>;
+      case 2: return <ClassStreamSetup/>;
+      case 3: return <SubjectManagement/>;
+      case 4: return <DepartmentManagement/>;
+      default: return null;
     }
   };
 
-  const steps = [
-    { number: 1, title: 'Programme & Track' },
-    { number: 2, title: 'Class & Stream' },
-    { number: 3, title: 'Subjects' },
-    { number: 4, title: 'Departments' }
-  ];
-
   return (
-    <div className="bg-white max-w-6xl mx-auto p-6 rounded-xl shadow-md">
-      
-      <h1 className="text-3xl font-bold mb-6 text-[var(--accent-red)]">
-        Academic Structure Management
-      </h1>
-
-      {/* Step Indicator */}
-      <div className="flex flex-wrap gap-2 border-b pb-4 mb-6">
-        {steps.map((item, index) => {
-          const isActive = step === item.number;
-          const isCompleted = step > item.number;
-
-          return (
-            <div
-              key={item.number}
-              onClick={() => goToStep(item.number)}
-              className={`px-4 py-2 rounded-md cursor-pointer flex items-center gap-2 text-sm font-medium transition-all
-                ${isActive ? 'bg-blue-600 text-white' : ''}
-                ${isCompleted ? 'bg-green-500 text-white' : ''}
-                ${!isActive && !isCompleted ? 'bg-gray-200 text-gray-700' : ''}
-              `}
-            >
-              {isCompleted ? '✓' : item.number}
-              {item.title}
-            </div>
-          );
-        })}
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>School Organisation Setup</h1>
+        <p className="text-xs text-gray-400 mt-0.5">Programmes, classes, subjects and departments</p>
       </div>
 
-      {/* Form Content */}
-      <div className="min-h-[450px] mb-6">
-        {renderCurrentStep()}
-      </div>
-
-      {/* Buttons */}
-      <div className="flex justify-between items-center border-t pt-4">
-        
-        <button
-          onClick={goToPrev}
-          disabled={step === 1}
-          className={`px-5 py-2 rounded-md border 
-            ${step === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}
-          `}
-        >
-          ← Prev
-        </button>
-
-        <div className="flex gap-3">
-          
-          {!isPreviewMode && step !== 4 && (
-            <button
-              onClick={enterPreviewMode}
-              className="px-5 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-            >
-              Preview
-            </button>
-          )}
-
-          {isPreviewMode && (
-            <button
-              onClick={exitPreviewMode}
-              className="px-5 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-            >
-              Edit
-            </button>
-          )}
-
-          {step === 4 ? (
-            <button
-              onClick={saveAllChanges}
-              className="px-5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-            >
-              Save Changes
-            </button>
-          ) : (
-            <button
-              onClick={goToNext}
-              className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Next →
-            </button>
-          )}
-
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="flex overflow-x-auto border-b" style={{ borderColor:'var(--medium-gray)' }}>
+          {STEPS.map((s,i) => {
+            const done   = visited.has(s.id) && s.id < step;
+            const active = step === s.id;
+            return (
+              <button key={s.id} type="button" onClick={()=>goTo(s.id)}
+                className="flex items-center gap-2.5 px-4 py-3 border-b-2 transition-colors flex-shrink-0"
+                style={{ borderColor:active?'var(--royal-blue)':'transparent', backgroundColor:active?'#eef2ff':'white' }}>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+                  style={{ backgroundColor:done?'var(--success-dark)':active?'var(--royal-blue)':'var(--medium-gray)', color:'white' }}>
+                  {done?'✓':s.id}
+                </div>
+                <div className="text-left hidden sm:block">
+                  <p className="text-xs font-bold" style={{ color:active?'var(--royal-blue)':'var(--dark-gray)' }}>{s.title}</p>
+                  <p className="text-xs text-gray-400">{s.desc}</p>
+                </div>
+              </button>
+            );
+          })}
         </div>
+        <div className="p-5">{renderStep()}</div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <button type="button" onClick={prev} disabled={step===1}
+          className="px-4 py-2 text-sm font-semibold rounded-xl border"
+          style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', opacity:step===1?0.4:1 }}>
+          ← Previous
+        </button>
+        <span className="text-xs text-gray-400">Step {step} of {STEPS.length}</span>
+        {step<4
+          ? <button type="button" onClick={next}
+              className="px-5 py-2 text-sm font-bold text-white rounded-xl"
+              style={{ backgroundColor:'var(--royal-blue)' }}>Next →</button>
+          : <button type="button"
+              className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white rounded-xl"
+              style={{ backgroundColor:'var(--success-dark)' }}>
+              <CheckCircle2 size={14}/> Save All
+            </button>
+        }
       </div>
     </div>
   );
 };
-
 export default AcademicStructure2;

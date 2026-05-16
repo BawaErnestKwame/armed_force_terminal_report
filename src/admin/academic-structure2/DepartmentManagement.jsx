@@ -1,9 +1,9 @@
 // src/admin/academic-structure2/DepartmentManagement.jsx
 import React, { useState } from 'react';
-import { Plus, Edit3, Trash2, Save, X, CheckCircle2, BookOpen, Users } from 'lucide-react';
+import { Plus, Edit3, Trash2, Save, X, CheckCircle2, ChevronDown, BookOpen } from 'lucide-react';
 import { TEACHERS } from '../data/adminData';
 
-const INITIAL_DEPARTMENTS = [
+const INIT = [
   { id:1, name:'Mathematics',    code:'MTH', color:'var(--royal-blue)', bg:'#eef2ff', hodId:15, subjects:['Core Mathematics','Elective Mathematics'] },
   { id:2, name:'English',        code:'ENG', color:'#7c3aed',           bg:'#f5f3ff', hodId:13, subjects:['English Language','Literature in English'] },
   { id:3, name:'Science',        code:'SCI', color:'var(--accent-red)', bg:'#fff1f2', hodId:3,  subjects:['Integrated Science','Physics','Chemistry','Biology'] },
@@ -15,16 +15,22 @@ const INITIAL_DEPARTMENTS = [
 const EMPTY = { name:'', code:'', color:'var(--royal-blue)', bg:'#eef2ff', hodId:'', subjects:[] };
 
 const DepartmentManagement = () => {
-  const [depts,    setDepts]   = useState(INITIAL_DEPARTMENTS);
-  const [showForm, setShowForm]= useState(false);
-  const [editDept, setEditD]   = useState(null);
-  const [form,     setForm]    = useState(EMPTY);
-  const [toast,    setToast]   = useState(null);
-  const [subInput, setSubInput]= useState('');
-  const [openDept, setOpenDept]= useState(null);
+  const [depts,    setDepts]    = useState(INIT);
+  const [showForm, setShowForm] = useState(false);
+  const [editDept, setEditD]    = useState(null);
+  const [form,     setForm]     = useState({...EMPTY});
+  const [subInput, setSubInput] = useState('');
+  const [openDept, setOpenDept] = useState(null);
+  const [toast,    setToast]    = useState(null);
 
-  const showToast = (msg, type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
+  const showToast = (msg,type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const addSub = () => {
+    const s = subInput.trim();
+    if (s && !form.subjects.includes(s)) { set('subjects',[...form.subjects,s]); setSubInput(''); }
+  };
+  const removeSub = (s) => set('subjects',form.subjects.filter(x=>x!==s));
 
   const handleSave = () => {
     if (!form.name.trim()) return;
@@ -35,20 +41,13 @@ const DepartmentManagement = () => {
       setDepts(ds=>[...ds,{...form,id:Date.now()}]);
       showToast(`${form.name} created`);
     }
-    setShowForm(false); setEditD(null); setForm(EMPTY);
+    setShowForm(false); setEditD(null); setForm({...EMPTY});
   };
 
-  const handleDelete = (dept) => {
-    setDepts(ds=>ds.filter(d=>d.id!==dept.id));
-    showToast(`${dept.name} removed`,'error');
+  const handleDelete = (d) => {
+    setDepts(ds=>ds.filter(x=>x.id!==d.id));
+    showToast(`${d.name} removed`,'error');
   };
-
-  const addSub = () => {
-    const s = subInput.trim();
-    if (s && !form.subjects.includes(s)) { set('subjects',[...form.subjects,s]); setSubInput(''); }
-  };
-
-  const removeSub = (s) => set('subjects', form.subjects.filter(x=>x!==s));
 
   const getTeacher = (id) => TEACHERS.find(t=>t.id===id||t.id===parseInt(id));
   const getDeptTeachers = (name) => TEACHERS.filter(t=>t.department===name);
@@ -64,27 +63,38 @@ const DepartmentManagement = () => {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Department Management</h1>
-          <p className="text-xs text-gray-400 mt-0.5">{depts.length} departments · assign HODs and subjects</p>
+          <h2 className="font-black text-base" style={{ color:'var(--dark-gray)' }}>Department Management</h2>
+          <p className="text-xs text-gray-400">{depts.length} departments · assign HODs, subjects and staff</p>
         </div>
-        <button type="button" onClick={()=>{ setEditD(null); setForm(EMPTY); setShowForm(true); }}
+        <button type="button" onClick={()=>{ setEditD(null); setForm({...EMPTY}); setShowForm(true); }}
           className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl text-white"
           style={{ backgroundColor:'var(--royal-blue)' }}>
           <Plus size={14}/> Add Department
         </button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Quick-pick pills */}
+      <div className="flex flex-wrap gap-2">
+        {depts.map(d=>(
+          <button key={d.id} type="button" onClick={()=>setOpenDept(openDept===d.id?null:d.id)}
+            className="px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition"
+            style={{ borderColor:openDept===d.id?d.color:'var(--medium-gray)', backgroundColor:openDept===d.id?d.bg:'white', color:openDept===d.id?d.color:'var(--dark-gray)' }}>
+            {d.name} ({getDeptTeachers(d.name).length})
+          </button>
+        ))}
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label:'Departments',   value:depts.length,               color:'var(--royal-blue)'   },
-          { label:'Total Staff',   value:TEACHERS.length,            color:'#7c3aed'             },
-          { label:'Total Subjects',value:depts.reduce((s,d)=>s+d.subjects.length,0), color:'var(--success-dark)' },
-          { label:'Avg Staff/Dept',value:Math.round(TEACHERS.length/depts.length),   color:'var(--warning)'      },
+          { label:'Departments',    value:depts.length,                                  color:'var(--royal-blue)' },
+          { label:'Teaching Staff', value:TEACHERS.length,                               color:'#7c3aed'           },
+          { label:'Total Subjects', value:depts.reduce((s,d)=>s+d.subjects.length,0),   color:'var(--success-dark)'},
+          { label:'Avg Staff/Dept', value:Math.round(TEACHERS.length/Math.max(depts.length,1)), color:'var(--warning)' },
         ].map(({label,value,color})=>(
-          <div key={label} className="bg-white rounded-xl border p-4 text-center shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
+          <div key={label} className="bg-white rounded-xl border p-3 text-center shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
             <p className="text-2xl font-black" style={{ color }}>{value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+            <p className="text-xs text-gray-500">{label}</p>
           </div>
         ))}
       </div>
@@ -92,14 +102,14 @@ const DepartmentManagement = () => {
       {/* Department cards */}
       <div className="space-y-3">
         {depts.map(dept=>{
-          const hod = getTeacher(dept.hodId);
-          const staff = getDeptTeachers(dept.name);
+          const hod    = getTeacher(dept.hodId);
+          const staff  = getDeptTeachers(dept.name);
           const isOpen = openDept===dept.id;
           return (
             <div key={dept.id} className="bg-white rounded-2xl border shadow-sm overflow-hidden"
               style={{ borderColor:isOpen?dept.color:'var(--medium-gray)', borderWidth:isOpen?2:1 }}>
-              <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
-                onClick={()=>setOpenDept(isOpen?null:dept.id)}>
+              <button type="button" onClick={()=>setOpenDept(isOpen?null:dept.id)}
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition text-left">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-black"
                     style={{ backgroundColor:dept.color }}>{dept.code}</div>
@@ -107,23 +117,24 @@ const DepartmentManagement = () => {
                     <p className="font-black text-sm" style={{ color:'var(--dark-gray)' }}>{dept.name} Department</p>
                     <p className="text-xs text-gray-400">
                       {staff.length} staff · {dept.subjects.length} subjects
-                      {hod ? ` · HOD: ${hod.title} ${hod.lastName}` : ''}
+                      {hod?` · HOD: ${hod.title} ${hod.lastName}`:''}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={e=>{e.stopPropagation();setEditD(dept);setForm({...dept,subjects:[...dept.subjects]});setShowForm(true);}}
-                    style={{ color:'var(--warning)' }}><Edit3 size={15}/></button>
+                    style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
                   <button type="button" onClick={e=>{e.stopPropagation();handleDelete(dept);}}
-                    style={{ color:'var(--accent-red)' }}><Trash2 size={15}/></button>
+                    style={{ color:'var(--accent-red)' }}><Trash2 size={14}/></button>
+                  <ChevronDown size={15} className="text-gray-400 transition-transform"
+                    style={{ transform:isOpen?'rotate(180deg)':undefined }}/>
                 </div>
-              </div>
+              </button>
 
               {isOpen && (
                 <div className="border-t px-4 pb-4 pt-3 space-y-4"
                   style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {/* Subjects */}
                     <div>
                       <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color:'var(--dark-gray)',opacity:0.5 }}>Subjects</p>
                       <div className="flex flex-wrap gap-1.5">
@@ -133,18 +144,33 @@ const DepartmentManagement = () => {
                         ))}
                       </div>
                     </div>
-                    {/* Staff */}
                     <div>
-                      <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color:'var(--dark-gray)',opacity:0.5 }}>Staff ({staff.length})</p>
+                      <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color:'var(--dark-gray)',opacity:0.5 }}>
+                        Staff ({staff.length})
+                      </p>
                       <div className="space-y-1.5">
-                        {staff.map(t=>(
-                          <div key={t.id} className="flex items-center gap-2 text-xs bg-white rounded-lg p-2 border" style={{ borderColor:'var(--medium-gray)' }}>
+                        {staff.length===0
+                          ? <p className="text-xs text-gray-400">No staff assigned to this department</p>
+                          : staff.map(t=>(
+                          <div key={t.id} className="flex items-center gap-2 text-xs bg-white rounded-lg p-2 border"
+                            style={{ borderColor:'var(--medium-gray)' }}>
                             <div className="w-6 h-6 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0"
                               style={{ backgroundColor:dept.color }}>
                               {t.firstName[0]}{t.lastName[0]}
                             </div>
-                            <span className="font-semibold flex-1" style={{ color:'var(--dark-gray)' }}>{t.title} {t.firstName} {t.lastName}</span>
-                            {dept.hodId===t.id && <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor:dept.bg,color:dept.color }}>HOD</span>}
+                            <span className="font-semibold flex-1 truncate" style={{ color:'var(--dark-gray)' }}>
+                              {t.title} {t.firstName} {t.lastName}
+                            </span>
+                            <div className="flex gap-1 flex-wrap justify-end">
+                              {dept.hodId===t.id&&<span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor:dept.bg,color:dept.color }}>HOD</span>}
+                              {t.formClass&&<span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor:'#f0fdf4',color:'var(--success-dark)' }}>FT</span>}
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">{t.currentPeriods||0}/{t.maxPeriods||30} periods</p>
+                              <div className="h-1 rounded-full overflow-hidden mt-0.5" style={{ width:60, backgroundColor:'var(--medium-gray)' }}>
+                                <div className="h-full rounded-full" style={{ width:`${Math.round(((t.currentPeriods||0)/(t.maxPeriods||30))*100)}%`, backgroundColor:dept.color }}/>
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -169,8 +195,8 @@ const DepartmentManagement = () => {
             <div className="h-1 flex-shrink-0" style={{ backgroundColor:'var(--accent-red)' }}/>
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
               {[
-                { label:'Department Name', field:'name'  },
-                { label:'Code (3 letters)',field:'code'  },
+                { label:'Department Name *', field:'name' },
+                { label:'Code (3 letters)', field:'code' },
               ].map(({label,field})=>(
                 <div key={field}>
                   <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>{label}</label>
@@ -182,7 +208,7 @@ const DepartmentManagement = () => {
                 </div>
               ))}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>HOD</label>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Head of Department</label>
                 <select value={form.hodId||''} onChange={e=>set('hodId',parseInt(e.target.value)||'')}
                   className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none bg-white"
                   style={{ borderColor:'var(--medium-gray)' }}>
@@ -196,8 +222,7 @@ const DepartmentManagement = () => {
                 <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Subjects</label>
                 <div className="flex gap-2 mb-2">
                   <input value={subInput} onChange={e=>setSubInput(e.target.value)}
-                    onKeyDown={e=>e.key==='Enter'&&addSub()}
-                    placeholder="Add subject..."
+                    onKeyDown={e=>e.key==='Enter'&&addSub()} placeholder="Type subject + Enter"
                     className="flex-1 px-3 py-2 text-sm rounded-xl border-2 outline-none"
                     style={{ borderColor:'var(--medium-gray)' }}/>
                   <button type="button" onClick={addSub}
@@ -232,5 +257,4 @@ const DepartmentManagement = () => {
     </div>
   );
 };
-
 export default DepartmentManagement;

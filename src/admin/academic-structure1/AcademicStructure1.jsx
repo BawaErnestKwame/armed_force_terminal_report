@@ -1,169 +1,97 @@
+// src/admin/academic-structure1/AcademicStructure1.jsx
 import React, { useState } from 'react';
-import SchoolProfileSetup from './SchoolProfileSetup';
-import AcademicYear from './AcademicYear';
-import DoubleTruckManagement from './DoubleTruckManagement';
-import GradingConfiguration from './GradingConfiguration';
+import { CheckCircle2 } from 'lucide-react';
+import SchoolProfileSetup      from './SchoolProfileSetup';
+import AcademicYear            from './AcademicYear';
+import DoubleTruckManagement   from './DoubleTruckManagement';
+import GradingConfiguration    from './GradingConfiguration';
 import AssessmentConfiguration from './AssessmentConfiguration';
 
+const STEPS = [
+  { id:1, title:'School Profile',  desc:'Identity & contacts'   },
+  { id:2, title:'Academic Year',   desc:'Terms & dates'         },
+  { id:3, title:'Double Track',    desc:'Track A / B calendar'  },
+  { id:4, title:'Grading Scale',   desc:'A1–F9 configuration'   },
+  { id:5, title:'Assessment',      desc:'CA breakdown & weights'},
+];
 
 const AcademicStructure1 = () => {
-  const [step, setStep] = useState(1);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [allFormData, setAllFormData] = useState({
-    form1: {},
-    form2: {},
-    form3: {},
-    form4: {},
-    form5: {}
-  });
+  const [step,    setStep]    = useState(1);
+  const [visited, setVisited] = useState(new Set([1]));
 
-  const updateFormData = (formId, data) => {
-    setAllFormData(prev => ({
-      ...prev,
-      [formId]: { ...prev[formId], ...data }
-    }));
-  };
+  const goTo = (s) => { setStep(s); setVisited(v=>new Set([...v,s])); };
+  const next = () => goTo(Math.min(step+1, 5));
+  const prev = () => goTo(Math.max(step-1, 1));
 
-  const goToNext = () => {
-    if (step < 5) setStep(step + 1);
-  };
-
-  const goToPrev = () => {
-    if (step > 1) setStep(step - 1);
-  };
-
-  const goToStep = (stepNumber) => {
-    setStep(stepNumber);
-  };
-
-  const enterPreviewMode = () => {
-    setIsPreviewMode(true);
-  };
-
-  const exitPreviewMode = () => {
-    setIsPreviewMode(false);
-  };
-
-  const saveAllChanges = () => {
-    console.log('Saving all data:', allFormData);
-    alert('All changes saved successfully!');
-  };
-
-  const renderCurrentStep = () => {
-    const commonProps = {
-      formData: allFormData[`form${step}`],
-      updateFormData: (data) => updateFormData(`form${step}`, data),
-      isPreviewMode: isPreviewMode
-    };
-
+  const renderStep = () => {
     switch(step) {
-      case 1:
-        return <SchoolProfileSetup {...commonProps} />;
-      case 2:
-        return <AcademicYear {...commonProps} />;
-      case 3:
-        return <DoubleTruckManagement {...commonProps} />;
-      case 4:
-        return <GradingConfiguration {...commonProps} />;
-      case 5:
-        return <AssessmentConfiguration {...commonProps} />;
-      default:
-        return null;
+      case 1: return <SchoolProfileSetup />;
+      case 2: return <AcademicYear />;
+      case 3: return <DoubleTruckManagement />;
+      case 4: return <GradingConfiguration />;
+      case 5: return <AssessmentConfiguration />;
+      default: return null;
     }
   };
 
-  const steps = [
-    { number: 1, title: 'School Profile' },
-    { number: 2, title: 'Academic Year' },
-    { number: 3, title: 'Double Track' },
-    { number: 4, title: 'Grading Scale' },
-    { number: 5, title: 'Assessment' }
-  ];
-
   return (
-    <div className="bg-white rounded-lg p-4 shadow-md overflow-hidden" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 className='text-[var(--accent-red)] lg:text-4xl font-bold mb-6'>Academic Structure Setup</h1>
-      
-      {/* Step Indicator */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: `2px solid var(--medium-gray)`, paddingBottom: '16px' }}>
-        {steps.map(stepItem => (
-          <div
-            key={stepItem.number}
-            onClick={() => goToStep(stepItem.number)}
-            style={{
-              padding: '10px 20px',
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Academic Structure Setup</h1>
+        <p className="text-xs text-gray-400 mt-0.5">Configure school profile, academic calendar, grading and assessment</p>
+      </div>
 
-              cursor: 'pointer',
-              backgroundColor: step === stepItem.number ? 'var(--royal-blue)' : 'var(--light-gray)',
-              color: step === stepItem.number ? 'var(--white)' : 'var(--dark-gray)',
-              fontWeight: '500',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            {stepItem.number}. {stepItem.title}
-          </div>
-        ))}
+      {/* Step tabs */}
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="flex overflow-x-auto border-b" style={{ borderColor:'var(--medium-gray)' }}>
+          {STEPS.map((s,i) => {
+            const done   = visited.has(s.id) && s.id < step;
+            const active = step === s.id;
+            return (
+              <button key={s.id} type="button" onClick={()=>goTo(s.id)}
+                className="flex items-center gap-2.5 px-4 py-3 border-b-2 transition-colors flex-shrink-0 min-w-0"
+                style={{
+                  borderColor: active ? 'var(--royal-blue)' : 'transparent',
+                  backgroundColor: active ? '#eef2ff' : 'white',
+                }}>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+                  style={{ backgroundColor: done?'var(--success-dark)':active?'var(--royal-blue)':'var(--medium-gray)', color:'white' }}>
+                  {done ? '✓' : s.id}
+                </div>
+                <div className="text-left hidden sm:block">
+                  <p className="text-xs font-bold" style={{ color: active?'var(--royal-blue)':'var(--dark-gray)' }}>{s.title}</p>
+                  <p className="text-xs text-gray-400">{s.desc}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <div className="p-5">{renderStep()}</div>
       </div>
-      
-      {/* Form Content */}
-      <div style={{ minHeight: '500px', marginBottom: '32px' }}>
-        {renderCurrentStep()}
-      </div>
-      
-      {/* Navigation Buttons */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid var(--medium-gray)`, paddingTop: '20px' }}>
-        <button
-          onClick={goToPrev}
-          disabled={step === 1}
-          style={{
-            ...buttonStyle('secondary'),
-            opacity: step === 1 ? 0.5 : 1,
-            cursor: step === 1 ? 'not-allowed' : 'pointer'
-          }}
-        >
-          ← Prev
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between">
+        <button type="button" onClick={prev} disabled={step===1}
+          className="px-4 py-2 text-sm font-semibold rounded-xl border transition"
+          style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', opacity:step===1?0.4:1 }}>
+          ← Previous
         </button>
-        
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {!isPreviewMode && step !== 5 && (
-            <button onClick={enterPreviewMode} style={buttonStyle('secondary')}>
-              Preview
-            </button>
-          )}
-          
-          {isPreviewMode && (
-            <button onClick={exitPreviewMode} style={buttonStyle('secondary')}>
-              Edit
-            </button>
-          )}
-          
-          {step === 5 ? (
-            <button onClick={saveAllChanges} style={buttonStyle('success')}>
-              Save Changes
-            </button>
-          ) : (
-            <button onClick={goToNext} style={buttonStyle('primary')}>
+        <span className="text-xs text-gray-400">Step {step} of {STEPS.length}</span>
+        {step < 5
+          ? <button type="button" onClick={next}
+              className="px-5 py-2 text-sm font-bold text-white rounded-xl"
+              style={{ backgroundColor:'var(--royal-blue)' }}>
               Next →
             </button>
-          )}
-        </div>
+          : <button type="button"
+              className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white rounded-xl"
+              style={{ backgroundColor:'var(--success-dark)' }}>
+              <CheckCircle2 size={14}/> Save All
+            </button>
+        }
       </div>
     </div>
   );
 };
-
-const buttonStyle = (type) => ({
-  padding: '10px 24px',
-  border: 'none',
-  borderRadius: '6px',
-  cursor: 'pointer',
-  fontWeight: '500',
-  fontSize: '14px',
-  backgroundColor: type === 'primary' ? 'var(--royal-blue)' : 
-                    type === 'success' ? 'var(--success)' : 
-                    'var(--light-gray)',
-  color: type === 'primary' || type === 'success' ? 'var(--white)' : 'var(--dark-gray)',
-  transition: 'all 0.3s ease'
-});
 
 export default AcademicStructure1;

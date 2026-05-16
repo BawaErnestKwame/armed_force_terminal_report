@@ -208,11 +208,11 @@ const Profile = () => {
               )}
             </div>
             <div className="pb-1">
-              <h2 className="text-xl font-black" style={{ color: 'var(--dark-gray)' }}>
+              <h2 className="text-xl font-black " style={{ color: 'white' }}>
                 {info.title} {info.firstName} {info.lastName}
               </h2>
               <p className="text-sm text-gray-400">{info.position}</p>
-              <div className="flex flex-wrap gap-2 mt-1.5">
+              <div className="flex flex-wrap gap-2 mt-2">
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
                   🛡 Administrator

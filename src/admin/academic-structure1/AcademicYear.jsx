@@ -1,215 +1,263 @@
+// src/admin/academic-structure1/AcademicYear.jsx
 import React, { useState } from 'react';
+import { Plus, Trash2, Save, CheckCircle2, X, Edit3, Calendar, ChevronDown } from 'lucide-react';
+import { ACADEMIC_YEARS } from '../data/adminData';
 
-const AcademicYear = ({ formData, updateFormData, isPreviewMode }) => {
-  const [academicYears, setAcademicYears] = useState(formData?.academicYears || []);
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [activeTerm, setActiveTerm] = useState(null);
+const buildYears = () => ACADEMIC_YEARS.map(y => ({
+  ...y,
+  activeTerm: y.status==='active' ? 'Term 2' : null,
+}));
 
-  const addAcademicYear = () => {
-    const newYear = {
-      id: Date.now(),
-      title: '',
-      terms: [
-        { id: 1, name: 'Term 1', startDate: '', endDate: '', vacationDate: '', reopeningDate: '', cumulative: false },
-        { id: 2, name: 'Term 2', startDate: '', endDate: '', vacationDate: '', reopeningDate: '', cumulative: true },
-        { id: 3, name: 'Term 3', startDate: '', endDate: '', vacationDate: '', reopeningDate: '', cumulative: true }
-      ]
-    };
-    setAcademicYears([...academicYears, newYear]);
-    setSelectedYear(newYear.id);
-  };
+const EMPTY_YEAR = {
+  id: null, year:'', status:'draft',
+  term1:{ start:'', end:'', trackAStart:'', trackBStart:'' },
+  term2:{ start:'', end:'', trackAStart:'', trackBStart:'' },
+  term3:{ start:'', end:'', trackAStart:'', trackBStart:'' },
+  notes:'', activeTerm:null,
+};
 
-  const updateYear = (yearId, field, value) => {
-    const updatedYears = academicYears.map(year =>
-      year.id === yearId ? { ...year, [field]: value } : year
-    );
-    setAcademicYears(updatedYears);
-    updateFormData && updateFormData({ academicYears: updatedYears });
-  };
+const STATUS_STYLE = {
+  active:   { bg:'#f0fdf4', color:'var(--success-dark)', label:'Active'   },
+  archived: { bg:'var(--light-gray)', color:'#6b7280',   label:'Archived' },
+  draft:    { bg:'#fffbeb', color:'var(--warning)',       label:'Draft'    },
+};
 
-  const updateTerm = (yearId, termId, field, value) => {
-    const updatedYears = academicYears.map(year => {
-      if (year.id === yearId) {
-        const updatedTerms = year.terms.map(term =>
-          term.id === termId ? { ...term, [field]: value } : term
-        );
-        return { ...year, terms: updatedTerms };
-      }
-      return year;
-    });
-    setAcademicYears(updatedYears);
-    updateFormData && updateFormData({ academicYears: updatedYears });
-  };
+const DateInput = ({ label, value, onChange }) => (
+  <div>
+    <label className="text-xs text-gray-400 block mb-0.5">{label}</label>
+    <input type="date" value={value||''} onChange={e=>onChange(e.target.value)}
+      className="w-full px-3 py-2 text-xs rounded-xl border-2 outline-none"
+      style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}
+      onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
+      onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}/>
+  </div>
+);
 
-  const activateTerm = (yearId, termId) => {
-    setActiveTerm({ yearId, termId });
-    alert(`Activated: ${academicYears.find(y => y.id === yearId)?.title} - Term ${termId}`);
-  };
+const AcademicYear = () => {
+  const [years,    setYears]    = useState(buildYears());
+  const [showForm, setShowForm] = useState(false);
+  const [editYear, setEditY]    = useState(null);
+  const [form,     setForm]     = useState({...EMPTY_YEAR});
+  const [expanded, setExpanded] = useState(new Set([ACADEMIC_YEARS.find(y=>y.status==='active')?.id]));
+  const [toast,    setToast]    = useState(null);
 
-  const archiveYear = (yearId) => {
-    if (window.confirm('Archive this academic year?')) {
-      setAcademicYears(academicYears.filter(year => year.id !== yearId));
+  const showToast = (msg,type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
+  const setF = (k,v) => setForm(f=>({...f,[k]:v}));
+  const setFT = (term,k,v) => setForm(f=>({...f,[term]:{...f[term],[k]:v}}));
+  const toggleExpand = (id) => setExpanded(s=>{ const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n; });
+
+  const openAdd = () => { setEditY(null); setForm({...EMPTY_YEAR,id:Date.now()}); setShowForm(true); };
+  const openEdit = (yr) => { setEditY(yr); setForm({...yr}); setShowForm(true); };
+
+  const handleSave = () => {
+    if (!form.year.trim()) return;
+    if (editYear) {
+      setYears(ys=>ys.map(y=>y.id===editYear.id?{...form}:y));
+      showToast(`${form.year} updated`);
+    } else {
+      setYears(ys=>[{...form},...ys]);
+      showToast(`${form.year} created`);
     }
+    setShowForm(false);
   };
 
-  if (isPreviewMode) {
-    return (
-      <div className="p-5 bg-[var(--light-gray)] rounded-lg">
-        <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-4">
-          Academic Years Preview
-        </h3>
+  const handleDelete = (yr) => {
+    setYears(ys=>ys.filter(y=>y.id!==yr.id));
+    showToast(`${yr.year} removed`,'error');
+  };
 
-        {academicYears.map(year => (
-          <div key={year.id} className="bg-white p-4 rounded-md mb-4 shadow-sm">
-            <h4 className="text-[var(--royal-blue)] font-semibold">
-              {year.title || 'Untitled Year'}
-            </h4>
+  const handleActivateTerm = (yrId, term) => {
+    setYears(ys=>ys.map(y=>y.id===yrId?{...y,activeTerm:term}:y));
+    showToast(`${term} activated`);
+  };
 
-            {year.terms.map(term => (
-              <div key={term.id} className="mt-2 text-sm">
-                <strong>{term.name}:</strong> {term.startDate || 'TBD'} to {term.endDate || 'TBD'}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  const inputClass =
-    "w-full px-3 py-2 border border-[var(--medium-gray)] rounded-md text-sm focus:outline-[var(--accent-red)] focus:ring-2 focus:ring-[var(--accent-red)]";
+  const handleSetActive = (yr) => {
+    setYears(ys=>ys.map(y=>({ ...y, status: y.id===yr.id?'active':'archived' })));
+    showToast(`${yr.year} set as active`);
+  };
 
   return (
-    <div className="max-w-[1000px] mx-auto">
+    <div className="space-y-4">
+      {toast && (
+        <div className="fixed top-4 right-4 z-[60] px-4 py-3 rounded-xl shadow-xl text-white text-sm font-semibold flex items-center gap-2"
+          style={{ backgroundColor:toast.type==='error'?'var(--accent-red)':'var(--success-dark)' }}>
+          <CheckCircle2 size={14}/> {toast.msg}
+        </div>
+      )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-[var(--royal-blue)] text-xl font-bold">
-          Academic Year & Term Management
-        </h2>
-
-        <button
-          onClick={addAcademicYear}
-          className="px-4 py-2 rounded-md bg-[var(--royal-blue)] text-white font-medium hover:opacity-90 transition"
-        >
-          + Create Academic Year
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-black text-base" style={{ color:'var(--dark-gray)' }}>Academic Year & Term Management</h2>
+          <p className="text-xs text-gray-400">{years.length} academic years · click any to expand</p>
+        </div>
+        <button type="button" onClick={openAdd}
+          className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl text-white"
+          style={{ backgroundColor:'var(--royal-blue)' }}>
+          <Plus size={14}/> New Year
         </button>
       </div>
 
-      {/* Years */}
-      {academicYears.map(year => (
-        <div
-          key={year.id}
-          className="bg-[var(--light-gray)] p-5 rounded-lg mb-5"
-        >
-
-          {/* Year Header */}
-          <div className="flex justify-between items-center mb-4">
-            <input
-              type="text"
-              value={year.title}
-              onChange={(e) => updateYear(year.id, 'title', e.target.value)}
-              placeholder="e.g., 2025/2026"
-              className={`${inputClass} text-lg font-bold max-w-[250px]`}
-            />
-
-            <button
-              onClick={() => archiveYear(year.id)}
-              className="px-4 py-2 rounded-md bg-[var(--danger)] text-white hover:opacity-90 transition"
-            >
-              Archive
-            </button>
-          </div>
-
-          {/* Terms */}
-          <div className="space-y-5">
-            {year.terms.map(term => (
-              <div key={term.id} className="border-t border-[var(--medium-gray)] pt-4">
-
-                <h3 className="text-[var(--royal-blue-dark)] font-semibold mb-3">
-                  {term.name}
-                </h3>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-
-                  <div>
-                    <label className="text-sm">Start Date</label>
-                    <input
-                      type="date"
-                      value={term.startDate}
-                      onChange={(e) => updateTerm(year.id, term.id, 'startDate', e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm">End Date</label>
-                    <input
-                      type="date"
-                      value={term.endDate}
-                      onChange={(e) => updateTerm(year.id, term.id, 'endDate', e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm">Vacation Date</label>
-                    <input
-                      type="date"
-                      value={term.vacationDate}
-                      onChange={(e) => updateTerm(year.id, term.id, 'vacationDate', e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm">Next Term Reopening</label>
-                    <input
-                      type="date"
-                      value={term.reopeningDate}
-                      onChange={(e) => updateTerm(year.id, term.id, 'reopeningDate', e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
-
+      {/* Year cards */}
+      {years.map(yr => {
+        const ss  = STATUS_STYLE[yr.status] || STATUS_STYLE.draft;
+        const isX = expanded.has(yr.id);
+        return (
+          <div key={yr.id} className="bg-white rounded-2xl border shadow-sm overflow-hidden"
+            style={{ borderColor: yr.status==='active'?'var(--success-dark)':'var(--medium-gray)', borderWidth: yr.status==='active'?2:1 }}>
+            <button type="button" onClick={()=>toggleExpand(yr.id)}
+              className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-xs"
+                  style={{ backgroundColor:'var(--royal-blue)' }}>
+                  <Calendar size={16}/>
                 </div>
-
-                {/* Checkbox */}
-                <div className="mt-3 flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={term.cumulative}
-                    onChange={(e) => updateTerm(year.id, term.id, 'cumulative', e.target.checked)}
-                    className="mr-2 accent-[var(--accent-red)]"
-                  />
-                  <span className="text-sm">
-                    Cumulative Reporting (include previous terms)
-                  </span>
+                <div>
+                  <p className="font-black text-base" style={{ color:'var(--dark-gray)' }}>{yr.year}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor:ss.bg, color:ss.color }}>
+                      {ss.label}
+                    </span>
+                    {yr.activeTerm && (
+                      <span className="text-xs text-gray-400">Current: {yr.activeTerm}</span>
+                    )}
+                  </div>
                 </div>
-
-                {/* Activate Button */}
-                <button
-                  onClick={() => activateTerm(year.id, term.id)}
-                  className="mt-3 px-4 py-2 rounded-md bg-[var(--success)] text-white hover:opacity-90 transition"
-                >
-                  Activate {term.name}
-                </button>
-
               </div>
-            ))}
-          </div>
-        </div>
-      ))}
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={e=>{e.stopPropagation();openEdit(yr);}}
+                  style={{ color:'var(--warning)' }}><Edit3 size={15}/></button>
+                <button type="button" onClick={e=>{e.stopPropagation();handleDelete(yr);}}
+                  style={{ color:'var(--accent-red)' }}><Trash2 size={15}/></button>
+                <ChevronDown size={16} className="text-gray-400 transition-transform"
+                  style={{ transform:isX?'rotate(180deg)':undefined }}/>
+              </div>
+            </button>
 
-      {/* Empty State */}
-      {academicYears.length === 0 && (
-        <div className="text-center py-10 text-[var(--dark-gray)]">
-          No academic years created. Click "Create Academic Year" to start.
+            {isX && (
+              <div className="border-t px-5 pb-5 pt-4 space-y-4"
+                style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
+
+                {/* Set active btn */}
+                {yr.status !== 'active' && (
+                  <div className="flex justify-end">
+                    <button type="button" onClick={()=>handleSetActive(yr)}
+                      className="text-xs font-bold px-3 py-1.5 rounded-lg text-white"
+                      style={{ backgroundColor:'var(--success-dark)' }}>
+                      ✓ Set as Active Year
+                    </button>
+                  </div>
+                )}
+
+                {/* Terms grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {[1,2,3].map(n => {
+                    const td = yr[`term${n}`] || {};
+                    const isCurrent = yr.activeTerm===`Term ${n}`;
+                    return (
+                      <div key={n} className="bg-white rounded-xl border p-4"
+                        style={{ borderColor: isCurrent?'var(--royal-blue)':'var(--medium-gray)', borderWidth: isCurrent?2:1 }}>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="font-bold text-sm" style={{ color: isCurrent?'var(--royal-blue)':'var(--dark-gray)' }}>
+                            Term {n}
+                          </p>
+                          <div className="flex items-center gap-1.5">
+                            {isCurrent && <span className="text-xs px-1.5 py-0.5 rounded font-bold text-white" style={{ backgroundColor:'var(--royal-blue)' }}>Active</span>}
+                            {yr.status==='active' && !isCurrent && (
+                              <button type="button" onClick={()=>handleActivateTerm(yr.id,`Term ${n}`)}
+                                className="text-xs px-2 py-0.5 rounded font-semibold"
+                                style={{ backgroundColor:'#f0fdf4', color:'var(--success-dark)', border:'1px solid var(--success-dark)' }}>
+                                Activate
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-2 text-xs text-gray-500">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div><p className="font-semibold">Start</p><p>{td.start||'—'}</p></div>
+                            <div><p className="font-semibold">End</p><p>{td.end||'—'}</p></div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 pt-1 border-t" style={{ borderColor:'var(--medium-gray)' }}>
+                            <div><p className="font-semibold text-amber-600">Track A</p><p>{td.trackAStart||'—'}</p></div>
+                            <div><p className="font-semibold text-green-600">Track B</p><p>{td.trackBStart||'—'}</p></div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {yr.notes && <p className="text-xs text-gray-500 italic">{yr.notes}</p>}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Add/Edit Modal */}
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ background:'linear-gradient(135deg,var(--royal-blue),var(--royal-blue-dark))' }}>
+              <p className="text-white font-black">{editYear?'Edit Academic Year':'Add Academic Year'}</p>
+              <button type="button" onClick={()=>setShowForm(false)} className="text-white"><X size={18}/></button>
+            </div>
+            <div className="h-1 flex-shrink-0" style={{ backgroundColor:'var(--accent-red)' }}/>
+            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Academic Year *</label>
+                  <input value={form.year} onChange={e=>setF('year',e.target.value)} placeholder="e.g. 2025/2026"
+                    className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none"
+                    style={{ borderColor:'var(--medium-gray)' }}
+                    onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
+                    onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}/>
+                </div>
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Status</label>
+                  <select value={form.status} onChange={e=>setF('status',e.target.value)}
+                    className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none bg-white"
+                    style={{ borderColor:'var(--medium-gray)' }}>
+                    <option value="draft">Draft</option>
+                    <option value="active">Active</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+              </div>
+
+              {[1,2,3].map(n => (
+                <div key={n} className="border rounded-xl p-4" style={{ borderColor:'var(--medium-gray)' }}>
+                  <p className="text-sm font-black mb-3" style={{ color:'var(--royal-blue)' }}>Term {n}</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <DateInput label="Term Start"  value={form[`term${n}`]?.start}       onChange={v=>setFT(`term${n}`,'start',v)}/>
+                    <DateInput label="Term End"    value={form[`term${n}`]?.end}         onChange={v=>setFT(`term${n}`,'end',v)}/>
+                    <DateInput label="Track A Start" value={form[`term${n}`]?.trackAStart} onChange={v=>setFT(`term${n}`,'trackAStart',v)}/>
+                    <DateInput label="Track B Start" value={form[`term${n}`]?.trackBStart} onChange={v=>setFT(`term${n}`,'trackBStart',v)}/>
+                  </div>
+                </div>
+              ))}
+
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Notes</label>
+                <textarea value={form.notes||''} onChange={e=>setF('notes',e.target.value)} rows={2} placeholder="Optional notes..."
+                  className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none resize-none"
+                  style={{ borderColor:'var(--medium-gray)' }}/>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 px-5 py-4 border-t flex-shrink-0"
+              style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
+              <button type="button" onClick={()=>setShowForm(false)}
+                className="px-4 py-2 text-sm rounded-xl border font-semibold"
+                style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}>Cancel</button>
+              <button type="button" onClick={handleSave}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white rounded-xl"
+                style={{ backgroundColor:'var(--royal-blue)' }}>
+                <Save size={13}/> {editYear?'Save Changes':'Create Year'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
 };
-
 export default AcademicYear;

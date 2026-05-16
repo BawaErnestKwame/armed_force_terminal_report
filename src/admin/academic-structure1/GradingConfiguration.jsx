@@ -1,193 +1,214 @@
+// src/admin/academic-structure1/GradingConfiguration.jsx
 import React, { useState } from 'react';
+import { Save, Plus, Trash2, Edit3, X, CheckCircle2, RotateCcw } from 'lucide-react';
+import { GRADE_SCALE } from '../data/adminData';
 
-const GradingConfiguration = ({ formData, updateFormData, isPreviewMode }) => {
-  const [grades, setGrades] = useState(formData?.grades || [
-    { grade: 'A1', min: 80, max: 100, description: 'Excellent' },
-    { grade: 'B2', min: 75, max: 79, description: 'Very Good' },
-    { grade: 'B3', min: 70, max: 74, description: 'Good' },
-    { grade: 'C4', min: 65, max: 69, description: 'Credit' },
-    { grade: 'C5', min: 60, max: 64, description: 'Credit' },
-    { grade: 'C6', min: 55, max: 59, description: 'Credit' },
-    { grade: 'D7', min: 50, max: 54, description: 'Pass' },
-    { grade: 'E8', min: 40, max: 49, description: 'Pass' },
-    { grade: 'F9', min: 0, max: 39, description: 'Fail' }
-  ]);
+const DEFAULT_GRADES = GRADE_SCALE.map(g => ({ ...g }));
 
-  const [promotionThreshold, setPromotionThreshold] = useState('D7');
+const GradingConfiguration = () => {
+  const [grades, setGrades]     = useState(DEFAULT_GRADES);
+  const [editIdx, setEditIdx]   = useState(null);
+  const [showAdd, setShowAdd]   = useState(false);
+  const [newRow, setNewRow]     = useState({ grade:'', min:0, max:0, label:'', points:1, color:'#2563eb' });
+  const [toast, setToast]       = useState(null);
+  const [promotionGrade, setPromo] = useState('D7');
+  const [examMinScore, setExamMin] = useState(40);
 
-  const addGrade = () => {
-    setGrades([...grades, { grade: '', min: 0, max: 0, description: '' }]);
+  const showToast = (msg,type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
+  const update = (i,k,v) => setGrades(gs=>gs.map((g,j)=>j===i?{...g,[k]:v}:g));
+  const handleDelete = (i) => { setGrades(gs=>gs.filter((_,j)=>j!==i)); showToast('Grade row removed','error'); };
+  const handleAdd = () => {
+    if (!newRow.grade.trim()) return;
+    setGrades(gs=>[...gs, { ...newRow }]);
+    setNewRow({ grade:'', min:0, max:0, label:'', points:1, color:'#2563eb' });
+    setShowAdd(false);
+    showToast(`Grade ${newRow.grade} added`);
   };
+  const handleReset = () => { setGrades(DEFAULT_GRADES); showToast('Reset to WASSCE defaults'); };
 
-  const updateGrade = (index, field, value) => {
-    const updatedGrades = [...grades];
-    updatedGrades[index][field] = value;
-    setGrades(updatedGrades);
-    if (updateFormData) updateFormData({ grades: updatedGrades });
-  };
+  const PASS_LEVELS = ['distinction','credit','pass','fail'];
 
-  const removeGrade = (index) => {
-    if (window.confirm('Remove this grade?')) {
-      const updatedGrades = grades.filter((_, i) => i !== index);
-      setGrades(updatedGrades);
-    }
-  };
-
-  const previewLookupTable = () => {
-    alert(
-      grades
-        .map(g => `${g.grade}: ${g.min}-${g.max} (${g.description})`)
-        .join('\n')
-    );
-  };
-
-  /* ================= PREVIEW ================= */
-  if (isPreviewMode) {
-    return (
-      <div className="p-6 bg-gray-100 rounded-lg">
-        <h3 className="text-lg font-semibold text-blue-900 mb-4">
-          Grading Scale Preview
-        </h3>
-
-        <table className="w-full border bg-white rounded-lg overflow-hidden">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="p-3 text-left">Grade</th>
-              <th className="p-3 text-left">Range</th>
-              <th className="p-3 text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {grades.map((g, idx) => (
-              <tr key={idx} className="border-t">
-                <td className="p-3 font-semibold">{g.grade}</td>
-                <td className="p-3">{g.min} - {g.max}</td>
-                <td className="p-3">{g.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <p className="mt-4">
-          <strong>Promotion Threshold:</strong> Minimum {promotionThreshold}
-        </p>
-      </div>
-    );
-  }
-
-  /* ================= MAIN ================= */
   return (
-    <div className="max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold text-blue-700 mb-6">
-        Grading Configuration
-      </h2>
+    <div className="space-y-5">
+      {toast && (
+        <div className="fixed top-4 right-4 z-[60] px-4 py-3 rounded-xl shadow-xl text-white text-sm font-semibold flex items-center gap-2"
+          style={{ backgroundColor:toast.type==='error'?'var(--accent-red)':'var(--success-dark)' }}>
+          <CheckCircle2 size={14}/> {toast.msg}
+        </div>
+      )}
 
-      {/* Promotion Threshold */}
-      <div className="mb-6">
-        <label className="block mb-2 font-medium">Promotion Threshold</label>
-        <select
-          value={promotionThreshold}
-          onChange={(e) => setPromotionThreshold(e.target.value)}
-          className="w-full md:w-60 px-3 py-2 border rounded-md focus:outline-none"
-        >
-          {grades.map(g => (
-            <option key={g.grade} value={g.grade}>
-              {g.grade}
-            </option>
-          ))}
-        </select>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-black text-base" style={{ color:'var(--dark-gray)' }}>Grading Configuration</h2>
+          <p className="text-xs text-gray-400">WASSCE A1–F9 grade scale editor</p>
+        </div>
+        <div className="flex gap-2">
+          <button type="button" onClick={handleReset}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border"
+            style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}>
+            <RotateCcw size={12}/> Reset
+          </button>
+          <button type="button" onClick={()=>showToast('Grading scale saved')}
+            className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-xl text-white"
+            style={{ backgroundColor:'var(--royal-blue)' }}>
+            <Save size={14}/> Save Scale
+          </button>
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border bg-white rounded-lg shadow-sm">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="p-3 text-left">Grade</th>
-              <th className="p-3 text-left">Min</th>
-              <th className="p-3 text-left">Max</th>
-              <th className="p-3 text-left">Description</th>
-              <th className="p-3 text-left">Actions</th>
-            </tr>
-          </thead>
+      {/* Settings row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border p-4 shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
+          <label className="text-xs font-bold uppercase tracking-wider block mb-1.5" style={{ color:'var(--dark-gray)' }}>
+            Promotion Threshold
+          </label>
+          <select value={promotionGrade} onChange={e=>setPromo(e.target.value)}
+            className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none bg-white"
+            style={{ borderColor:'var(--medium-gray)' }}>
+            {grades.map(g=><option key={g.grade}>{g.grade} — {g.label}</option>)}
+          </select>
+          <p className="text-xs text-gray-400 mt-1.5">Minimum grade required to pass and be promoted</p>
+        </div>
+        <div className="bg-white rounded-xl border p-4 shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
+          <label className="text-xs font-bold uppercase tracking-wider block mb-1.5" style={{ color:'var(--dark-gray)' }}>
+            Minimum Exam Score to Sit
+          </label>
+          <input type="number" min={0} max={100} value={examMinScore}
+            onChange={e=>setExamMin(parseInt(e.target.value)||0)}
+            className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none text-center font-black"
+            style={{ borderColor:'var(--medium-gray)', color:'var(--royal-blue)' }}
+            onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
+            onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}/>
+          <p className="text-xs text-gray-400 mt-1.5">Student must score at least {examMinScore}% in CA to sit exam</p>
+        </div>
+      </div>
 
-          <tbody>
-            {grades.map((grade, idx) => (
-              <tr key={idx} className="border-t">
-                <td className="p-2">
-                  <input
-                    type="text"
-                    value={grade.grade}
-                    onChange={(e) => updateGrade(idx, 'grade', e.target.value)}
-                    className="w-full px-2 py-1 border rounded "
-                  />
-                </td>
-
-                <td className="p-2">
-                  <input
-                    type="number"
-                    value={grade.min}
-                    onChange={(e) =>
-                      updateGrade(idx, 'min', parseInt(e.target.value))
-                    }
-                    className="w-full px-2 py-1 border rounded"
-                  />
-                </td>
-
-                <td className="p-2">
-                  <input
-                    type="number"
-                    value={grade.max}
-                    onChange={(e) =>
-                      updateGrade(idx, 'max', parseInt(e.target.value))
-                    }
-                    className="w-full px-2 py-1 border rounded "
-                  />
-                </td>
-
-                <td className="p-2">
-                  <input
-                    type="text"
-                    value={grade.description}
-                    onChange={(e) =>
-                      updateGrade(idx, 'description', e.target.value)
-                    }
-                    className="w-full px-2 py-1 border rounded "
-                  />
-                </td>
-
-                <td className="p-2">
-                  <button
-                    onClick={() => removeGrade(idx)}
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                </td>
+      {/* Grade scale table */}
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="flex items-center justify-between px-5 py-3 border-b"
+          style={{ borderColor:'var(--medium-gray)', backgroundColor:'var(--light-gray)' }}>
+          <h3 className="font-black text-sm" style={{ color:'var(--dark-gray)' }}>Grade Scale ({grades.length} grades)</h3>
+          <button type="button" onClick={()=>setShowAdd(!showAdd)}
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg text-white"
+            style={{ backgroundColor:'var(--royal-blue)' }}>
+            <Plus size={12}/> Add Grade
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
+            <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
+              <tr>
+                {['Grade','Min','Max','Description','Points','Level','Color','Actions'].map(h=>(
+                  <th key={h} className="px-3 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
+                ))}
               </tr>
+            </thead>
+            <tbody className="divide-y" style={{ borderColor:'var(--medium-gray)' }}>
+              {grades.map((g,i) => {
+                const isEdit = editIdx===i;
+                const Cell = ({field, type='text', options, min, max}) => (
+                  isEdit
+                    ? options
+                      ? <select value={g[field]} onChange={e=>update(i,field,e.target.value)}
+                          className="w-full px-2 py-1 text-xs rounded-lg border outline-none bg-white"
+                          style={{ borderColor:'var(--medium-gray)' }}>
+                          {options.map(o=><option key={o}>{o}</option>)}
+                        </select>
+                      : <input type={type} min={min} max={max} value={g[field]||''}
+                          onChange={e=>update(i,field,type==='number'?parseInt(e.target.value)||0:e.target.value)}
+                          className="w-full px-2 py-1 text-xs rounded-lg border outline-none"
+                          style={{ borderColor:'var(--medium-gray)' }}/>
+                    : <span>{g[field]}</span>
+                );
+                return (
+                  <tr key={i} className="hover:bg-gray-50">
+                    <td className="px-3 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor:g.color }}/>
+                        <span className="font-black" style={{ color:g.color }}>{g.grade}</span>
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5 w-16"><Cell field="min" type="number" min={0} max={100}/></td>
+                    <td className="px-3 py-2.5 w-16"><Cell field="max" type="number" min={0} max={100}/></td>
+                    <td className="px-3 py-2.5 w-28"><Cell field="label"/></td>
+                    <td className="px-3 py-2.5 w-16"><Cell field="points" type="number" min={1} max={9}/></td>
+                    <td className="px-3 py-2.5 w-28"><Cell field="passLevel" options={PASS_LEVELS}/></td>
+                    <td className="px-3 py-2.5 w-16">
+                      {isEdit
+                        ? <input type="color" value={g.color||'#2563eb'} onChange={e=>update(i,'color',e.target.value)}
+                            className="w-8 h-8 rounded cursor-pointer border-0"/>
+                        : <div className="w-6 h-6 rounded-lg" style={{ backgroundColor:g.color }}/>
+                      }
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <div className="flex items-center gap-1">
+                        {isEdit
+                          ? <button type="button" onClick={()=>{ setEditIdx(null); showToast(`Grade ${g.grade} saved`); }}
+                              style={{ color:'var(--success-dark)' }}><CheckCircle2 size={14}/></button>
+                          : <button type="button" onClick={()=>setEditIdx(i)}
+                              style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
+                        }
+                        <button type="button" onClick={()=>handleDelete(i)} style={{ color:'var(--accent-red)' }}>
+                          <Trash2 size={14}/>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {showAdd && (
+                <tr className="border-t-2" style={{ borderColor:'var(--royal-blue)' }}>
+                  {[
+                    { field:'grade', placeholder:'A1', w:'w-16' },
+                    { field:'min',   placeholder:'0',  w:'w-14', type:'number' },
+                    { field:'max',   placeholder:'100',w:'w-14', type:'number' },
+                    { field:'label', placeholder:'Excellent', w:'w-24' },
+                    { field:'points',placeholder:'1',  w:'w-12', type:'number' },
+                  ].map(({field,placeholder,w,type='text'})=>(
+                    <td key={field} className="px-3 py-2">
+                      <input type={type} placeholder={placeholder} value={newRow[field]||''}
+                        onChange={e=>setNewRow(n=>({...n,[field]:type==='number'?parseInt(e.target.value)||0:e.target.value}))}
+                        className={`${w} px-2 py-1.5 text-xs rounded-lg border-2 outline-none`}
+                        style={{ borderColor:'var(--royal-blue)' }}/>
+                    </td>
+                  ))}
+                  <td className="px-3 py-2">
+                    <select value={newRow.passLevel||'credit'} onChange={e=>setNewRow(n=>({...n,passLevel:e.target.value}))}
+                      className="px-2 py-1.5 text-xs rounded-lg border-2 outline-none bg-white"
+                      style={{ borderColor:'var(--royal-blue)' }}>
+                      {PASS_LEVELS.map(p=><option key={p}>{p}</option>)}
+                    </select>
+                  </td>
+                  <td className="px-3 py-2">
+                    <input type="color" value={newRow.color||'#2563eb'} onChange={e=>setNewRow(n=>({...n,color:e.target.value}))}
+                      className="w-8 h-8 rounded cursor-pointer border-0"/>
+                  </td>
+                  <td className="px-3 py-2">
+                    <div className="flex gap-1">
+                      <button type="button" onClick={handleAdd} style={{ color:'var(--success-dark)' }}><CheckCircle2 size={16}/></button>
+                      <button type="button" onClick={()=>setShowAdd(false)} style={{ color:'var(--accent-red)' }}><X size={16}/></button>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Grade colour preview */}
+        <div className="px-5 py-3 border-t" style={{ borderColor:'var(--medium-gray)' }}>
+          <p className="text-xs text-gray-400 mb-2">Grade colour preview</p>
+          <div className="flex flex-wrap gap-1.5">
+            {grades.map(g=>(
+              <span key={g.grade} className="text-xs px-2 py-1 rounded-lg font-black"
+                style={{ backgroundColor:g.color+'22', color:g.color }}>
+                {g.grade}
+              </span>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Actions */}
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={addGrade}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          + Add Grade Row
-        </button>
-
-        <button
-          onClick={previewLookupTable}
-          className="px-4 py-2 border rounded hover:bg-gray-100"
-        >
-          Preview Table
-        </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
-
 export default GradingConfiguration;
