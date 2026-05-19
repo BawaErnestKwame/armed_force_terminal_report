@@ -179,7 +179,7 @@ export default function Features() {
         
 {/* ── HERO ───────────────────────────────────────────────────────── */}
 <section
-  className="relative w-full overflow-hidden"
+  className="relative w-full overflow-hidden py-8"
   style={{
     background:
       'linear-gradient(150deg,var(--royal-blue-dark) 0%,var(--royal-blue) 55%,#1e3a8a 100%)',
