@@ -60,7 +60,7 @@ const PARENT_USERS = [
 
 const ALL_USERS = [...ADMIN_USERS, ...TEACHER_USERS, ...STUDENT_USERS, ...PARENT_USERS];
 
-// ─── Config
+// ─── Config ───────────────────────────────────────────────────────────────────
 const ROLE_CONFIG = {
   admin:   { label:'Admin',   color:'var(--accent-red)',   bg:'#fff1f2', icon:Shield,        plural:'Admins'   },
   teacher: { label:'Teacher', color:'var(--royal-blue)',   bg:'#eef2ff', icon:Users,         plural:'Teachers' },
@@ -587,6 +587,59 @@ const UserManagement = () => {
     showToast(`${filtered.length} users exported`);
   };
 
+  const handleSampleDownload = () => {
+    const sections = [
+      '============================================',
+      'AFSHTS USER MANAGEMENT — SAMPLE DATA GUIDE',
+      '============================================',
+      '',
+      '---- TEACHERS (CSV format) ----',
+      'title,firstName,lastName,email,phone,department,staffId,teacherRole,formClass',
+      'Mr,Kwabena,Adjei,k.adjei@afshts.edu.gh,0244123456,Mathematics,AFSHTS/TCH/001,Subject Teacher + Form Teacher,Form 3 Science A',
+      'Mrs,Ama,Eshun,a.eshun@afshts.edu.gh,0277654321,English,AFSHTS/TCH/002,Subject Teacher,',
+      'Dr,Kofi,Osei,k.osei@afshts.edu.gh,0200112233,Science,AFSHTS/TCH/003,Subject Teacher + HOD,',
+      '',
+      'TEACHER ROLE OPTIONS (pick exactly one):',
+      '  - Subject Teacher',
+      '  - Subject Teacher + Form Teacher',
+      '  - Subject Teacher + HOD',
+      '  - Subject Teacher + Form Teacher + HOD',
+      '  - Form Teacher + HOD',
+      '  - Examiner',
+      '',
+      '---- STUDENTS (CSV format) ----',
+      'firstName,lastName,email,studentId,formClass,program,track,year,status',
+      'Kofi,Asante,k.asante@afshts.edu.gh,AFSHTS/2024/001,Form 3 Science A,General Science,A,2024,Active',
+      'Ama,Mensah,a.mensah@afshts.edu.gh,AFSHTS/2024/002,Form 2 Arts B,General Arts,B,2024,Active',
+      '',
+      'PROGRAMME OPTIONS:',
+      '  - General Science',
+      '  - General Arts',
+      '  - Business',
+      '  - Technical',
+      '',
+      'TRACK OPTIONS:  A  or  B',
+      '',
+      '---- PARENTS (CSV format) ----',
+      'title,firstName,lastName,email,phone,childStudentId',
+      'Mr,Emmanuel,Asante,e.asante@gmail.com,0244123456,AFSHTS/2024/001',
+      'Mrs,Grace,Mensah,g.mensah@gmail.com,0277654321,AFSHTS/2024/002',
+      '',
+      '============================================',
+      'NOTES:',
+      '  - Passwords are auto-generated on account creation.',
+      '  - Email must be unique per user.',
+      '  - Staff IDs follow format: AFSHTS/TCH/001',
+      '  - Student IDs follow format: AFSHTS/2024/001',
+      '  - Default password sent to user email after creation.',
+      '============================================',
+    ];
+    const blob = new Blob([sections.join('\n')], { type:'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'AFSHTS_User_Sample_Guide.txt'; a.click();
+    showToast('Sample guide downloaded');
+  };
+
   const filtered = useMemo(() =>
     users.filter(u => {
       const q  = search.toLowerCase();
@@ -637,7 +690,13 @@ const UserManagement = () => {
             {users.length} total · {activeCount} active · {inactiveCount} inactive
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" onClick={handleSampleDownload}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
+            style={{ borderColor:'var(--success-dark)', color:'var(--success-dark)', backgroundColor:'#f0fdf4' }}
+            title="Download sample data format guide">
+            <Download size={13}/> Sample Guide
+          </button>
           <button type="button" onClick={handleExport}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
             style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
@@ -714,7 +773,7 @@ const UserManagement = () => {
               onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {['All','Active','Inactive'].map(f=>(
               <button key={f} type="button" onClick={()=>setFStatus(f)}
                 className="text-xs font-semibold px-3 py-2 rounded-xl transition"
@@ -802,6 +861,9 @@ const UserManagement = () => {
                             <button type="button" onClick={()=>setViewUser(u)}
                               className="p-1.5 rounded-lg hover:bg-blue-50 transition"
                               style={{ color:'var(--royal-blue)' }} title="View profile"><Eye size={14}/></button>
+                            <button type="button"
+                              className="p-1.5 rounded-lg hover:bg-purple-50 transition"
+                              style={{ color:'#7c3aed' }} title="Edit user"><Edit3 size={14}/></button>
                             <button type="button" onClick={()=>setResetUser(u)}
                               className="p-1.5 rounded-lg hover:bg-yellow-50 transition"
                               style={{ color:'var(--warning)' }} title="Reset password"><Key size={14}/></button>
@@ -869,6 +931,12 @@ const UserManagement = () => {
                           className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs font-semibold rounded-lg"
                           style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>
                           <Eye size={11}/> View
+                        </button>
+                        <button type="button"
+                          className="flex items-center justify-center p-1.5 rounded-lg"
+                          style={{ backgroundColor:'#f5f3ff', color:'#7c3aed' }}
+                          title="Edit user">
+                          <Edit3 size={13}/>
                         </button>
                         <button type="button" onClick={()=>setResetUser(u)}
                           className="flex items-center justify-center p-1.5 rounded-lg"

@@ -1,6 +1,11 @@
 // src/pages/about/About.jsx
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  FaDesktop, FaMobileAlt, FaLock, FaChartBar, FaLink, FaTools,
+  FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt,
+  FaStar, FaShieldAlt, FaHandshake, FaBullseye, FaLightbulb, FaFlag,
+} from 'react-icons/fa';
 
 const STYLES = `
   .ab-fade { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
@@ -44,20 +49,24 @@ const DEVELOPER = {
   website: 'www.amfexnetwork.com',
   email:   'info@amfexnetwork.com',
   phone:   '+233 54 562 2044',
-  location:'Accra, Ghana',
+  location:'Sunyani, Ghana',
   socials: [
-    { label:'Website',  icon:'🌐', url:'https://www.amfexnetwork.com'              },
-    { label:'Email',    icon:'✉️',  url:'mailto:info@amfexnetwork.com'              },
-    { label:'LinkedIn', icon:'💼', url:'https://linkedin.com/company/amfexnetwork' },
-    { label:'Twitter',  icon:'🐦', url:'https://twitter.com/amfexnetwork'          },
+    { label:'Website', icon:FaGlobe,   url:'https://amfexnetwork.com/', color:'var(--royal-blue)',   bg:'#eef2ff' },
+    { label:'Email',   icon:FaEnvelope,url:'mailto:info@amfexnetwork.com', color:'var(--accent-red)',   bg:'#fff1f2' },
+  ],
+  contacts: [
+    { icon:FaGlobe,         label:'Website',  value:'www.amfexnetwork.com', href:'https://amfexnetwork.com/' },
+    { icon:FaEnvelope,      label:'Email',    value:'info@amfexnetwork.com', href:'mailto:info@amfexnetwork.com' },
+    { icon:FaPhone,         label:'Phone',    value:'+233 54 562 2044',      href:'tel:+233545622044'            },
+    { icon:FaMapMarkerAlt,  label:'Location', value:'Sunyani, Ghana',        href:null                          },
   ],
   services: [
-    { icon:'🖥️',  title:'School Management Systems',    desc:'End-to-end digital platforms for SHS, JHS and tertiary institutions — reports, results, attendance and more.' },
-    { icon:'📱',  title:'Web & Mobile Applications',    desc:'Responsive web apps and mobile-first platforms built for real users in the Ghanaian environment.'              },
-    { icon:'🔐',  title:'Secure Portal Development',    desc:'Role-based multi-portal systems with authentication, audit trails and data protection.'                       },
-    { icon:'📊',  title:'Data & Analytics Dashboards',  desc:'Custom reporting dashboards that turn raw school or business data into clear, actionable insights.'            },
-    { icon:'🔗',  title:'System Integration',           desc:'Connecting existing platforms — SMS gateways, payment systems, government databases and more.'                 },
-    { icon:'🛠️',  title:'Support & Maintenance',        desc:'Ongoing technical support, system updates and training for staff after deployment.'                           },
+    { icon:FaDesktop,  color:'var(--royal-blue)',   bg:'#eef2ff', title:'School Management Systems',   desc:'End-to-end digital platforms for SHS, JHS and tertiary institutions — reports, results, attendance and more.' },
+    { icon:FaMobileAlt,color:'#7c3aed',             bg:'#f5f3ff', title:'Web & Mobile Applications',   desc:'Responsive web apps and mobile-first platforms built for real users in the Ghanaian environment.'             },
+    { icon:FaLock,     color:'var(--accent-red)',   bg:'#fff1f2', title:'Secure Portal Development',   desc:'Role-based multi-portal systems with authentication, audit trails and data protection.'                      },
+    { icon:FaChartBar, color:'var(--success-dark)', bg:'#f0fdf4', title:'Data & Analytics Dashboards', desc:'Custom reporting dashboards that turn raw school or business data into clear, actionable insights.'           },
+    { icon:FaLink,     color:'#b45309',             bg:'#fefce8', title:'System Integration',          desc:'Connecting existing platforms — SMS gateways, payment systems, government databases and more.'               },
+    { icon:FaTools,    color:'#0369a1',             bg:'#f0f9ff', title:'Support & Maintenance',       desc:'Ongoing technical support, system updates and training for staff after deployment.'                          },
   ],
 };
 
@@ -71,12 +80,12 @@ const CLIENT = {
   desc:      'Armed Forces Senior High Technical School (AFSHTS) is a prestigious senior high technical school located at Uaddara Barracks in Kumasi, Ghana. Established under the Ghana Armed Forces, the school combines rigorous academic standards with the discipline and values of military tradition to produce well-rounded, disciplined and technically skilled graduates.',
   desc2:     "AFSHTS operates under Ghana's double-track system, serving students across Form 1 to Form 3. The school is fully accredited by the Ghana Education Service (GES) and is a registered WAEC examination centre.",
   values: [
-    { icon:'⭐', title:'Excellence', desc:'We pursue the highest standards in academic performance and personal conduct.' },
-    { icon:'🛡️', title:'Discipline', desc:'Order, respect and self-control are the foundation of everything we do.'       },
-    { icon:'🤝', title:'Integrity',  desc:'Honesty and accountability guide our actions in and out of the classroom.'      },
-    { icon:'🎯', title:'Service',    desc:'We train students to contribute meaningfully to Ghana and the wider world.'     },
-    { icon:'💡', title:'Innovation', desc:'We embrace new ideas, technology and methods to improve learning outcomes.'     },
-    { icon:'🌍', title:'Patriotism', desc:'We instil pride in Ghana and a commitment to national development.'             },
+    { icon:FaStar,      color:'#f59e0b', bg:'#fefce8', title:'Excellence', desc:'We pursue the highest standards in academic performance and personal conduct.' },
+    { icon:FaShieldAlt, color:'var(--royal-blue)',bg:'#eef2ff', title:'Discipline', desc:'Order, respect and self-control are the foundation of everything we do.'       },
+    { icon:FaHandshake, color:'var(--success-dark)',bg:'#f0fdf4',title:'Integrity',  desc:'Honesty and accountability guide our actions in and out of the classroom.'      },
+    { icon:FaBullseye,  color:'var(--accent-red)', bg:'#fff1f2', title:'Service',    desc:'We train students to contribute meaningfully to Ghana and the wider world.'     },
+    { icon:FaLightbulb, color:'#7c3aed',           bg:'#f5f3ff', title:'Innovation', desc:'We embrace new ideas, technology and methods to improve learning outcomes.'     },
+    { icon:FaFlag,      color:'#0369a1',           bg:'#f0f9ff', title:'Patriotism', desc:'We instil pride in Ghana and a commitment to national development.'             },
   ],
 };
 
@@ -140,7 +149,7 @@ export default function About() {
           </div>
         </section>
 
-        {/* ══ STICKY TABS  */}
+        {/* ══ STICKY TABS ═════════════════════════════════════════════════ */}
         <div className="border-b sticky top-0 z-10"
           style={{ backgroundColor:'white', borderColor:'var(--medium-gray)', boxShadow:'0 1px 8px rgba(0,0,0,.05)' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6 flex overflow-x-auto">
@@ -192,17 +201,16 @@ export default function About() {
                   <p className="text-sm leading-relaxed mb-3" style={{ color:'rgba(255,255,255,.75)' }}>{DEVELOPER.desc}</p>
                   <p className="text-sm leading-relaxed" style={{ color:'rgba(255,255,255,.65)' }}>{DEVELOPER.desc2}</p>
                 </div>
-                {/* Contact strip */}
+
+                {/* Contact strip — react-icons */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0"
                   style={{ borderTop:'1px solid var(--medium-gray)' }}>
-                  {[
-                    { icon:'🌐', label:'Website',  value:DEVELOPER.website,  href:`https://${DEVELOPER.website}` },
-                    { icon:'✉️',  label:'Email',    value:DEVELOPER.email,    href:`mailto:${DEVELOPER.email}`    },
-                    { icon:'📞', label:'Phone',    value:DEVELOPER.phone,    href:`tel:${DEVELOPER.phone}`       },
-                    { icon:'📍', label:'Location', value:DEVELOPER.location, href:null                           },
-                  ].map(({ icon, label, value, href }) => (
+                  {DEVELOPER.contacts.map(({ icon:Icon, label, value, href }) => (
                     <div key={label} className="px-4 py-3 sm:px-5 sm:py-4">
-                      <p className="text-xs font-semibold mb-0.5" style={{ color:'#9ca3af' }}>{icon} {label}</p>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Icon size={11} color="#9ca3af"/>
+                        <p className="text-xs font-semibold" style={{ color:'#9ca3af' }}>{label}</p>
+                      </div>
                       {href
                         ? <a href={href} target="_blank" rel="noreferrer"
                             className="text-xs sm:text-sm font-semibold hover:underline break-all"
@@ -215,32 +223,41 @@ export default function About() {
               </div>
             </Rev>
 
-            {/* Services */}
+            {/* Services — react-icons */}
             <Rev delay={100}>
               <h3 className="font-black text-base mb-5" style={{ color:'var(--dark-gray)' }}>What We Build</h3>
             </Rev>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              {DEVELOPER.services.map((s, i) => (
-                <Rev key={s.title} delay={i*60}>
-                  <div className="ab-hover bg-white rounded-2xl border p-5 h-full" style={{ borderColor:'var(--medium-gray)' }}>
-                    <p className="text-3xl mb-3">{s.icon}</p>
-                    <p className="font-bold text-sm mb-1.5" style={{ color:'var(--dark-gray)' }}>{s.title}</p>
-                    <p className="text-xs leading-relaxed" style={{ color:'#6b7280' }}>{s.desc}</p>
-                  </div>
-                </Rev>
-              ))}
+              {DEVELOPER.services.map((s, i) => {
+                const Icon = s.icon;
+                return (
+                  <Rev key={s.title} delay={i*60}>
+                    <div className="ab-hover bg-white rounded-2xl border p-5 h-full" style={{ borderColor:'var(--medium-gray)' }}>
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3 flex-shrink-0"
+                        style={{ backgroundColor:s.bg }}>
+                        <Icon size={20} color={s.color}/>
+                      </div>
+                      <p className="font-bold text-sm mb-1.5" style={{ color:'var(--dark-gray)' }}>{s.title}</p>
+                      <p className="text-xs leading-relaxed" style={{ color:'#6b7280' }}>{s.desc}</p>
+                    </div>
+                  </Rev>
+                );
+              })}
             </div>
 
-            {/* Socials */}
+            {/* Social links — react-icons */}
             <Rev delay={180}>
               <div className="flex flex-wrap gap-3">
-                {DEVELOPER.socials.map(s => (
-                  <a key={s.label} href={s.url} target="_blank" rel="noreferrer"
-                    className="ab-btn inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border"
-                    style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
-                    <span>{s.icon}</span> {s.label}
-                  </a>
-                ))}
+                {DEVELOPER.socials.map(s => {
+                  const Icon = s.icon;
+                  return (
+                    <a key={s.label} href={s.url} target="_blank" rel="noreferrer"
+                      className="ab-btn inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border"
+                      style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
+                      <Icon size={14} color={s.color}/> {s.label}
+                    </a>
+                  );
+                })}
               </div>
             </Rev>
           </div>
@@ -293,20 +310,26 @@ export default function About() {
               </div>
             </Rev>
 
-            {/* Core Values */}
+            {/* Core Values — react-icons */}
             <Rev delay={100}>
               <h3 className="font-black text-base mb-5" style={{ color:'var(--dark-gray)' }}>Core Values</h3>
             </Rev>
             <div className="ab-values-grid grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-              {CLIENT.values.map((v, i) => (
-                <Rev key={v.title} delay={i*60}>
-                  <div className="ab-hover bg-white rounded-2xl border p-4 sm:p-5 text-center" style={{ borderColor:'var(--medium-gray)' }}>
-                    <p className="text-2xl sm:text-3xl mb-2">{v.icon}</p>
-                    <p className="font-black text-xs sm:text-sm mb-1.5" style={{ color:'var(--dark-gray)' }}>{v.title}</p>
-                    <p className="text-xs leading-relaxed" style={{ color:'#6b7280' }}>{v.desc}</p>
-                  </div>
-                </Rev>
-              ))}
+              {CLIENT.values.map((v, i) => {
+                const Icon = v.icon;
+                return (
+                  <Rev key={v.title} delay={i*60}>
+                    <div className="ab-hover bg-white rounded-2xl border p-4 sm:p-5 text-center" style={{ borderColor:'var(--medium-gray)' }}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                        style={{ backgroundColor:v.bg }}>
+                        <Icon size={22} color={v.color}/>
+                      </div>
+                      <p className="font-black text-xs sm:text-sm mb-1.5" style={{ color:'var(--dark-gray)' }}>{v.title}</p>
+                      <p className="text-xs leading-relaxed" style={{ color:'#6b7280' }}>{v.desc}</p>
+                    </div>
+                  </Rev>
+                );
+              })}
             </div>
           </div>
         </section>

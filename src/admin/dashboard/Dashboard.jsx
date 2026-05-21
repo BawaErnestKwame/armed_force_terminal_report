@@ -1,5 +1,5 @@
 // src/admin/dashboard/Dashboard.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Users, GraduationCap, UserCheck, BookOpen,
@@ -15,15 +15,15 @@ import { useAuth } from '../../context/AuthContext';
 
 // ─── Mock school-wide data ────────────────────────────────────────────────────
 const STATS = {
-  totalStudents:  486,
-  trackA:         243,
-  trackB:         243,
-  totalTeachers:  42,
-  totalParents:   380,
-  totalClasses:   24,
-  attendanceRate: 91,
-  passRate:       87,
-  pendingScores:  14,
+  totalStudents:    5000,
+  trackA:           2500,
+  trackB:           2500,
+  totalTeachers:    42,
+  totalParents:     3800,
+  totalClasses:     24,
+  attendanceRate:   91,
+  passRate:         87,
+  pendingScores:    14,
   reportsGenerated: 320,
 };
 
@@ -81,15 +81,45 @@ const PROGRAM_DATA = [
   { name: 'Technical',       value: 116, color: 'var(--accent-red)'  },
 ];
 
-// Recent activity
+// Recent activity — no emojis, uses type for icon
 const RECENT_ACTIVITY = [
-  { icon: '📝', text: 'WOI Ama Mensah submitted Form 3A exam scores',        time: '5 min ago',  type: 'success' },
-  { icon: '⚠️', text: '14 score submissions still pending — deadline Friday', time: '1 hr ago',   type: 'warning' },
-  { icon: '👤', text: 'New teacher Cpt Ebo Darko added to Mathematics dept',  time: '2 hrs ago',  type: 'info'    },
-  { icon: '📋', text: 'Term 1 report cards approved for Form 3 Science B',   time: '3 hrs ago',  type: 'success' },
-  { icon: '🎓', text: '12 new students enrolled — Form 1 General Science',   time: '1 day ago',  type: 'info'    },
-  { icon: '📢', text: 'Bulk SMS sent to 380 parents re: Term 2 exams',       time: '2 days ago', type: 'info'    },
+  { text: 'WOI Ama Mensah submitted Form 3A exam scores',        time: '5 min ago',  type: 'success' },
+  { text: '14 score submissions still pending — deadline Friday', time: '1 hr ago',   type: 'warning' },
+  { text: 'New teacher Cpt Ebo Darko added to Mathematics dept',  time: '2 hrs ago',  type: 'info'    },
+  { text: 'Term 1 report cards approved for Form 3 Science B',   time: '3 hrs ago',  type: 'success' },
+  { text: '12 new students enrolled — Form 1 General Science',   time: '1 day ago',  type: 'info'    },
+  { text: 'Bulk SMS sent to 380 parents re: Term 2 exams',       time: '2 days ago', type: 'info'    },
 ];
+
+// Activity icon map
+const ACTIVITY_ICON = {
+  success: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="var(--success-dark)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  ),
+  warning: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="var(--warning)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+  ),
+  info: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="var(--royal-blue)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+  ),
+};
+
+const ACTIVITY_BG = {
+  success: '#f0fdf4',
+  warning: '#fefce8',
+  info:    '#eef2ff',
+};
 
 // Custom tooltips
 const BarTip = ({ active, payload, label }) => {
@@ -104,26 +134,53 @@ const BarTip = ({ active, payload, label }) => {
   return null;
 };
 
-// ─── Stat card ────────────────────────────────────────────────────────────────
-const StatCard = ({ icon: Icon, label, value, sub, color, onClick, alert }) => (
-  <div onClick={onClick}
-    className={`bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm ${onClick ? 'cursor-pointer hover:shadow-md' : ''} transition-all relative overflow-hidden`}
-    style={{ borderColor: 'var(--medium-gray)' }}>
-    {alert && (
-      <span className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
-        style={{ backgroundColor: 'var(--accent-red)' }} />
-    )}
-    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-      style={{ backgroundColor: color + '18' }}>
-      <Icon size={22} style={{ color }} />
+// ─── Animated counter hook ────────────────────────────────────────────────────
+const useCounter = (target, suffix = '', duration = 1800) => {
+  const [val, setVal] = React.useState(0);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) { setVal(target); clearInterval(timer); }
+        else { setVal(Math.floor(start)); }
+      }, 16);
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+  return { val, ref, display: val.toLocaleString() + suffix };
+};
+
+// ─── Stat card with animated counter ─────────────────────────────────────────
+const StatCard = ({ icon: Icon, label, value, target, suffix = '', sub, color, onClick, alert }) => {
+  const counter = useCounter(target ?? 0, suffix);
+  const display = target !== undefined ? counter.display : value;
+  return (
+    <div ref={counter.ref} onClick={onClick}
+      className={`bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm ${onClick ? 'cursor-pointer hover:shadow-md' : ''} transition-all relative overflow-hidden`}
+      style={{ borderColor: 'var(--medium-gray)' }}>
+      {alert && (
+        <span className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
+          style={{ backgroundColor: 'var(--accent-red)' }} />
+      )}
+      <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ backgroundColor: color + '18' }}>
+        <Icon size={22} style={{ color }} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-2xl font-black" style={{ color: 'var(--dark-gray)' }}>{display}</p>
+        <p className="text-xs text-gray-500 truncate">{label}</p>
+        {sub && <p className="text-xs font-semibold truncate mt-0.5" style={{ color }}>{sub}</p>}
+      </div>
     </div>
-    <div className="min-w-0 flex-1">
-      <p className="text-2xl font-black" style={{ color: 'var(--dark-gray)' }}>{value}</p>
-      <p className="text-xs text-gray-500 truncate">{label}</p>
-      {sub && <p className="text-xs font-semibold truncate mt-0.5" style={{ color }}>{sub}</p>}
-    </div>
-  </div>
-);
+  );
+};
 
 // ─── Section card ─────────────────────────────────────────────────────────────
 const Card = ({ title, subtitle, children, linkTo, linkLabel = 'View all', accentColor = 'var(--royal-blue)' }) => {
@@ -202,17 +259,17 @@ const Dashboard = () => {
 
       {/* Key stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={GraduationCap} label="Total Students"   value={STATS.totalStudents}  sub={`Track A: ${STATS.trackA} · B: ${STATS.trackB}`} color="var(--royal-blue)"   onClick={() => navigate('/dashboard/students')} />
-        <StatCard icon={Users}         label="Total Teachers"   value={STATS.totalTeachers}  sub={`${STATS.totalClasses} classes`}                  color="#7c3aed"             onClick={() => navigate('/dashboard/teacher')}  />
-        <StatCard icon={UserCheck}     label="Attendance Rate"  value={`${STATS.attendanceRate}%`} sub="This term"                                   color="var(--success-dark)" />
-        <StatCard icon={Award}         label="Overall Pass Rate" value={`${STATS.passRate}%`} sub="Credit & above"                                   color="var(--warning)"      />
+        <StatCard icon={GraduationCap} label="Total Students"    target={STATS.totalStudents}  suffix="+"  sub={`Track A: ${STATS.trackA.toLocaleString()} · B: ${STATS.trackB.toLocaleString()}`} color="var(--royal-blue)"   onClick={() => navigate('/dashboard/students')} />
+        <StatCard icon={Users}         label="Total Teachers"    target={STATS.totalTeachers}              sub={`${STATS.totalClasses} classes`}                  color="#7c3aed"             onClick={() => navigate('/dashboard/teacher')}  />
+        <StatCard icon={UserCheck}     label="Attendance Rate"   target={STATS.attendanceRate} suffix="%"  sub="This term"                                        color="var(--success-dark)" />
+        <StatCard icon={Award}         label="Overall Pass Rate" target={STATS.passRate}        suffix="%"  sub="Credit & above"                                   color="var(--warning)"      />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={BookOpen}      label="Total Classes"    value={STATS.totalClasses}    sub="24 active this term"    color="var(--info)"         onClick={() => navigate('/dashboard/academicStructure1')} />
-        <StatCard icon={ClipboardList} label="Pending Scores"   value={STATS.pendingScores}   sub="Chase up before Friday" color="var(--accent-red)"   alert onClick={() => navigate('/dashboard/teacher')} />
-        <StatCard icon={CheckCircle2}  label="Reports Generated" value={STATS.reportsGenerated} sub="This term"            color="var(--success-dark)" />
-        <StatCard icon={Users}         label="Total Parents"    value={STATS.totalParents}    sub="Registered on portal"   color="#0369a1"              onClick={() => navigate('/dashboard/parents')} />
+        <StatCard icon={BookOpen}      label="Total Classes"     target={STATS.totalClasses}       sub="24 active this term"   color="var(--info)"         onClick={() => navigate('/dashboard/academicStructure1')} />
+        <StatCard icon={ClipboardList} label="Pending Scores"    target={STATS.pendingScores}      sub="Chase up before Friday" color="var(--accent-red)"  alert onClick={() => navigate('/dashboard/teacher')} />
+        <StatCard icon={CheckCircle2}  label="Reports Generated" target={STATS.reportsGenerated}   suffix="+"  sub="This term"  color="var(--success-dark)" />
+        <StatCard icon={Users}         label="Total Parents"     target={STATS.totalParents}       suffix="+"  sub="Registered on portal" color="#0369a1" onClick={() => navigate('/dashboard/parents')} />
       </div>
 
       {/* Charts row 1 — Grade distribution + Term trend */}
@@ -357,8 +414,11 @@ const Dashboard = () => {
         <Card title="Recent Activity" subtitle="Last 24 hours">
           <div className="space-y-3">
             {RECENT_ACTIVITY.slice(0, 5).map((a, i) => (
-              <div key={i} className="flex items-start gap-2.5">
-                <span className="text-base flex-shrink-0 mt-0.5">{a.icon}</span>
+              <div key={i} className="flex items-start gap-3">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                  style={{ backgroundColor: ACTIVITY_BG[a.type] }}>
+                  {ACTIVITY_ICON[a.type]}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--dark-gray)' }}>{a.text}</p>
                   <p className="text-xs text-gray-400 mt-0.5">{a.time}</p>

@@ -32,7 +32,6 @@ const getParentInfo = (parentId) => {
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-const scoreColor  = s => s >= 80 ? 'var(--success-dark)' : s >= 60 ? 'var(--royal-blue)' : s >= 50 ? 'var(--warning)' : 'var(--accent-red)';
 const attColor    = a => a >= 95 ? 'var(--success-dark)' : a >= 85 ? 'var(--warning)' : 'var(--accent-red)';
 const statusStyle = s => ({
   Active:    { bg:'#f0fdf4', color:'var(--success-dark)' },
@@ -232,20 +231,6 @@ const ProfileDrawer = ({ student, onEdit, onClose }) => {
   if (!student) return null;
   const ss = statusStyle(student.status);
 
-  const mockSubjects = [
-    { name:'Core Mathematics',   grade:'A1', score:85 },
-    { name:'English Language',   grade:'B2', score:73 },
-    { name:'Integrated Science', grade:'A1', score:81 },
-    { name:'Social Studies',     grade:'B3', score:67 },
-    { name:'ICT',                grade:'A1', score:80 },
-    { name:'Elective Subject 1', grade:'B2', score:75 },
-  ];
-
-  const gradeColor = g => ({
-    A1:'text-green-700 bg-green-50', B2:'text-blue-700 bg-blue-50',
-    B3:'text-blue-600 bg-blue-50',   C4:'text-yellow-700 bg-yellow-50',
-  }[g] || 'text-gray-600 bg-gray-50');
-
   return (
     <div className="fixed inset-0 z-50 flex" onClick={e=>e.target===e.currentTarget&&onClose()}>
       {/* Backdrop */}
@@ -291,41 +276,16 @@ const ProfileDrawer = ({ student, onEdit, onClose }) => {
           </div>
 
           {/* Quick stats */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {[
-              { label:'Avg Score',  value:`${student.avgScore}%`,    color:scoreColor(student.avgScore)  },
-              { label:'Attendance', value:`${student.attendance}%`,  color:attColor(student.attendance)  },
               { label:'Programme',  value:student.program.replace('General ',''), color:'var(--royal-blue)' },
+              { label:'Form Class', value:student.formClass,                       color:'#7c3aed'           },
             ].map(({ label,value,color })=>(
               <div key={label} className="text-center p-3 rounded-xl" style={{ backgroundColor:'var(--light-gray)' }}>
                 <p className="text-base font-black leading-tight" style={{ color }}>{value}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{label}</p>
               </div>
             ))}
-          </div>
-
-          {/* Academic progress bars */}
-          <div className="bg-white rounded-xl border p-4" style={{ borderColor:'var(--medium-gray)' }}>
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color:'var(--dark-gray)', opacity:0.5 }}>
-              Academic Performance
-            </p>
-            <div className="space-y-2.5">
-              {mockSubjects.map(s=>(
-                <div key={s.name} className="flex items-center gap-2">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <p className="text-xs font-medium truncate" style={{ color:'var(--dark-gray)' }}>{s.name}</p>
-                      <span className={`text-xs px-1.5 py-0.5 rounded font-bold ml-2 flex-shrink-0 ${gradeColor(s.grade)}`}>{s.grade}</span>
-                    </div>
-                    <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor:'var(--medium-gray)' }}>
-                      <div className="h-full rounded-full"
-                        style={{ width:`${s.score}%`, backgroundColor:scoreColor(s.score) }}/>
-                    </div>
-                  </div>
-                  <span className="text-xs font-bold w-8 text-right flex-shrink-0" style={{ color:'var(--dark-gray)' }}>{s.score}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Info rows */}
@@ -604,7 +564,7 @@ const Students = () => {
                     <input type="checkbox" checked={allSelected} onChange={toggleAll}
                       className="w-4 h-4 rounded" style={{ accentColor:'var(--royal-blue)' }}/>
                   </th>
-                  {['Student','ID','Programme','Class','Track','Score','Attendance','Status','Actions'].map(h=>(
+                  {['Student','ID','Programme','Class','Track','Status','Actions'].map(h=>(
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                   ))}
                 </tr>
@@ -641,8 +601,6 @@ const Students = () => {
                             {s.track}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-bold text-sm" style={{ color:scoreColor(s.avgScore) }}>{s.avgScore}%</td>
-                        <td className="px-4 py-3 font-bold text-sm" style={{ color:attColor(s.attendance) }}>{s.attendance}%</td>
                         <td className="px-4 py-3">
                           <span className="text-xs font-semibold px-2 py-0.5 rounded"
                             style={{ backgroundColor:ss.bg, color:ss.color }}>{s.status}</span>
@@ -717,17 +675,6 @@ const Students = () => {
                       <span className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor:'#f5f3ff', color:'#7c3aed' }}>
                         {s.program.replace('General ','')}
                       </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 mt-3">
-                      <div className="text-center p-2 rounded-lg" style={{ backgroundColor:'var(--light-gray)' }}>
-                        <p className="text-sm font-black" style={{ color:scoreColor(s.avgScore) }}>{s.avgScore}%</p>
-                        <p className="text-xs text-gray-400">Score</p>
-                      </div>
-                      <div className="text-center p-2 rounded-lg" style={{ backgroundColor:'var(--light-gray)' }}>
-                        <p className="text-sm font-black" style={{ color:attColor(s.attendance) }}>{s.attendance}%</p>
-                        <p className="text-xs text-gray-400">Attend.</p>
-                      </div>
                     </div>
 
                     <div className="flex items-center gap-1 mt-3 pt-3 border-t" style={{ borderColor:'var(--medium-gray)' }}>

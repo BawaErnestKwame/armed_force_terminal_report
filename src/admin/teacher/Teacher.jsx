@@ -11,21 +11,21 @@ import {
 
 // ─── Mock teacher data ────────────────────────────────────────────────────────
 const INITIAL_TEACHERS = [
-  { id:1,  staffId:'AFTS/TCH/001', title:'Capt',  firstName:'Kwabena',  lastName:'Adjei',      gender:'Male',   subject:'Mathematics',        department:'Mathematics', qualification:'BSc Mathematics',     employmentType:'Full-time', track:'A', formClass:'Form 3 Science A', status:'Active',   phone:'0244123456', email:'k.adjei@afts.edu.gh',     address:'Uaddara Barracks, Kumasi', joinDate:'2018-09-01', currentPeriods:28, maxPeriods:30 },
-  { id:2,  staffId:'AFTS/TCH/002', title:'Mrs',   firstName:'Ama',      lastName:'Eshun',      gender:'Female', subject:'English Language',   department:'English',     qualification:'BA English',          employmentType:'Full-time', track:'A', formClass:'Form 2 Arts A',    status:'Active',   phone:'0277654321', email:'a.eshun@afts.edu.gh',      address:'Asokwa, Kumasi',           joinDate:'2019-01-15', currentPeriods:26, maxPeriods:30 },
-  { id:3,  staffId:'AFTS/TCH/003', title:'Dr',    firstName:'Kofi',     lastName:'Osei',       gender:'Male',   subject:'Integrated Science', department:'Science',     qualification:'MSc Biology',         employmentType:'Full-time', track:'B', formClass:'',              status:'Active',   phone:'0200112233', email:'k.osei@afts.edu.gh',       address:'Bantama, Kumasi',          joinDate:'2017-09-01', currentPeriods:24, maxPeriods:30 },
-  { id:4,  staffId:'AFTS/TCH/004', title:'Sgt',   firstName:'Efua',     lastName:'Frimpong',   gender:'Female', subject:'ICT',                department:'Technical',   qualification:'BSc Computer Science',employmentType:'Full-time', track:'A', formClass:'Form 1 Science A', status:'Active',   phone:'0244987654', email:'e.frimpong@afts.edu.gh',   address:'Nhyiaeso, Kumasi',         joinDate:'2020-09-01', currentPeriods:22, maxPeriods:30 },
-  { id:5,  staffId:'AFTS/TCH/005', title:'Mr',    firstName:'Nana',     lastName:'Boateng',    gender:'Male',   subject:'Social Studies',     department:'Social Studies',qualification:'BA Social Studies',  employmentType:'Full-time', track:'A', formClass:'',              status:'Active',   phone:'0207654321', email:'n.boateng@afts.edu.gh',    address:'Suame, Kumasi',            joinDate:'2016-09-01', currentPeriods:20, maxPeriods:30 },
-  { id:6,  staffId:'AFTS/TCH/006', title:'Mrs',   firstName:'Abena',    lastName:'Mensah',     gender:'Female', subject:'Physics',            department:'Science',     qualification:'BSc Physics',         employmentType:'Full-time', track:'B', formClass:'Form 3 Science B', status:'Active',   phone:'0244555666', email:'a.mensah@afts.edu.gh',     address:'Oforikrom, Kumasi',        joinDate:'2021-01-10', currentPeriods:25, maxPeriods:30 },
-  { id:7,  staffId:'AFTS/TCH/007', title:'Lt',    firstName:'Kwame',    lastName:'Asare',      gender:'Male',   subject:'Chemistry',          department:'Science',     qualification:'BSc Chemistry',       employmentType:'Full-time', track:'A', formClass:'',              status:'Active',   phone:'0277112233', email:'k.asare@afts.edu.gh',      address:'Dichemso, Kumasi',         joinDate:'2019-09-01', currentPeriods:23, maxPeriods:30 },
-  { id:8,  staffId:'AFTS/TCH/008', title:'Mr',    firstName:'Yaw',      lastName:'Tawiah',     gender:'Male',   subject:'Biology',            department:'Science',     qualification:'BSc Biology',         employmentType:'Full-time', track:'B', formClass:'Form 2 Science B', status:'Active',   phone:'0244321654', email:'y.tawiah@afts.edu.gh',     address:'Kumasi Central',           joinDate:'2020-01-05', currentPeriods:26, maxPeriods:30 },
-  { id:9,  staffId:'AFTS/TCH/009', title:'Mrs',   firstName:'Akua',     lastName:'Bonsu',      gender:'Female', subject:'Economics',          department:'Business',    qualification:'BA Economics',        employmentType:'Full-time', track:'A', formClass:'Form 3 Business A',status:'Active',   phone:'0207111222', email:'a.bonsu@afts.edu.gh',      address:'Ayigya, Kumasi',           joinDate:'2018-01-15', currentPeriods:24, maxPeriods:30 },
-  { id:10, staffId:'AFTS/TCH/010', title:'Mr',    firstName:'Fiifi',    lastName:'Annan',      gender:'Male',   subject:'Accounting',         department:'Business',    qualification:'BSc Accounting',      employmentType:'Part-time', track:'B', formClass:'',              status:'Active',   phone:'0244888999', email:'f.annan@afts.edu.gh',      address:'Tafo, Kumasi',             joinDate:'2022-09-01', currentPeriods:15, maxPeriods:20 },
-  { id:11, staffId:'AFTS/TCH/011', title:'Cpl',   firstName:'Esi',      lastName:'Darkwah',    gender:'Female', subject:'Technical Drawing',  department:'Technical',   qualification:'BSc Civil Engineering',employmentType:'Full-time',track:'A', formClass:'Form 2 Tech A',    status:'Active',   phone:'0277888777', email:'e.darkwah@afts.edu.gh',    address:'Manhyia, Kumasi',          joinDate:'2021-09-01', currentPeriods:27, maxPeriods:30 },
-  { id:12, staffId:'AFTS/TCH/012', title:'Mr',    firstName:'Ekow',     lastName:'Sarpong',    gender:'Male',   subject:'Geography',          department:'Social Studies',qualification:'BA Geography',       employmentType:'Full-time', track:'B', formClass:'Form 1 Arts B',    status:'Inactive', phone:'0244666777', email:'e.sarpong@afts.edu.gh',    address:'Kwadaso, Kumasi',          joinDate:'2017-01-10', currentPeriods:0,  maxPeriods:30 },
-  { id:13, staffId:'AFTS/TCH/013', title:'Mrs',   firstName:'Adwoa',    lastName:'Acheampong', gender:'Female', subject:'Literature',         department:'English',     qualification:'MA Literature',       employmentType:'Full-time', track:'A', formClass:'Form 1 Arts A',    status:'Active',   phone:'0207567890', email:'a.acheampong@afts.edu.gh', address:'Patasi, Kumasi',           joinDate:'2020-09-01', currentPeriods:22, maxPeriods:30 },
-  { id:14, staffId:'AFTS/TCH/014', title:'Mr',    firstName:'Kojo',     lastName:'Owusu',      gender:'Male',   subject:'Government',         department:'Social Studies',qualification:'BA Political Science',employmentType:'Part-time',track:'B', formClass:'',              status:'Active',   phone:'0277345678', email:'k.owusu@afts.edu.gh',      address:'Suame, Kumasi',            joinDate:'2023-01-15', currentPeriods:12, maxPeriods:20 },
-  { id:15, staffId:'AFTS/TCH/015', title:'Dr',    firstName:'Yaa',      lastName:'Agyemang',   gender:'Female', subject:'Core Mathematics',   department:'Mathematics', qualification:'PhD Mathematics',     employmentType:'Full-time', track:'A', formClass:'Form 2 Science A', status:'Active',   phone:'0244567890', email:'y.agyemang@afts.edu.gh',   address:'Asokwa, Kumasi',           joinDate:'2015-09-01', currentPeriods:30, maxPeriods:30 },
+  { id:1,  staffId:'AFTS/TCH/001', title:'Capt',  firstName:'Kwabena',  lastName:'Adjei',      gender:'Male',   subject:'Mathematics',        department:'Mathematics', qualification:'BSc Mathematics',     employmentType:'Full-time', track:'A', formClass:'Form 3 Science A', status:'Active',   phone:'0244123456', email:'k.adjei@afts.edu.gh',     address:'Uaddara Barracks, Kumasi', joinDate:'2018-09-01' },
+  { id:2,  staffId:'AFTS/TCH/002', title:'Mrs',   firstName:'Ama',      lastName:'Eshun',      gender:'Female', subject:'English Language',   department:'English',     qualification:'BA English',          employmentType:'Full-time', track:'A', formClass:'Form 2 Arts A',    status:'Active',   phone:'0277654321', email:'a.eshun@afts.edu.gh',      address:'Asokwa, Kumasi',           joinDate:'2019-01-15' },
+  { id:3,  staffId:'AFTS/TCH/003', title:'Dr',    firstName:'Kofi',     lastName:'Osei',       gender:'Male',   subject:'Integrated Science', department:'Science',     qualification:'MSc Biology',         employmentType:'Full-time', track:'B', formClass:'',              status:'Active',   phone:'0200112233', email:'k.osei@afts.edu.gh',       address:'Bantama, Kumasi',          joinDate:'2017-09-01' },
+  { id:4,  staffId:'AFTS/TCH/004', title:'Sgt',   firstName:'Efua',     lastName:'Frimpong',   gender:'Female', subject:'ICT',                department:'Technical',   qualification:'BSc Computer Science',employmentType:'Full-time', track:'A', formClass:'Form 1 Science A', status:'Active',   phone:'0244987654', email:'e.frimpong@afts.edu.gh',   address:'Nhyiaeso, Kumasi',         joinDate:'2020-09-01' },
+  { id:5,  staffId:'AFTS/TCH/005', title:'Mr',    firstName:'Nana',     lastName:'Boateng',    gender:'Male',   subject:'Social Studies',     department:'Social Studies',qualification:'BA Social Studies',  employmentType:'Full-time', track:'A', formClass:'',              status:'Active',   phone:'0207654321', email:'n.boateng@afts.edu.gh',    address:'Suame, Kumasi',            joinDate:'2016-09-01' },
+  { id:6,  staffId:'AFTS/TCH/006', title:'Mrs',   firstName:'Abena',    lastName:'Mensah',     gender:'Female', subject:'Physics',            department:'Science',     qualification:'BSc Physics',         employmentType:'Full-time', track:'B', formClass:'Form 3 Science B', status:'Active',   phone:'0244555666', email:'a.mensah@afts.edu.gh',     address:'Oforikrom, Kumasi',        joinDate:'2021-01-10' },
+  { id:7,  staffId:'AFTS/TCH/007', title:'Lt',    firstName:'Kwame',    lastName:'Asare',      gender:'Male',   subject:'Chemistry',          department:'Science',     qualification:'BSc Chemistry',       employmentType:'Full-time', track:'A', formClass:'',              status:'Active',   phone:'0277112233', email:'k.asare@afts.edu.gh',      address:'Dichemso, Kumasi',         joinDate:'2019-09-01' },
+  { id:8,  staffId:'AFTS/TCH/008', title:'Mr',    firstName:'Yaw',      lastName:'Tawiah',     gender:'Male',   subject:'Biology',            department:'Science',     qualification:'BSc Biology',         employmentType:'Full-time', track:'B', formClass:'Form 2 Science B', status:'Active',   phone:'0244321654', email:'y.tawiah@afts.edu.gh',     address:'Kumasi Central',           joinDate:'2020-01-05' },
+  { id:9,  staffId:'AFTS/TCH/009', title:'Mrs',   firstName:'Akua',     lastName:'Bonsu',      gender:'Female', subject:'Economics',          department:'Business',    qualification:'BA Economics',        employmentType:'Full-time', track:'A', formClass:'Form 3 Business A',status:'Active',   phone:'0207111222', email:'a.bonsu@afts.edu.gh',      address:'Ayigya, Kumasi',           joinDate:'2018-01-15' },
+  { id:10, staffId:'AFTS/TCH/010', title:'Mr',    firstName:'Fiifi',    lastName:'Annan',      gender:'Male',   subject:'Accounting',         department:'Business',    qualification:'BSc Accounting',      employmentType:'Part-time', track:'B', formClass:'',              status:'Active',   phone:'0244888999', email:'f.annan@afts.edu.gh',      address:'Tafo, Kumasi',             joinDate:'2022-09-01' },
+  { id:11, staffId:'AFTS/TCH/011', title:'Cpl',   firstName:'Esi',      lastName:'Darkwah',    gender:'Female', subject:'Technical Drawing',  department:'Technical',   qualification:'BSc Civil Engineering',employmentType:'Full-time',track:'A', formClass:'Form 2 Tech A',    status:'Active',   phone:'0277888777', email:'e.darkwah@afts.edu.gh',    address:'Manhyia, Kumasi',          joinDate:'2021-09-01' },
+  { id:12, staffId:'AFTS/TCH/012', title:'Mr',    firstName:'Ekow',     lastName:'Sarpong',    gender:'Male',   subject:'Geography',          department:'Social Studies',qualification:'BA Geography',       employmentType:'Full-time', track:'B', formClass:'Form 1 Arts B',    status:'Inactive', phone:'0244666777', email:'e.sarpong@afts.edu.gh',    address:'Kwadaso, Kumasi',          joinDate:'2017-01-10' },
+  { id:13, staffId:'AFTS/TCH/013', title:'Mrs',   firstName:'Adwoa',    lastName:'Acheampong', gender:'Female', subject:'Literature',         department:'English',     qualification:'MA Literature',       employmentType:'Full-time', track:'A', formClass:'Form 1 Arts A',    status:'Active',   phone:'0207567890', email:'a.acheampong@afts.edu.gh', address:'Patasi, Kumasi',           joinDate:'2020-09-01' },
+  { id:14, staffId:'AFTS/TCH/014', title:'Mr',    firstName:'Kojo',     lastName:'Owusu',      gender:'Male',   subject:'Government',         department:'Social Studies',qualification:'BA Political Science',employmentType:'Part-time',track:'B', formClass:'',              status:'Active',   phone:'0277345678', email:'k.owusu@afts.edu.gh',      address:'Suame, Kumasi',            joinDate:'2023-01-15' },
+  { id:15, staffId:'AFTS/TCH/015', title:'Dr',    firstName:'Yaa',      lastName:'Agyemang',   gender:'Female', subject:'Core Mathematics',   department:'Mathematics', qualification:'PhD Mathematics',     employmentType:'Full-time', track:'A', formClass:'Form 2 Science A', status:'Active',   phone:'0244567890', email:'y.agyemang@afts.edu.gh',   address:'Asokwa, Kumasi',           joinDate:'2015-09-01' },
 ];
 
 const DEPARTMENTS  = ['Mathematics','English','Science','Social Studies','Technical','Business','Arts','Physical Education'];
@@ -40,7 +40,7 @@ const EMPTY = {
   staffId:'', title:'Mr', firstName:'', lastName:'', gender:'Male',
   subject:'Mathematics', department:'Mathematics', qualification:'BSc',
   employmentType:'Full-time', track:'A', formClass:'', status:'Active',
-  phone:'', email:'', address:'', joinDate:'', currentPeriods:0, maxPeriods:30,
+  phone:'', email:'', address:'', joinDate:'',
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -155,8 +155,6 @@ const TeacherFormModal = ({ teacher, onSave, onClose }) => {
               <FInput label="Employment Type"   value={form.employmentType}   onChange={v=>set('employmentType',v)}   options={EMP_TYPES} />
               <FInput label="Track"             value={form.track}            onChange={v=>set('track',v)}            options={TRACKS} />
               <FInput label="Form Class (if any)" value={form.formClass}      onChange={v=>set('formClass',v)} />
-              <FInput label="Max Periods/Week"  value={form.maxPeriods}       onChange={v=>set('maxPeriods',parseInt(v)||0)} type="number" />
-              <FInput label="Current Periods"   value={form.currentPeriods}   onChange={v=>set('currentPeriods',parseInt(v)||0)} type="number" />
             </div>
           </div>
         </div>
@@ -209,8 +207,6 @@ const ProfileDrawer = ({ teacher, onEdit, onClose }) => {
   if (!teacher) return null;
   const ss = statusStyle(teacher.status);
   const fullName = `${teacher.title} ${teacher.firstName} ${teacher.lastName}`;
-  const periodPct = Math.round((teacher.currentPeriods / teacher.maxPeriods) * 100);
-
   return (
     <div className="fixed inset-0 z-50 flex" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="flex-1 bg-black/40" onClick={onClose}/>
@@ -252,8 +248,7 @@ const ProfileDrawer = ({ teacher, onEdit, onClose }) => {
           {/* Quick stats */}
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center p-3 rounded-xl" style={{ backgroundColor:'var(--light-gray)' }}>
-              <p className="text-lg font-black" style={{ color:'var(--royal-blue)' }}>{teacher.currentPeriods}</p>
-              <p className="text-xs text-gray-400">Periods/Wk</p>
+              
             </div>
             <div className="text-center p-3 rounded-xl" style={{ backgroundColor:'var(--light-gray)' }}>
               <p className="text-lg font-black" style={{ color:'var(--success-dark)' }}>{teacher.qualification}</p>
@@ -267,23 +262,10 @@ const ProfileDrawer = ({ teacher, onEdit, onClose }) => {
             </div>
           </div>
 
-          {/* Workload bar */}
+          {/* Form class info */}
           <div className="bg-white rounded-xl border p-4" style={{ borderColor:'var(--medium-gray)' }}>
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color:'var(--dark-gray)', opacity:0.5 }}>
-              Workload
-            </p>
-            <div className="flex justify-between text-xs mb-1">
-              <span style={{ color:'var(--dark-gray)', fontWeight:600 }}>Periods this week</span>
-              <span style={{ color: periodPct>=90?'var(--accent-red)':periodPct>=70?'var(--warning)':'var(--success-dark)', fontWeight:700 }}>
-                {teacher.currentPeriods}/{teacher.maxPeriods}
-              </span>
-            </div>
-            <div className="h-3 rounded-full overflow-hidden" style={{ backgroundColor:'var(--medium-gray)' }}>
-              <div className="h-full rounded-full transition-all"
-                style={{ width:`${periodPct}%`, backgroundColor: periodPct>=90?'var(--accent-red)':periodPct>=70?'var(--warning)':'var(--success-dark)' }}/>
-            </div>
             {teacher.formClass && (
-              <p className="text-xs mt-2 font-semibold" style={{ color:'#7c3aed' }}>
+              <p className="text-xs font-semibold" style={{ color:'#7c3aed' }}>
                 📋 Form Teacher: {teacher.formClass}
               </p>
             )}
@@ -539,7 +521,7 @@ const Teacher = () => {
                     <input type="checkbox" checked={allSelected} onChange={toggleAll}
                       className="w-4 h-4" style={{ accentColor:'var(--royal-blue)' }}/>
                   </th>
-                  {['Teacher','Staff ID','Subject','Department','Track','Periods','Status','Actions'].map(h=>(
+                  {['Teacher','Staff ID','Subject','Department','Track','Status','Actions'].map(h=>(
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                   ))}
                 </tr>
@@ -550,7 +532,6 @@ const Teacher = () => {
                   : filtered.map(t=>{
                     const ss = statusStyle(t.status);
                     const isSel = selected.includes(t.id);
-                    const periodPct = Math.round((t.currentPeriods/t.maxPeriods)*100);
                     return (
                       <tr key={t.id} className="hover:bg-gray-50 transition"
                         style={{ backgroundColor:isSel?'#eef2ff':undefined }}>
@@ -578,14 +559,7 @@ const Teacher = () => {
                             {t.track}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor:'var(--medium-gray)' }}>
-                              <div className="h-full rounded-full" style={{ width:`${periodPct}%`, backgroundColor: periodPct>=90?'var(--accent-red)':periodPct>=70?'var(--warning)':'var(--success-dark)' }}/>
-                            </div>
-                            <span className="text-xs font-semibold" style={{ color:'var(--dark-gray)' }}>{t.currentPeriods}/{t.maxPeriods}</span>
-                          </div>
-                        </td>
+                        
                         <td className="px-4 py-3">
                           <span className="text-xs font-semibold px-2 py-0.5 rounded"
                             style={{ backgroundColor:ss.bg, color:ss.color }}>{t.status}</span>
@@ -621,7 +595,6 @@ const Teacher = () => {
             : filtered.map(t=>{
               const ss = statusStyle(t.status);
               const isSel = selected.includes(t.id);
-              const periodPct = Math.round((t.currentPeriods/t.maxPeriods)*100);
               return (
                 <div key={t.id}
                   className="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-all"
@@ -651,13 +624,6 @@ const Teacher = () => {
                       {t.formClass && <span className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor:'#f0fdf4', color:'var(--success-dark)' }}>Form Teacher</span>}
                     </div>
                     <div className="mt-3">
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-500">Periods</span>
-                        <span className="font-bold" style={{ color: periodPct>=90?'var(--accent-red)':'var(--dark-gray)' }}>{t.currentPeriods}/{t.maxPeriods}</span>
-                      </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor:'var(--medium-gray)' }}>
-                        <div className="h-full rounded-full" style={{ width:`${periodPct}%`, backgroundColor: periodPct>=90?'var(--accent-red)':periodPct>=70?'var(--warning)':'var(--success-dark)' }}/>
-                      </div>
                     </div>
                     <div className="flex items-center gap-1 mt-3 pt-3 border-t" style={{ borderColor:'var(--medium-gray)' }}>
                       <button type="button" onClick={()=>setViewT(t)}
