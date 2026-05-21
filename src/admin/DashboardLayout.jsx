@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import { MdDashboard, MdSchool } from 'react-icons/md';
 
-// ─── Sidebar nav sections ─────────────────────────────────────────────────────
+//  Sidebar nav sections 
 const NAV_SECTIONS = [
   {
     section: 'Main',
@@ -57,7 +57,6 @@ const NAV_SECTIONS = [
     section: 'Analytics & Finance',
     items: [
       { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
-      { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
       { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
     ],
   },

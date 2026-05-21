@@ -140,7 +140,7 @@ export default function About() {
           </div>
         </section>
 
-        {/* ══ STICKY TABS ═════════════════════════════════════════════════ */}
+        {/* ══ STICKY TABS  */}
         <div className="border-b sticky top-0 z-10"
           style={{ backgroundColor:'white', borderColor:'var(--medium-gray)', boxShadow:'0 1px 8px rgba(0,0,0,.05)' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6 flex overflow-x-auto">

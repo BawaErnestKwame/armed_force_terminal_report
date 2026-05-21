@@ -1,9 +1,16 @@
 // src/pages/features/Features.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  FaBook,
+  FaChalkboardTeacher,
+  FaUserTie,
+  FaStar,
+  FaClipboardList,
+  FaFileAlt,
+} from 'react-icons/fa';
 
 const STYLES = `
-
   .fp-fade { opacity:0; transform:translateY(28px); transition:opacity .6s ease,transform .6s ease; }
   .fp-fade.in { opacity:1; transform:translateY(0); }
   .fp-hover { transition:transform .25s ease,box-shadow .25s ease; }
@@ -78,30 +85,69 @@ const PORTALS = [
   },
 ];
 
+// ── Professional icons for each teacher role ──────────────────────────────────
 const TEACHER_ROLES = [
-  { e:'📚',      r:'Subject Teacher',                       d:'Enters scores for every subject they are assigned to teach.' },
-  { e:'📚🏫',   r:'Subject Teacher + Form Teacher',        d:'Teaches subjects and manages the welfare of their form class.' },
-  { e:'📚🏛',   r:'Subject Teacher + HOD',                d:'Teaches subjects and oversees their academic department.' },
-  { e:'📚🏫🏛', r:'Subject Teacher + Form Teacher + HOD', d:'Combines teaching, class management and departmental leadership.' },
-  { e:'🏫🏛',   r:'Form Teacher + HOD',                   d:'Class welfare and department leadership — no direct score entry.' },
-  { e:'📝',     r:'Examiner',                              d:'Manages examinations and WASSCE internal assessment oversight.' },
+  {
+    icon: FaBook,
+    color: '#60a5fa',
+    r: 'Subject Teacher',
+    d: 'Enters scores for every subject they are assigned to teach.',
+  },
+  {
+    icon: FaChalkboardTeacher,
+    color: '#34d399',
+    r: 'Subject Teacher + Form Teacher',
+    d: "Teaches subjects and manages the welfare of their form class.",
+  },
+  {
+    icon: FaUserTie,
+    color: '#f472b6',
+    r: 'Subject Teacher + HOD',
+    d: 'Teaches subjects and oversees their academic department.',
+  },
+  {
+    icon: FaStar,
+    color: '#fbbf24',
+    r: 'Subject Teacher + Form Teacher + HOD',
+    d: 'Combines teaching, class management and departmental leadership.',
+  },
+  {
+    icon: FaClipboardList,
+    color: '#a78bfa',
+    r: 'Form Teacher + HOD',
+    d: 'Class welfare and department leadership — no direct score entry.',
+  },
+  {
+    icon: FaFileAlt,
+    color: '#fb923c',
+    r: 'Examiner',
+    d: 'Manages examinations and WASSCE internal assessment oversight.',
+  },
 ];
 
 const STEPS = [
-  { n:'01', c:'#E63946', t:'Admin Configures the School',    d:"Admin sets up the school profile, academic year, double-track dates, programmes, classes, subjects and the WASSCE A1–F9 grading scale.", ticks:['Create academic year and 3 term dates','Set Track A and Track B calendars','Configure programmes, classes and subjects','Set CA/exam weighting and grading scale'] },
-  { n:'02', c:'#0e07dd', t:'Users Are Added and Enrolled',   d:"Teachers are added with their specific roles. Students are enrolled into form classes, programmes and tracks. Parents are linked to their children.", ticks:['Add teachers and assign their roles','Enrol students into classes and tracks','Link parents to student accounts','Assign form teachers to classes'] },
-  { n:'03', c:'#7c3aed', t:'Teachers Enter Scores',          d:'Subject teachers enter CA marks and end-of-term exam scores. The system instantly calculates totals, WASSCE grades (A1–F9) and class positions.', ticks:['Enter Class Assessment (CA) marks','Enter end-of-term exam scores','System computes totals and WASSCE grades','Form teacher adds class comment'] },
-  { n:'04', c:'#166534', t:'Report Cards Are Published',     d:'Once all scores and comments are complete, admin approves and publishes report cards. Students and parents can view and download them instantly.', ticks:['Admin reviews all scores and comments','Report cards approved and published','Students download their report card','Parents view results from their portal'] },
+  { n:'01', c:'#E63946', t:'Admin Configures the School',
+    d:"Admin sets up the school profile, academic year, double-track dates, programmes, classes, subjects and the WASSCE A1–F9 grading scale.",
+    ticks:['Create academic year and 3 term dates','Set Track A and Track B calendars','Configure programmes, classes and subjects','Set CA/exam weighting and grading scale'] },
+  { n:'02', c:'#0e07dd', t:'Users Are Added and Enrolled',
+    d:"Teachers are added with their specific roles. Students are enrolled into form classes, programmes and tracks. Parents are linked to their children.",
+    ticks:['Add teachers and assign their roles','Enrol students into classes and tracks','Link parents to student accounts','Assign form teachers to classes'] },
+  { n:'03', c:'#7c3aed', t:'Teachers Enter Scores',
+    d:'Subject teachers enter CA marks and end-of-term exam scores. The system instantly calculates totals, WASSCE grades (A1–F9) and class positions.',
+    ticks:['Enter Class Assessment (CA) marks','Enter end-of-term exam scores','System computes totals and WASSCE grades','Form teacher adds class comment'] },
+  { n:'04', c:'#166534', t:'Report Cards Are Published',
+    d:'Once all scores and comments are complete, Admin or Examiner approves and publishes report cards. Students and parents can view and download them instantly.',
+    ticks:['Admin reviews all scores and comments','Report cards approved and published','Students download their report card','Parents view results from their portal'] },
 ];
 
 const FAQS = [
-  { q:'Who uses the system and how do they log in?',                  a:'There are 4 user types — Admin, Teacher, Student and Parent — each with their own separate login page and portal. Credentials are created by the admin and distributed to users.' },
-  { q:'How are teacher roles assigned?',                              a:"Admin assigns each teacher one of 6 roles when creating their account. The teacher's sidebar, dashboard and available tools automatically match their role — no further setup needed." },
-  { q:'How does the double track system work?',                       a:'Track A and Track B students attend school at different times. Admin sets separate term calendars for each track. Students are assigned a track at enrolment and all their records reflect it.' },
-  { q:'Can a parent have more than one child in the system?',         a:'Yes. Parents with multiple enrolled children can switch between them using a child switcher in their portal — without logging out and back in.' },
-  { q:'How are WASSCE grades calculated?',                            a:'The system uses the standard Ghana WASSCE scale: A1 (80–100), B2 (70–79), B3 (65–69), C4 (60–64), C5 (55–59), C6 (50–54), D7 (45–49), E8 (40–44), F9 (0–39). Admins can customise the scale from Grading Configuration.' },
-  { q:'Can report cards be printed?',                                 a:'Yes. Both students and parents can open the report card and print it to A4 directly from the browser. The layout is formatted specifically for A4 printing.' },
-  { q:'Is the system secure?',                                        a:'Every portal has its own authentication. Role-based access means users only see what they are permitted to. Every action taken in the system is recorded in the admin audit log.' },
+  { q:'Who uses the system and how do they log in?',         a:'There are 4 user types — Admin, Teacher, Student and Parent — each with their own separate login page and portal. Credentials are created by the admin and distributed to users.' },
+  { q:'How are teacher roles assigned?',                     a:"Admin assigns each teacher one of 6 roles when creating their account. The teacher's sidebar, dashboard and available tools automatically match their role — no further setup needed." },
+  { q:'How does the double track system work?',              a:'Track A and Track B students attend school at different times. Admin sets separate term calendars for each track. Students are assigned a track at enrolment and all their records reflect it.' },
+  { q:'Can a parent have more than one child in the system?',a:'Yes. Parents with multiple enrolled children can switch between them using a child switcher in their portal — without logging out and back in.' },
+  { q:'How are WASSCE grades calculated?',                   a:'The system uses the standard Ghana WASSCE scale: A1 (80–100), B2 (70–79), B3 (65–69), C4 (60–64), C5 (55–59), C6 (50–54), D7 (45–49), E8 (40–44), F9 (0–39). Admins can customise the scale from Grading Configuration.' },
+  { q:'Can report cards be printed?',                        a:'Yes. Both students and parents can open the report card and print it to A4 directly from the browser. The layout is formatted specifically for A4 printing.' },
+  { q:'Is the system secure?',                               a:'Every portal has its own authentication. Role-based access means users only see what they are permitted to. Every action taken in the system is recorded in the admin audit log.' },
 ];
 
 const FaqItem = ({ q, a, i }) => {
@@ -130,37 +176,23 @@ const FaqItem = ({ q, a, i }) => {
   );
 };
 
-export default function Features() {
-  const Counter = ({ end, suffix = '' }) => {
+const Counter = ({ end, suffix = '' }) => {
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     let start = 0;
-
     const duration = 2000;
     const increment = end / (duration / 16);
-
     const timer = setInterval(() => {
       start += increment;
-
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
+      if (start >= end) { setCount(end); clearInterval(timer); }
+      else { setCount(Math.floor(start)); }
     }, 16);
-
     return () => clearInterval(timer);
   }, [end]);
-
-  return (
-    <span>
-      {count}
-      {suffix}
-    </span>
-  );
+  return <span>{count}{suffix}</span>;
 };
+
+export default function Features() {
   const navigate = useNavigate();
   const [tab, setTab] = useState('admin');
   const portal = PORTALS.find(p => p.id === tab);
@@ -176,197 +208,85 @@ export default function Features() {
       <style>{STYLES}</style>
       <div style={{ backgroundColor:'#fff', overflowX:'hidden' }}>
 
-        
-{/* ── HERO ───────────────────────────────────────────────────────── */}
-<section
-  className="relative w-full overflow-hidden py-8"
-  style={{
-    background:
-      'linear-gradient(150deg,var(--royal-blue-dark) 0%,var(--royal-blue) 55%,#1e3a8a 100%)',
-    minHeight: '70vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
->
-  {/* Background Grid */}
-  <div
-    className="absolute inset-0 pointer-events-none"
-    style={{
-      backgroundImage:
-        'linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)',
-      backgroundSize: '64px 64px',
-    }}
-  />
-
-  {/* Top Line */}
-  <div className="absolute inset-x-0 top-0 h-1" />
-
-  {/* Ghost Text */}
-  <div
-    className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none hidden lg:block"
-    style={{
-      fontSize: '14rem',
-      lineHeight: 1,
-      color: 'rgba(255,255,255,.04)',
-      letterSpacing: '-.04em',
-      fontWeight: '800',
-    }}
-  >
-    AFTS
-  </div>
-
-  {/* Content */}
-  <div
-    className="relative max-w-5xl mx-auto w-full px-6 flex flex-col items-center justify-center text-center"
-    style={{ minHeight: '70vh' }}
-  >
-    <Rev>
-      <span
-        className="fp-tag mb-6"
-        style={{
-          backgroundColor: 'rgba(255,255,255,.12)',
-          color: 'rgba(255,255,255,.9)',
-          border: '1px solid rgba(255,255,255,.15)',
-        }}
-      >
-        ⚡ Armed Forces SHTS · Kumasi, Ghana
-      </span>
-    </Rev>
-
-    <Rev delay={80}>
-      <h1
-        className="fp-h1 text-white mb-6"
-        style={{
-          fontWeight: '800',
-          fontSize: '3.5rem',
-          marginBottom: '1.5rem',
-        }}
-      >
-        Feature Page
-      </h1>
-    </Rev>
-
-    <Rev delay={160}>
-      <p
-        className="text-base sm:text-lg leading-relaxed mb-10 mx-auto"
-        style={{
-          color: 'rgba(255,255,255,.7)',
-          maxWidth: '700px',
-        }}
-      >
-        The AFTS Terminal Report Management System digitalises academic
-        records, report cards, attendance and school communications —
-        purpose-built for Ghana's double-track Senior High Schools.
-      </p>
-    </Rev>
-
-    <Rev delay={220}>
-      <div className="flex flex-wrap justify-center gap-3 mb-16">
-        <button
-          type="button"
-          onClick={() => navigate('/dashboard')}
-          className="fp-btn inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold text-white"
-          style={{ backgroundColor: 'var(--accent-red)' }}
-        >
-          Get Started
-
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            document
-              .getElementById('portals')
-              ?.scrollIntoView({ behavior: 'smooth' })
-          }
-          className="fp-btn inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold"
-          style={{
-            backgroundColor: 'rgba(255,255,255,.1)',
-            color: 'white',
-            border: '1px solid rgba(255,255,255,.2)',
-          }}
-        >
-          Explore Features ↓
-        </button>
-      </div>
-    </Rev>
-
-    <Rev delay={280}>
-      <div
-        className="flex flex-wrap justify-center gap-8 pt-8 border-t w-full"
-        style={{ borderColor: 'rgba(255,255,255,.12)' }}
-      >
-        {[
-          { v: 4, suffix: '+', l: 'Portals' },
-          { v: 5000, suffix: '+', l: 'Students' },
-          { v: 20, suffix: '+', l: 'Teaching Staff' },
-          { v: 6, suffix: '+', l: 'Teacher Roles' },
-        ].map(({ v, suffix, l }) => (
-          <div key={l} className="text-center">
-            <p
-              className="text-2xl text-white"
-              style={{ fontWeight: '800' }}
-            >
-              <Counter end={v} suffix={suffix} />
-            </p>
-
-            <p
-              className="text-xs mt-0.5"
-              style={{ color: 'rgba(255,255,255,.45)' }}
-            >
-              {l}
-            </p>
+        {/* ── HERO ─────────────────────────────────────────────────────────── */}
+        <section className="relative w-full overflow-hidden py-8"
+          style={{ background:'linear-gradient(150deg,var(--royal-blue-dark) 0%,var(--royal-blue) 55%,#1e3a8a 100%)', minHeight:'70vh', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ backgroundImage:'linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)', backgroundSize:'64px 64px' }}/>
+          <div className="absolute inset-x-0 top-0 h-1" style={{ background:'var(--accent-red)' }}/>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none hidden lg:block"
+            style={{ fontSize:'14rem', lineHeight:1, color:'rgba(255,255,255,.04)', letterSpacing:'-.04em', fontWeight:'800' }}>
+            AFSHTS
           </div>
-        ))}
+          <div className="relative max-w-5xl mx-auto w-full px-6 flex flex-col items-center justify-center text-center"
+            style={{ minHeight:'70vh' }}>
+            <Rev>
+              <span className="fp-tag mb-6"
+                style={{ backgroundColor:'rgba(255,255,255,.12)', color:'rgba(255,255,255,.9)', border:'1px solid rgba(255,255,255,.15)' }}>
+                ⚡ Armed Forces SHTS · Kumasi, Ghana
+              </span>
+            </Rev>
+            <Rev delay={80}>
+              <h1 className="fp-h1 text-white mb-6" style={{ fontWeight:'800', fontSize:'3.5rem', marginBottom:'1.5rem' }}>
+                Feature Page
+              </h1>
+            </Rev>
+            <Rev delay={160}>
+              <p className="text-base sm:text-lg leading-relaxed mb-10 mx-auto"
+                style={{ color:'rgba(255,255,255,.7)', maxWidth:'700px' }}>
+                The <b>Armed Forces Senior High School Terminal Report Management System</b> digitalises academic
+                records, report cards, attendance and school communications —
+                purpose-built for Ghana's double-track Senior High Schools.
+              </p>
+            </Rev>
+            <Rev delay={220}>
+              <div className="flex flex-wrap justify-center gap-3 mb-16">
+                <button type="button" onClick={() => navigate('/')}
+                  className="fp-btn inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold text-white"
+                  style={{ backgroundColor:'var(--accent-red)' }}>
+                  Get Started
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </button>
+                <button type="button"
+                  onClick={() => document.getElementById('portals')?.scrollIntoView({ behavior:'smooth' })}
+                  className="fp-btn inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold"
+                  style={{ backgroundColor:'rgba(255,255,255,.1)', color:'white', border:'1px solid rgba(255,255,255,.2)' }}>
+                  Explore Features ↓
+                </button>
+              </div>
+            </Rev>
+            <Rev delay={280}>
+              <div className="flex flex-wrap justify-center gap-8 pt-8 border-t w-full"
+                style={{ borderColor:'rgba(255,255,255,.12)' }}>
+                {[
+                  { v:4,    suffix:'+', l:'Portals'        },
+                  { v:5000, suffix:'+', l:'Students'       },
+                  { v:20,   suffix:'+', l:'Teaching Staff' },
+                  { v:6,    suffix:'+', l:'Teacher Roles'  },
+                ].map(({ v, suffix, l }) => (
+                  <div key={l} className="text-center">
+                    <p className="text-2xl text-white" style={{ fontWeight:'800' }}>
+                      <Counter end={v} suffix={suffix}/>
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color:'rgba(255,255,255,.45)' }}>{l}</p>
+                  </div>
+                ))}
+                <div className="text-center">
+                  <p className="text-2xl text-white" style={{ fontWeight:'800' }}>A1–F9</p>
+                  <p className="text-xs mt-0.5" style={{ color:'rgba(255,255,255,.45)' }}>WASSCE Grading</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl text-white" style={{ fontWeight:'800' }}>Track A/B</p>
+                  <p className="text-xs mt-0.5" style={{ color:'rgba(255,255,255,.45)' }}>Double Track</p>
+                </div>
+              </div>
+            </Rev>
+          </div>
+        </section>
 
-        {/* Static Items */}
-        <div className="text-center">
-          <p
-            className="text-2xl text-white"
-            style={{ fontWeight: '800' }}
-          >
-            A1–F9
-          </p>
-
-          <p
-            className="text-xs mt-0.5"
-            style={{ color: 'rgba(255,255,255,.45)' }}
-          >
-            WASSCE Grading
-          </p>
-        </div>
-
-        <div className="text-center">
-          <p
-            className="text-2xl text-white"
-            style={{ fontWeight: '800' }}
-          >
-            Track A/B
-          </p>
-
-          <p
-            className="text-xs mt-0.5"
-            style={{ color: 'rgba(255,255,255,.45)' }}
-          >
-            Double Track
-          </p>
-        </div>
-      </div>
-    </Rev>
-  </div>
-</section>
-        {/* ── MARQUEE ─────────────────────────────────────────────────────── */}
+        {/* ── MARQUEE ──────────────────────────────────────────────────────── */}
         <div className="overflow-hidden py-3.5 border-y" style={{ backgroundColor:'var(--dark-gray)', borderColor:'#374151' }}>
           <div className="fp-marquee text-xs font-semibold uppercase tracking-widest" style={{ color:'rgba(255,255,255,.35)' }}>
             {MARQUEE_ITEMS.map((t,i) => (
@@ -380,7 +300,7 @@ export default function Features() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
-          {/* ── PORTALS ─────────────────────────────────────────────────────── */}
+          {/* ── PORTALS ──────────────────────────────────────────────────────── */}
           <section id="portals" className="py-20">
             <Rev>
               <span className="fp-tag mb-4" style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>The Four Portals</span>
@@ -403,7 +323,6 @@ export default function Features() {
                 ))}
               </div>
             </Rev>
-
             {portal && (
               <div key={portal.id} className="fp-hover rounded-2xl overflow-hidden border-2"
                 style={{ borderColor:portal.hex+'35' }}>
@@ -434,7 +353,7 @@ export default function Features() {
             )}
           </section>
 
-          {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
+          {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
           <section className="py-20 border-t" style={{ borderColor:'var(--medium-gray)' }}>
             <Rev>
               <span className="fp-tag mb-4" style={{ backgroundColor:'#f0fdf4', color:'var(--success-dark)' }}>How It Works</span>
@@ -463,6 +382,7 @@ export default function Features() {
               ))}
             </div>
           </section>
+
         </div>
 
         {/* ── TEACHER ROLES — full-bleed ───────────────────────────────────── */}
@@ -471,7 +391,9 @@ export default function Features() {
           <div className="max-w-6xl mx-auto">
             <Rev>
               <div className="text-center mb-12">
-                <span className="fp-tag mb-4" style={{ backgroundColor:'rgba(255,255,255,.12)', color:'white', border:'1px solid rgba(255,255,255,.18)' }}>Teacher Role System</span>
+                <span className="fp-tag mb-4" style={{ backgroundColor:'rgba(255,255,255,.12)', color:'white', border:'1px solid rgba(255,255,255,.18)' }}>
+                  Teacher Role System
+                </span>
                 <h2 className="text-3xl sm:text-4xl mt-3 text-white"
                   style={{ letterSpacing:'-.02em', display:'block', fontWeight:'800' }}>
                   6 Roles. One Portal. Smart Access.
@@ -482,21 +404,28 @@ export default function Features() {
               </div>
             </Rev>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {TEACHER_ROLES.map((r, i) => (
-                <Rev key={r.r} delay={i*70}>
-                  <div className="fp-hover rounded-2xl p-6 h-full"
-                    style={{ backgroundColor:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.11)' }}>
-                    <p className="text-3xl mb-4">{r.e}</p>
-                    <p className="font-bold text-sm text-white mb-2">{r.r}</p>
-                    <p className="text-xs leading-relaxed" style={{ color:'rgba(255,255,255,.55)' }}>{r.d}</p>
-                  </div>
-                </Rev>
-              ))}
+              {TEACHER_ROLES.map((role, i) => {
+                const Icon = role.icon;
+                return (
+                  <Rev key={role.r} delay={i * 70}>
+                    <div className="fp-hover rounded-2xl p-6 h-full"
+                      style={{ backgroundColor:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.11)' }}>
+                      {/* Icon box */}
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 flex-shrink-0"
+                        style={{ backgroundColor:'rgba(255,255,255,.12)' }}>
+                        <Icon size={22} color={role.color}/>
+                      </div>
+                      <p className="font-bold text-sm text-white mb-2">{role.r}</p>
+                      <p className="text-xs leading-relaxed" style={{ color:'rgba(255,255,255,.55)' }}>{role.d}</p>
+                    </div>
+                  </Rev>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* ── DOUBLE TRACK ────────────────────────────────────────────────── */}
+        {/* ── DOUBLE TRACK ─────────────────────────────────────────────────── */}
         <section className="py-20 px-4 sm:px-6 border-b" style={{ borderColor:'var(--medium-gray)' }}>
           <div className="max-w-6xl mx-auto">
             <Rev>
@@ -532,7 +461,7 @@ export default function Features() {
           </div>
         </section>
 
-        {/* ── FAQ ─────────────────────────────────────────────────────────── */}
+        {/* ── FAQ ──────────────────────────────────────────────────────────── */}
         <section className="py-20 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <Rev>
@@ -554,7 +483,7 @@ export default function Features() {
           </div>
         </section>
 
-        {/* ── FOOTER CTA ──────────────────────────────────────────────────── */}
+        {/* ── FOOTER CTA ───────────────────────────────────────────────────── */}
         <section className="py-20 px-4 sm:px-6"
           style={{ background:'linear-gradient(150deg,var(--dark-gray) 0%,#111827 100%)' }}>
           <div className="max-w-4xl mx-auto text-center">

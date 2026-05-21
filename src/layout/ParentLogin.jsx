@@ -37,8 +37,20 @@ const ParentLogin = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden relative"
           style={{ border: '2px solid rgba(255,255,255,0.15)' }}>
+
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/20 transition"
+            title="Close"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
 
           {/* Header */}
           <div className="px-8 py-6 text-center"

@@ -25,7 +25,19 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
+
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/20 transition"
+          title="Close"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
 
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 text-center border-b-4 border-red-600">
