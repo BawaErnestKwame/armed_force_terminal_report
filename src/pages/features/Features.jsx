@@ -58,7 +58,7 @@ const PORTALS = [
   {
     id:'admin', label:'Admin', hex:'#E63946', bg:'#fff1f2', loginPath:'/adminLogin',
     headline:'Total Control of the School',
-    audience:'Headmaster · Vice Principal · Academic Director',
+    audience:'System Administrators',
     desc:'The administrative brain of the entire system. Manage every user, configure the academic structure, publish report cards and monitor school-wide performance — from one powerful dashboard.',
     features:['Manage all users — teachers, students, parents','Configure programmes, classes and subjects','Set up grading scale and CA/exam weightings','Manage academic years, terms and double-track dates','View school-wide analytics and performance charts','Send bulk messages to parents and staff','Manage school calendar and key events','Full audit log — every action is tracked','Comment bank management for report cards','Approve and publish terminal report cards'],
   },
@@ -234,9 +234,11 @@ export default function Features() {
             <Rev delay={160}>
               <p className="text-base sm:text-lg leading-relaxed mb-10 mx-auto"
                 style={{ color:'rgba(255,255,255,.7)', maxWidth:'700px' }}>
-                The <b>Armed Forces Senior High School Terminal Report Management System</b> digitalises academic
-                records, report cards, attendance and school communications —
-                purpose-built for Ghana's double-track Senior High Schools.
+                <b className='text-white'>
+                  Armed Forces Senior High Technical School Terminal Report Management System. </b> <br />
+                   A digitalises academic
+                records, report cards, attendance and school communications
+                purposely for Ghana's double-track Senior High Schools.
               </p>
             </Rev>
             <Rev delay={220}>
@@ -461,7 +463,7 @@ export default function Features() {
           </div>
         </section>
 
-        {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+        {/* ── FAQ  */}
         <section className="py-20 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <Rev>

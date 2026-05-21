@@ -1,6 +1,5 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useState } from 'react';
-import { TEACHERS, STUDENTS, PARENTS } from '../data/schoolData';
 
 const AuthContext = createContext();
 
@@ -10,20 +9,13 @@ export const useAuth = () => {
   return ctx;
 };
 
-// All admin accounts — add any email variant here
-const ADMIN_USERS = [
-  { id:100, role:'admin', name:'System Administrator', email:'admin@afts.edu.gh',       password:'admin123', redirectTo:'/dashboard' },
-  { id:101, role:'admin', name:'System Administrator', email:'admin@excellence.edu.gh',  password:'admin123', redirectTo:'/dashboard' },
-  { id:102, role:'admin', name:'System Administrator', email:'admin@armedforces.edu.gh', password:'admin123', redirectTo:'/dashboard' },
-];
-
-// Flat list of all users across all roles
-const ALL_USERS = [
-  ...TEACHERS.map(t => ({ ...t, role:'teacher' })),
-  ...STUDENTS.map(s => ({ ...s, role:'student' })),
-  ...PARENTS.map(p => ({ ...p, role:'parent'  })),
-  ...ADMIN_USERS,
-];
+// Redirect map per role
+const REDIRECT = {
+  admin:   '/dashboard',
+  teacher: '/teacher',
+  student: '/student',
+  parent:  '/parent',
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -46,43 +38,44 @@ export const AuthProvider = ({ children }) => {
     setError('');
 
     try {
+      // Simulate a small network delay
       await new Promise(r => setTimeout(r, 600));
 
-      // Normalise inputs
-      const emailLower = (email || '').trim().toLowerCase();
-      const passTrim   = (password || '').trim();
-      const roleLower  = (role || '').trim().toLowerCase();
-
-      // Find user — match on email + password + role
-      const found = ALL_USERS.find(u =>
-        u.email.toLowerCase() === emailLower &&
-        u.password === passTrim &&
-        u.role === roleLower
-      );
-
-      if (!found) {
-        setError('Invalid credentials. Please try again.');
+      // Basic validation — fields must not be empty
+      if (!email.trim() || !password.trim()) {
+        setError('Please enter your email and password.');
         setLoading(false);
         return { success: false };
       }
 
-      const { password: _, ...safe } = found;
+      // ── FRONTEND MODE ──────────────────────────────────────────────────────
+      // Accept any non-empty credentials and log the user in.
+      // Replace this block with a real API call when the backend is ready.
+      // ───────────────────────────────────────────────────────────────────────
+      const roleLower = (role || 'admin').toLowerCase();
 
-      // For teachers — lock their sidebar role
-      // Priority: chosen at login > assigned in data > default
+      const mockUser = {
+        id:         1,
+        role:       roleLower,
+        name:       email.split('@')[0],   // use email prefix as display name
+        email:      email.trim().toLowerCase(),
+        redirectTo: REDIRECT[roleLower] || '/dashboard',
+        // For students — store the ID they typed
+        ...(roleLower === 'student' && studentId ? { studentId } : {}),
+      };
+
+      // For teachers — lock the sidebar to the role they selected
       const lockedRole = roleLower === 'teacher'
-        ? (chosenTeacherRole && chosenTeacherRole !== 'Subject Teacher'
-            ? chosenTeacherRole
-            : safe.teacherRole || 'Subject Teacher')
-        : '';
+        ? (chosenTeacherRole || 'Subject Teacher')
+        : 'Subject Teacher';
 
-      setUser(safe);
-      setActiveRole(lockedRole || 'Subject Teacher');
-      localStorage.setItem('afts_user', JSON.stringify(safe));
-      localStorage.setItem('afts_active_role', lockedRole || 'Subject Teacher');
+      setUser(mockUser);
+      setActiveRole(lockedRole);
+      localStorage.setItem('afts_user',       JSON.stringify(mockUser));
+      localStorage.setItem('afts_active_role', lockedRole);
 
       setLoading(false);
-      return { success: true, redirectTo: safe.redirectTo || `/${roleLower}` };
+      return { success: true, redirectTo: mockUser.redirectTo };
 
     } catch (err) {
       setError('Something went wrong. Please try again.');

@@ -1,17 +1,16 @@
 // src/layout/StudentLogin.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaIdCard, FaArrowRight } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaGraduationCap, FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 
-const StudentLogin = () => {
+export default function StudentLogin() {
   const navigate = useNavigate();
   const { login, loading, error } = useAuth();
-
   const [studentId, setStudentId] = useState('');
   const [email,     setEmail]     = useState('');
-  const [password,  setPassword]  = useState('');
+  const [pw,        setPw]        = useState('');
   const [showPw,    setShowPw]    = useState(false);
   const [localErr,  setLocalErr]  = useState('');
 
@@ -19,163 +18,100 @@ const StudentLogin = () => {
     e.preventDefault();
     setLocalErr('');
     if (!studentId.trim()) { setLocalErr('Please enter your Student ID.'); return; }
-    if (!email.trim())     { setLocalErr('Please enter your email address.'); return; }
-    if (!password.trim())  { setLocalErr('Please enter your password.'); return; }
-
-    const result = await login(email, password, 'student', undefined, studentId.trim());
-    if (result.success) navigate(result.redirectTo || '/student', { replace: true });
+    const res = await login(email, pw, 'student', undefined, studentId.trim());
+    if (res.success) navigate(res.redirectTo || '/student', { replace: true });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
+      style={{ background:'linear-gradient(135deg,#064e3b,#065f46,#047857)' }}>
 
-      {/* Logo watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        <img src={logo} alt="" draggable={false} className="select-none"
-          style={{ width: '420px', height: '420px', objectFit: 'contain', opacity: 0.06, filter: 'brightness(0) invert(1)' }}
-        />
+        <img src={logo} alt="" style={{ width:420, height:420, objectFit:'contain', opacity:.05, filter:'brightness(0) invert(1)' }}/>
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden relative"
-          style={{ border: '2px solid rgba(255,255,255,0.15)' }}>
+      <div className="relative z-10 w-full max-w-sm">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
 
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/20 transition"
-            title="Close"
-          >
+          {/* Close */}
+          <button type="button" onClick={() => navigate(-1)}
+            className="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/20 transition">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
           </button>
 
           {/* Header */}
-          <div className="px-8 py-6 text-center"
-            style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
-            <div className="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center overflow-hidden"
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-              <img src={logo} alt="AFTS" className="w-12 h-12 object-contain" />
+          <div className="px-8 pt-8 pb-6 text-center" style={{ background:'linear-gradient(135deg,#064e3b,#065f46)' }}>
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+              style={{ backgroundColor:'rgba(255,255,255,.15)' }}>
+              <FaGraduationCap size={30} color="#fbbf24"/>
             </div>
-            <h1 className="text-white font-black text-xl">ARMED FORCES SHTS</h1>
-            <p className="text-blue-200 text-sm mt-1">Student Portal Login</p>
-            <p className="text-blue-300 text-xs mt-0.5">Uaddara Barracks, Kumasi, Ghana</p>
+            <h1 className="text-lg font-black text-white">ARMED FORCES SHTS</h1>
+            <p className="text-xs mt-1" style={{ color:'rgba(255,255,255,.55)' }}>Student Portal</p>
           </div>
-          <div className="h-1" style={{ backgroundColor: 'var(--accent-red)' }} />
+          <div className="h-1" style={{ background:'#10b981' }}/>
 
-          {/* Form */}
-          <div className="px-8 py-6 space-y-4">
-
-            {/* Demo hint */}
-            <div className="px-3 py-2.5 rounded-lg text-xs" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
-              <span className="font-bold">Demo: </span>
-              ID: <span className="font-mono font-bold">AFTS/2024/001</span> · kofi@afts.edu.gh · <span className="font-mono font-bold">student123</span>
-            </div>
-
-            {/* Error */}
+          <div className="px-6 py-6 space-y-4">
             {(localErr || error) && (
-              <div className="px-3 py-2.5 rounded-lg text-xs font-medium"
-                style={{ backgroundColor: '#fff1f2', color: 'var(--accent-red-dark)', border: '1px solid var(--accent-red-light)' }}>
-                {localErr || error}
-              </div>
+              <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{localErr || error}</p>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Student ID */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
-                  Student ID
-                </label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Student ID</label>
                 <div className="relative">
-                  <FaIdCard size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
-                  <input type="text" value={studentId} onChange={e => setStudentId(e.target.value)}
-                    required autoFocus placeholder="e.g. AFTS/2024/031"
-                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all font-mono"
-                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
-                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
-                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
-                  />
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  <input type="text" value={studentId} onChange={e=>setStudentId(e.target.value)} required
+                    placeholder="e.g. AFSHTS/2025/001"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600"/>
                 </div>
               </div>
 
-              {/* Email */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
-                  Email Address
-                </label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Email Address</label>
                 <div className="relative">
-                  <FaEnvelope size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                    required placeholder="yourname@afts.edu.gh"
-                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all"
-                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
-                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
-                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
-                  />
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required
+                    placeholder="yourname@afshts.edu.gh"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600"/>
                 </div>
               </div>
 
-              {/* Password */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--dark-gray)' }}>
-                  Password
-                </label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Password</label>
                 <div className="relative">
-                  <FaLock size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }} />
-                  <input type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                    required placeholder="Enter your password"
-                    className="w-full pl-9 pr-10 py-2.5 text-sm rounded-lg border-2 outline-none transition-all"
-                    style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}
-                    onFocus={e => e.target.style.borderColor = 'var(--royal-blue)'}
-                    onBlur={e  => e.target.style.borderColor = 'var(--medium-gray)'}
-                  />
-                  <button type="button" onClick={() => setShowPw(!showPw)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--royal-blue-light)' }}>
-                    {showPw ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                  <input type={showPw?'text':'password'} value={pw} onChange={e=>setPw(e.target.value)} required
+                    placeholder="Enter your password"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600"/>
+                  <button type="button" onClick={()=>setShowPw(!showPw)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    {showPw?<FaEyeSlash size={14}/>:<FaEye size={14}/>}
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs">
-                <label className="flex items-center gap-2 cursor-pointer" style={{ color: 'var(--dark-gray)' }}>
-                  <input type="checkbox" className="accent-[var(--royal-blue)]" /> Remember me
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer">
+                  <input type="checkbox" className="rounded"/> Remember me
                 </label>
-                <Link to="/forgotPassword" style={{ color: 'var(--accent-red)' }} className="font-medium">
-                  Forgot Password?
-                </Link>
+                <button type="button" className="text-xs font-semibold text-emerald-700">Forgot Password?</button>
               </div>
 
               <button type="submit" disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-white rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                style={{ backgroundColor: 'var(--royal-blue)' }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--royal-blue-dark)'; }}
-                onMouseLeave={e => { if (!loading) e.currentTarget.style.backgroundColor = 'var(--royal-blue)'; }}
-              >
+                className="w-full py-3 rounded-xl text-sm font-black text-white flex items-center justify-center gap-2"
+                style={{ background: loading?'#9ca3af':'linear-gradient(135deg,#064e3b,#065f46)' }}>
                 {loading
-                  ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Signing in...</>
-                  : <>Sign In to Student Portal <FaArrowRight size={12} /></>
-                }
+                  ? <><svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Signing In…</>
+                  : 'Sign In as Student →'}
               </button>
             </form>
-
-            <div className="text-center pt-2">
-              <Link to="/" className="text-xs" style={{ color: 'var(--royal-blue)' }}>
-                ← Back to Home
-              </Link>
-            </div>
           </div>
-        </div>
 
-        <p className="text-center text-white/40 text-xs mt-4">
-          ARMED FORCES SHTS · Uaddara Barracks, Kumasi, Ghana
-        </p>
+          <p className="text-center text-xs text-gray-400 pb-4">AFSHTS Terminal Report System</p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default StudentLogin;
+}
