@@ -15,7 +15,6 @@ const NAV_ITEMS = [
   { icon: FaClipboardList, label: 'My Results',  path: '/student/results'                 },
   { icon: FaFileAlt,       label: 'Report Card', path: '/student/reportcard'              },
   { icon: FaCalendarCheck, label: 'Attendance',  path: '/student/attendance'              },
-  { icon: FaTable,         label: 'Timetable',   path: '/student/timetable'               },
 ];
 
 const OTHER_NAV = [

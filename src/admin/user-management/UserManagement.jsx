@@ -37,11 +37,11 @@ const STUDENT_USERS = STUDENTS.slice(0, 20).map(s => ({
   email:     s.email || `${s.firstName.toLowerCase()}.${s.lastName.toLowerCase()}@afts.edu.gh`,
   phone:     '—',
   status:    s.status,
-  lastLogin: s.status === 'Active' ? '2025-03-17' : '—',
+  lastLogin: s.status === 'Active' ? '2025-03-17 08:00' : '—',
   joinDate:  s.enrollDate,
   studentId: s.studentId,
   formClass: s.formClass,
-  program:   s.program,
+  course:   s.course,
 }));
 
 // Build parent users from adminData
@@ -154,6 +154,85 @@ const ROLE_STEPS = {
   parent:  ['personal','children'],
 };
 
+// ─── Edit User Modal ──────────────────────────────────────────────────────────
+const EditUserModal = ({ user, onSave, onClose }) => {
+  const [form, setForm] = useState({ ...user });
+  const set = (k, v) => setForm(f => ({...f, [k]: v}));
+
+  const fields = [
+    { key:'firstName', label:'First Name' },
+    { key:'lastName',  label:'Last Name'  },
+    { key:'email',     label:'Email',     type:'email' },
+    { key:'phone',     label:'Phone'      },
+    ...(user.role==='teacher' ? [
+      { key:'department', label:'Department' },
+      { key:'staffId',    label:'Staff ID'   },
+    ] : []),
+    ...(user.role==='student' ? [
+      { key:'studentId', label:'Student ID' },
+      { key:'formClass', label:'Form Class'  },
+    ] : []),
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor:'rgba(0,0,0,.45)' }}
+      onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor:'var(--medium-gray)', background:'linear-gradient(135deg,var(--royal-blue-dark),var(--royal-blue))' }}>
+          <div>
+            <p className="text-white font-black text-sm">Edit User</p>
+            <p className="text-xs mt-0.5" style={{ color:'rgba(255,255,255,.6)' }}>
+              {user.title} {user.firstName} {user.lastName} · {user.role}
+            </p>
+          </div>
+          <button type="button" onClick={onClose}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition">
+            <X size={14}/>
+          </button>
+        </div>
+        <div className="h-1" style={{ backgroundColor:'var(--accent-red)' }}/>
+
+        {/* Form */}
+        <div className="px-6 py-5 space-y-4 max-h-[60vh] overflow-y-auto">
+          {fields.map(({key, label, type='text'}) => (
+            <div key={key}>
+              <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color:'#6b7280' }}>{label}</label>
+              <input type={type} value={form[key]||''} onChange={e=>set(key,e.target.value)}
+                className="w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ borderColor:'var(--medium-gray)' }}/>
+            </div>
+          ))}
+          {/* Status */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5" style={{ color:'#6b7280' }}>Status</label>
+            <select value={form.status||'Active'} onChange={e=>set('status',e.target.value)}
+              className="w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{ borderColor:'var(--medium-gray)' }}>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex gap-3 px-6 py-4 border-t" style={{ borderColor:'var(--medium-gray)' }}>
+          <button type="button" onClick={onClose}
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold border"
+            style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)' }}>
+            Cancel
+          </button>
+          <button type="button" onClick={()=>onSave(form)}
+            className="flex-1 py-2.5 rounded-xl text-sm font-black text-white flex items-center justify-center gap-2"
+            style={{ backgroundColor:'var(--royal-blue)' }}>
+            <Save size={14}/> Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AddUserModal = ({ onSave, onClose }) => {
   const [step,    setStep]    = useState('role'); // 'role' | 'form'
   const [role,    setRole]    = useState(null);
@@ -193,7 +272,7 @@ const AddUserModal = ({ onSave, onClose }) => {
       lastLogin: '—',
       joinDate:  new Date().toISOString().split('T')[0],
       ...(role === 'teacher' ? { staffId: form.staffId, department: form.department || 'Mathematics', teacherRole: form.teacherRole || 'Subject Teacher', formClass: form.formClass || '' } : {}),
-      ...(role === 'student' ? { studentId: form.studentId, formClass: form.formClass || '', program: form.program || 'General Science' } : {}),
+      ...(role === 'student' ? { studentId: form.studentId, formClass: form.formClass || '', course: form.course || 'General Science' } : {}),
       ...(role === 'parent'  ? { childrenCount: 0 } : {}),
     };
     onSave(newUser);
@@ -366,7 +445,7 @@ const AddUserModal = ({ onSave, onClose }) => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FInput label="Student ID"   field="studentId"  placeholder="e.g. AFTS/2025/050" required/>
                     <FInput label="Year Group"   field="year"       options={['Form 1','Form 2','Form 3']}/>
-                    <FInput label="Programme"    field="program"    options={['General Science','General Arts','Business','Technical']}/>
+                    <FInput label="Course"    field="course"    options={['General Science','General Arts','Business','Technical']}/>
                     <FInput label="Track"        field="track"      options={['A','B']}/>
                     <FInput label="Form Class"   field="formClass"  placeholder="e.g. Form 1 Science A"/>
                     <FInput label="House"        field="house"      options={['Warrior','Eagle','Phoenix','Valor']}/>
@@ -457,7 +536,7 @@ const ProfileDrawer = ({ user, onClose, onReset, onToggleStatus }) => {
     ...(user.role==='student' ? [
       { icon:User, label:'Student ID',  value:user.studentId  },
       { icon:User, label:'Form Class',  value:user.formClass  },
-      { icon:User, label:'Programme',   value:user.program    },
+      { icon:User, label:'Course',   value:user.course    },
     ] : []),
     ...(user.role==='parent' ? [
       { icon:User, label:'Children',    value:`${user.childrenCount || 1} enrolled` },
@@ -553,6 +632,7 @@ const UserManagement = () => {
   const [filterStatus,setFStatus]    = useState('All');
   const [viewMode,    setViewMode]   = useState('table');
   const [viewUser,    setViewUser]   = useState(null);
+  const [editUser,    setEditUser]   = useState(null);
   const [resetUser,   setResetUser]  = useState(null);
   const [showAddUser, setShowAddUser]= useState(false);
   const [toast,       setToast]      = useState(null);
@@ -587,58 +667,6 @@ const UserManagement = () => {
     showToast(`${filtered.length} users exported`);
   };
 
-  const handleSampleDownload = () => {
-    const sections = [
-      '============================================',
-      'AFSHTS USER MANAGEMENT — SAMPLE DATA GUIDE',
-      '============================================',
-      '',
-      '---- TEACHERS (CSV format) ----',
-      'title,firstName,lastName,email,phone,department,staffId,teacherRole,formClass',
-      'Mr,Kwabena,Adjei,k.adjei@afshts.edu.gh,0244123456,Mathematics,AFSHTS/TCH/001,Subject Teacher + Form Teacher,Form 3 Science A',
-      'Mrs,Ama,Eshun,a.eshun@afshts.edu.gh,0277654321,English,AFSHTS/TCH/002,Subject Teacher,',
-      'Dr,Kofi,Osei,k.osei@afshts.edu.gh,0200112233,Science,AFSHTS/TCH/003,Subject Teacher + HOD,',
-      '',
-      'TEACHER ROLE OPTIONS (pick exactly one):',
-      '  - Subject Teacher',
-      '  - Subject Teacher + Form Teacher',
-      '  - Subject Teacher + HOD',
-      '  - Subject Teacher + Form Teacher + HOD',
-      '  - Form Teacher + HOD',
-      '  - Examiner',
-      '',
-      '---- STUDENTS (CSV format) ----',
-      'firstName,lastName,email,studentId,formClass,program,track,year,status',
-      'Kofi,Asante,k.asante@afshts.edu.gh,AFSHTS/2024/001,Form 3 Science A,General Science,A,2024,Active',
-      'Ama,Mensah,a.mensah@afshts.edu.gh,AFSHTS/2024/002,Form 2 Arts B,General Arts,B,2024,Active',
-      '',
-      'PROGRAMME OPTIONS:',
-      '  - General Science',
-      '  - General Arts',
-      '  - Business',
-      '  - Technical',
-      '',
-      'TRACK OPTIONS:  A  or  B',
-      '',
-      '---- PARENTS (CSV format) ----',
-      'title,firstName,lastName,email,phone,childStudentId',
-      'Mr,Emmanuel,Asante,e.asante@gmail.com,0244123456,AFSHTS/2024/001',
-      'Mrs,Grace,Mensah,g.mensah@gmail.com,0277654321,AFSHTS/2024/002',
-      '',
-      '============================================',
-      'NOTES:',
-      '  - Passwords are auto-generated on account creation.',
-      '  - Email must be unique per user.',
-      '  - Staff IDs follow format: AFSHTS/TCH/001',
-      '  - Student IDs follow format: AFSHTS/2024/001',
-      '  - Default password sent to user email after creation.',
-      '============================================',
-    ];
-    const blob = new Blob([sections.join('\n')], { type:'text/plain' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'AFSHTS_User_Sample_Guide.txt'; a.click();
-    showToast('Sample guide downloaded');
-  };
 
   const filtered = useMemo(() =>
     users.filter(u => {
@@ -691,12 +719,6 @@ const UserManagement = () => {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" onClick={handleSampleDownload}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
-            style={{ borderColor:'var(--success-dark)', color:'var(--success-dark)', backgroundColor:'#f0fdf4' }}
-            title="Download sample data format guide">
-            <Download size={13}/> Sample Guide
-          </button>
           <button type="button" onClick={handleExport}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
             style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
@@ -863,7 +885,7 @@ const UserManagement = () => {
                               style={{ color:'var(--royal-blue)' }} title="View profile"><Eye size={14}/></button>
                             <button type="button"
                               className="p-1.5 rounded-lg hover:bg-purple-50 transition"
-                              style={{ color:'#7c3aed' }} title="Edit user"><Edit3 size={14}/></button>
+                              style={{ color:'#7c3aed' }} title="Edit user" onClick={()=>setEditUser(u)}><Edit3 size={14}/></button>
                             <button type="button" onClick={()=>setResetUser(u)}
                               className="p-1.5 rounded-lg hover:bg-yellow-50 transition"
                               style={{ color:'var(--warning)' }} title="Reset password"><Key size={14}/></button>
@@ -932,7 +954,7 @@ const UserManagement = () => {
                           style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>
                           <Eye size={11}/> View
                         </button>
-                        <button type="button"
+                        <button type="button" onClick={()=>setEditUser(u)}
                           className="flex items-center justify-center p-1.5 rounded-lg"
                           style={{ backgroundColor:'#f5f3ff', color:'#7c3aed' }}
                           title="Edit user">
@@ -961,6 +983,13 @@ const UserManagement = () => {
       {/* Modals */}
       {showAddUser && (
         <AddUserModal onSave={handleAddUser} onClose={()=>setShowAddUser(false)}/>
+      )}
+      {editUser && (
+        <EditUserModal user={editUser} onSave={(updated)=>{
+          setUsers(us => us.map(u => u.id===updated.id ? updated : u));
+          setEditUser(null);
+          showToast(`${updated.firstName} ${updated.lastName} updated`);
+        }} onClose={()=>setEditUser(null)}/>
       )}
       {viewUser && (
         <ProfileDrawer

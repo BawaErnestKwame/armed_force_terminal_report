@@ -62,7 +62,7 @@ import StudentResults         from './student/results/StudentResults';
 import StudentReportCard      from './student/reportcard/StudentReportCard';
 import StudentAttendance      from './student/attendance/StudentAttendance';
 import StudentProfile         from './student/profile/StudentProfile';
-import StudentTimetable       from './student/timetable/StudentTimetable';
+
 
 // ── Parent Portal 
 import ParentDashboardLayout from './parent/ParentDashboardLayout';
@@ -157,7 +157,6 @@ const App = () => (
           <Route path='results'       element={<StudentResults />}     />
           <Route path='reportcard'    element={<StudentReportCard />}  />
           <Route path='attendance'    element={<StudentAttendance />}  />
-          <Route path='timetable'     element={<StudentTimetable />}   />
           <Route path='profile'       element={<StudentProfile />}     />
         </Route>
 

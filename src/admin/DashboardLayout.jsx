@@ -1,6 +1,6 @@
 // src/admin/DashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet,Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
 import {
@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import { MdDashboard, MdSchool } from 'react-icons/md';
 
-//  Sidebar nav sections 
+// ─── Sidebar nav sections ─────────────────────────────────────────────────────
 const NAV_SECTIONS = [
   {
     section: 'Main',
@@ -57,6 +57,7 @@ const NAV_SECTIONS = [
     section: 'Analytics & Finance',
     items: [
       { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
+      { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
       { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
     ],
   },
@@ -120,18 +121,16 @@ const DashboardLayout = () => {
         {/* Branding */}
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
-            <NavLink to="/" className="flex items-center gap-2 text-white min-w-0">
-              <Link to="/" className="flex items-center gap-2 text-white min-w-0">
+            <div className="flex items-center gap-2 text-white min-w-0 cursor-pointer" onClick={() => window.location.href='/'} >
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
                 <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
               </div>
-              </Link>
               <div className="min-w-0">
                 <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
                 <p className="text-xs text-blue-200 italic truncate">Service With Humanity</p>
               </div>
-            </NavLink>
+            </div>
           )}
           <div className="flex items-center gap-2 ml-auto flex-shrink-0">
             {/* Desktop only — collapse/expand */}

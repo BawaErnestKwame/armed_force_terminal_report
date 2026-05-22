@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search, Plus, Edit3, Trash2, Eye, X, Save,
-  Users, GraduationCap, Filter, Download,
+  Users, GraduationCap, Filter, Download, Upload,
   LayoutGrid, LayoutList, CheckCircle2,
   AlertCircle, ArrowUpCircle, Mail,
   Phone, MapPin, BookOpen, User, Calendar,
@@ -20,7 +20,7 @@ const STATUSES = ['Active','Inactive','Suspended'];
 
 const EMPTY = {
   studentId:'', firstName:'', lastName:'', gender:'Male', dob:'',
-  program:'General Science', year:'Form 1', formClass:'', track:'A',
+  course:'General Science', year:'Form 1', formClass:'', track:'A',
   house:'Warrior', status:'Active', attendance:0, avgScore:0,
   parentId:null, address:'', email:'', enrollDate:'',
 };
@@ -139,7 +139,7 @@ const StudentFormModal = ({ student, onSave, onClose }) => {
             <p className="text-xs font-black uppercase tracking-widest mb-3 px-1"
               style={{ color:'var(--royal-blue)', opacity:0.7 }}>Academic Information</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FInput label="Programme"  value={form.program}   onChange={v=>set('program',v)}   options={PROGRAMS} />
+              <FInput label="Course"  value={form.course}   onChange={v=>set('course',v)}   options={PROGRAMS} />
               <FInput label="Year Group" value={form.year}      onChange={v=>set('year',v)}      options={YEARS} />
               <FInput label="Form Class" value={form.formClass} onChange={v=>set('formClass',v)} />
               <FInput label="Track"      value={form.track}     onChange={v=>set('track',v)}     options={TRACKS} />
@@ -278,7 +278,7 @@ const ProfileDrawer = ({ student, onEdit, onClose }) => {
           {/* Quick stats */}
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label:'Programme',  value:student.program.replace('General ',''), color:'var(--royal-blue)' },
+              { label:'Course',  value:(student.course || student.program || '').replace('General ',''), color:'var(--royal-blue)' },
               { label:'Form Class', value:student.formClass,                       color:'#7c3aed'           },
             ].map(({ label,value,color })=>(
               <div key={label} className="text-center p-3 rounded-xl" style={{ backgroundColor:'var(--light-gray)' }}>
@@ -320,7 +320,7 @@ const ProfileDrawer = ({ student, onEdit, onClose }) => {
 const Students = () => {
   const [students, setStudents]       = useState(INITIAL_STUDENTS);
   const [search,   setSearch]         = useState('');
-  const [filterProgram, setFP]        = useState('All');
+  const [filterCourse, setFP]        = useState('All');
   const [filterYear,    setFY]        = useState('All');
   const [filterTrack,   setFT]        = useState('All');
   const [filterStatus,  setFS]        = useState('All');
@@ -346,13 +346,13 @@ const Students = () => {
       const matchSearch = !q || s.firstName.toLowerCase().includes(q) ||
         s.lastName.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q) ||
         s.email.toLowerCase().includes(q);
-      const matchProgram = filterProgram==='All' || s.program===filterProgram;
+      const matchCourse = filterCourse==='All' || s.course===filterCourse;
       const matchYear    = filterYear   ==='All' || s.year   ===filterYear;
       const matchTrack   = filterTrack  ==='All' || s.track  ===filterTrack;
       const matchStatus  = filterStatus ==='All' || s.status ===filterStatus;
-      return matchSearch && matchProgram && matchYear && matchTrack && matchStatus;
+      return matchSearch && matchCourse && matchYear && matchTrack && matchStatus;
     })
-  ,[students, search, filterProgram, filterYear, filterTrack, filterStatus]);
+  ,[students, search, filterCourse, filterYear, filterTrack, filterStatus]);
 
   // ── CRUD ───────────────────────────────────────────────────────────────────
   const handleSave = (form) => {
@@ -389,11 +389,56 @@ const Students = () => {
     setSelected([]); setShowBulk(false);
   };
 
+  const handleSampleGuide = () => {
+    const lines = [
+      '============================================',
+      'AFSHTS STUDENT IMPORT — SAMPLE GUIDE',
+      '============================================',
+      '',
+      'CSV FORMAT (first row must be the header):',
+      'firstName,lastName,gender,email,studentId,year,formClass,course,track,status,parentId',
+      '',
+      'EXAMPLE ROWS:',
+      'Kofi,Asante,Male,k.asante@afshts.edu.gh,AFSHTS/2025/001,2025,Form 1 Science A,General Science,A,Active,P001',
+      'Ama,Mensah,Female,a.mensah@afshts.edu.gh,AFSHTS/2025/002,2025,Form 2 Arts B,General Arts,B,Active,P002',
+      '',
+      'COURSE OPTIONS:',
+      '  - General Science',
+      '  - General Arts',
+      '  - Business',
+      '  - Technical',
+      '',
+      'TRACK OPTIONS:  A  or  B',
+      '',
+      'STATUS OPTIONS:  Active  or  Inactive',
+      '',
+      'STUDENT ID FORMAT:  AFSHTS/YEAR/NUMBER',
+      '  e.g.  AFSHTS/2025/001',
+      '',
+      'NOTES:',
+      '  - Email must be unique per student.',
+      '  - parentId must match an existing parent record.',
+      '  - Leave parentId blank if parent not yet registered.',
+      '============================================',
+    ];
+    const blob = new Blob([lines.join('\n')], { type:'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'AFSHTS_Student_Sample_Guide.txt'; a.click();
+    showToast('Student sample guide downloaded');
+  };
+
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    showToast(`"${file.name}" ready — import will be processed by the backend`, 'info');
+    e.target.value = '';
+  };
+
   const handleExport = () => {
-    const rows = ['Student ID,First Name,Last Name,Gender,Programme,Year,Form Class,Track,Status,Email,Parent'];
+    const rows = ['Student ID,First Name,Last Name,Gender,Course,Year,Form Class,Track,Status,Email,Parent'];
     filtered.forEach(s=>{
       const { parentName } = getParentInfo(s.parentId);
-      rows.push(`${s.studentId},${s.firstName},${s.lastName},${s.gender},${s.program},${s.year},${s.formClass},${s.track},${s.status},${s.email},${parentName}`);
+      rows.push(`${s.studentId},${s.firstName},${s.lastName},${s.gender},${s.course || s.program},${s.year},${s.formClass},${s.track},${s.status},${s.email},${parentName}`);
     });
     const blob = new Blob([rows.join('\n')], { type:'text/csv' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -405,7 +450,7 @@ const Students = () => {
   const toggleAll    = () => setSelected(sel => sel.length===filtered.length ? [] : filtered.map(s=>s.id));
   const allSelected  = filtered.length>0 && selected.length===filtered.length;
 
-  const activeFilters = [filterProgram,filterYear,filterTrack,filterStatus].filter(f=>f!=='All').length;
+  const activeFilters = [filterCourse,filterYear,filterTrack,filterStatus].filter(f=>f!=='All').length;
 
   // ── Stats ──────────────────────────────────────────────────────────────────
   const total   = students.length;
@@ -434,6 +479,18 @@ const Students = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          {/* Sample Guide */}
+          <button onClick={handleSampleGuide}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
+            style={{ borderColor:'var(--success-dark)', color:'var(--success-dark)', backgroundColor:'#f0fdf4' }}>
+            <Download size={13}/> Sample Guide
+          </button>
+          {/* Import */}
+          <label className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition cursor-pointer"
+            style={{ borderColor:'var(--royal-blue)', color:'var(--royal-blue)', backgroundColor:'#eef2ff' }}>
+            <Upload size={13}/> Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={handleImport}/>
+          </label>
           <button onClick={handleExport}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
             style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
@@ -521,7 +578,7 @@ const Students = () => {
         {showFilters && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 pt-3 border-t" style={{ borderColor:'var(--medium-gray)' }}>
             {[
-              { label:'Programme', value:filterProgram, set:setFP, opts:['All',...PROGRAMS] },
+              { label:'Course', value:filterCourse, set:setFP, opts:['All',...PROGRAMS] },
               { label:'Year Group', value:filterYear,   set:setFY, opts:['All',...YEARS]    },
               { label:'Track',     value:filterTrack,   set:setFT, opts:['All',...TRACKS]   },
               { label:'Status',    value:filterStatus,  set:setFS, opts:['All',...STATUSES] },
@@ -564,7 +621,7 @@ const Students = () => {
                     <input type="checkbox" checked={allSelected} onChange={toggleAll}
                       className="w-4 h-4 rounded" style={{ accentColor:'var(--royal-blue)' }}/>
                   </th>
-                  {['Student','ID','Programme','Class','Track','Status','Actions'].map(h=>(
+                  {['Student','ID','Course','Class','Track','Status','Actions'].map(h=>(
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                   ))}
                 </tr>
@@ -593,7 +650,7 @@ const Students = () => {
                           </div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-gray-500">{s.studentId}</td>
-                        <td className="px-4 py-3 text-xs text-gray-600">{s.program.replace('General ','Gen. ')}</td>
+                        <td className="px-4 py-3 text-xs text-gray-600">{(s.course || s.program || '').replace('General ','Gen. ')}</td>
                         <td className="px-4 py-3 text-xs text-gray-600">{s.formClass}</td>
                         <td className="px-4 py-3">
                           <span className="text-xs font-bold px-2 py-0.5 rounded"
@@ -673,7 +730,7 @@ const Students = () => {
                         Track {s.track}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor:'#f5f3ff', color:'#7c3aed' }}>
-                        {s.program.replace('General ','')}
+                        {(s.course || s.program || '').replace('General ','')}
                       </span>
                     </div>
 

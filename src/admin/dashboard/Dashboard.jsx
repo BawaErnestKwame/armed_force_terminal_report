@@ -223,16 +223,16 @@ const Dashboard = () => {
           <div className="w-36 h-36 rounded-full bg-white absolute right-10 bottom-4" />
         </div>
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <div>
+          <div >
             <p className="text-blue-200 text-sm mb-1">Welcome back,</p>
             <h2 className="text-xl sm:text-2xl font-black">{user?.name || 'Administrator'}</h2>
-            <p className="text-blue-300 text-xs mt-0.5">Armed Forces SHT School · Admin Portal</p>
+            <p className="text-blue-300 text-xs mt-0.5">Armed Forces Senior High Technical School · Admin Portal</p>
             <p className="text-blue-300 text-xs">Uaddara Barracks, Kumasi, Ghana</p>
             <div className="flex flex-wrap gap-2 mt-3">
               {[
                 { label: `${STATS.totalStudents} Students`, bg: 'rgba(255,255,255,0.15)' },
                 { label: `${STATS.totalTeachers} Teachers`, bg: 'rgba(255,255,255,0.15)' },
-                { label: `${STATS.pendingScores} Pending Scores`, bg: 'rgba(230,57,70,0.35)' },
+                
               ].map(b => (
                 <span key={b.label} className="text-xs font-semibold px-2.5 py-1 rounded-full"
                   style={{ backgroundColor: b.bg }}>

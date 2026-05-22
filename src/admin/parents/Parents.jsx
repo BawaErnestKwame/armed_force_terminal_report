@@ -2,20 +2,20 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search, Plus, Edit3, Trash2, Eye, X, Save,
-  Users, UserCheck, Filter, Download,
+  Users, UserCheck, Filter, Download, Upload,
   LayoutGrid, LayoutList, CheckCircle2,
   AlertCircle, Mail, Phone, MapPin,
   User, Calendar, Briefcase, MessageSquare,
   ChevronDown, GraduationCap
 } from 'lucide-react';
 
-// ─── Mock data 
-// ─── Data from central source
+// ─── Mock data ─────────────────────────────────────────────────────────────
+// ─── Data from central source ─────────────────────────────────────────────────
 import { PARENTS as INITIAL_PARENTS, STUDENTS, PARENT_CHILDREN } from '../data/adminData';
 
 // Build children lookup from STUDENTS
 const CHILDREN_LOOKUP = STUDENTS.reduce((acc, s) => {
-  acc[s.studentId] = { name:`${s.firstName} ${s.lastName}`, class:s.formClass, program:s.program };
+  acc[s.studentId] = { name:`${s.firstName} ${s.lastName}`, class:s.formClass, course:s.course };
   return acc;
 }, {});
 
@@ -32,7 +32,7 @@ const EMPTY = {
   children:[], registeredDate:'',
 };
 
-// ─── Helpers 
+// ─── Helpers ──────────────────────────────────────────────────────────────
 const statusStyle = s => ({
   Active:   { bg:'#f0fdf4', color:'var(--success-dark)' },
   Inactive: { bg:'#fff1f2', color:'var(--accent-red)'   },
@@ -73,7 +73,7 @@ const FInput = ({ label, value, onChange, type='text', options, required, error 
   </div>
 );
 
-// ─── Parent Form Modal 
+// ─── Parent Form Modal ─────────────────────────────────────────────────────
 const ParentFormModal = ({ parent, onSave, onClose }) => {
   const isEdit = !!parent?.id;
   const [form,   setForm]   = useState(parent || EMPTY);
@@ -180,7 +180,7 @@ const ParentFormModal = ({ parent, onSave, onClose }) => {
                           <p className="text-xs font-bold" style={{ color:'var(--dark-gray)' }}>
                             {s.firstName} {s.lastName}
                           </p>
-                          <p className="text-xs text-gray-400">{s.formClass} · {s.program}</p>
+                          <p className="text-xs text-gray-400">{s.formClass} · {s.course}</p>
                         </div>
                       </div>
                       <span className="text-xs font-mono text-gray-400">{s.studentId}</span>
@@ -210,7 +210,7 @@ const ParentFormModal = ({ parent, onSave, onClose }) => {
   );
 };
 
-// ─── Delete Confirm 
+// ─── Delete Confirm ────────────────────────────────────────────────────────
 const DeleteConfirm = ({ parent, onConfirm, onClose }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 text-center">
@@ -237,7 +237,7 @@ const DeleteConfirm = ({ parent, onConfirm, onClose }) => (
   </div>
 );
 
-// ─── Profile Drawer 
+// ─── Profile Drawer ────────────────────────────────────────────────────────
 const ProfileDrawer = ({ parent, onEdit, onClose }) => {
   if (!parent) return null;
   const ss = statusStyle(parent.status);
@@ -314,7 +314,7 @@ const ProfileDrawer = ({ parent, onEdit, onClose }) => {
                       <p className="text-sm font-bold truncate" style={{ color:'var(--dark-gray)' }}>
                         {s.firstName} {s.lastName}
                       </p>
-                      <p className="text-xs text-gray-400">{s.formClass} · {s.program}</p>
+                      <p className="text-xs text-gray-400">{s.formClass} · {s.course}</p>
                     </div>
                     <span className="text-xs font-mono text-gray-400 flex-shrink-0">{s.studentId}</span>
                   </div>
@@ -349,7 +349,7 @@ const ProfileDrawer = ({ parent, onEdit, onClose }) => {
   );
 };
 
-// ─── Main Parents Component 
+// ─── Main Parents Component ────────────────────────────────────────────────
 const Parents = () => {
   const [parents,      setParents]    = useState(INITIAL_PARENTS);
   const [search,       setSearch]     = useState('');
@@ -405,6 +405,52 @@ const Parents = () => {
     setSelected([]); setShowBulk(false);
   };
 
+  const handleSampleGuide = () => {
+    const lines = [
+      '============================================',
+      'AFSHTS PARENT IMPORT — SAMPLE GUIDE',
+      '============================================',
+      '',
+      'CSV FORMAT (first row must be the header):',
+      'title,firstName,lastName,email,phone,relationship,childStudentId',
+      '',
+      'EXAMPLE ROWS:',
+      'Mr,Emmanuel,Asante,e.asante@gmail.com,0244123456,Father,AFSHTS/2025/001',
+      'Mrs,Grace,Mensah,g.mensah@gmail.com,0277654321,Mother,AFSHTS/2025/002',
+      'Mr,Yaw,Boateng,y.boateng@gmail.com,0200998877,Guardian,AFSHTS/2025/003',
+      '',
+      'RELATIONSHIP OPTIONS:',
+      '  - Father',
+      '  - Mother',
+      '  - Guardian',
+      '  - Other',
+      '',
+      'TITLE OPTIONS:  Mr  Mrs  Ms  Dr  Rev',
+      '',
+      'CHILD STUDENT ID FORMAT:  AFSHTS/YEAR/NUMBER',
+      '  e.g.  AFSHTS/2025/001',
+      '',
+      'NOTES:',
+      '  - One row per parent-child link.',
+      '  - A parent with multiple children needs one row per child.',
+      '  - Email must be unique per parent.',
+      '  - childStudentId must match an existing student record.',
+      '  - Default password is sent to parent email after account creation.',
+      '============================================',
+    ];
+    const blob = new Blob([lines.join('\n')], { type:'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'AFSHTS_Parent_Sample_Guide.txt'; a.click();
+    showToast('Parent sample guide downloaded');
+  };
+
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    showToast(`"${file.name}" ready — import will be processed by the backend`, 'info');
+    e.target.value = '';
+  };
+
   const handleExport = () => {
     const rows = ['Title,First Name,Last Name,Email,Phone,Occupation,Status,Children Count,Address'];
     filtered.forEach(p=>rows.push(`${p.title},${p.firstName},${p.lastName},${p.email},${p.phone},${p.occupation},${p.status},${p.children.length},${p.address}`));
@@ -444,6 +490,16 @@ const Parents = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          <button onClick={handleSampleGuide}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
+            style={{ borderColor:'var(--success-dark)', color:'var(--success-dark)', backgroundColor:'#f0fdf4' }}>
+            <Download size={13}/> Sample Guide
+          </button>
+          <label className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition cursor-pointer"
+            style={{ borderColor:'var(--royal-blue)', color:'var(--royal-blue)', backgroundColor:'#eef2ff' }}>
+            <Upload size={13}/> Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={handleImport}/>
+          </label>
           <button onClick={handleExport}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
             style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>

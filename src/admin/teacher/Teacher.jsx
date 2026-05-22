@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search, Plus, Edit3, Trash2, Eye, X, Save,
-  Users, BookOpen, Filter, Download,
+  Users, BookOpen, Filter, Download, Upload,
   LayoutGrid, LayoutList, CheckCircle2,
   AlertCircle, Mail, Phone, MapPin,
   User, Calendar, Briefcase, Award,
@@ -28,8 +28,8 @@ const INITIAL_TEACHERS = [
   { id:15, staffId:'AFTS/TCH/015', title:'Dr',    firstName:'Yaa',      lastName:'Agyemang',   gender:'Female', subject:'Core Mathematics',   department:'Mathematics', qualification:'PhD Mathematics',     employmentType:'Full-time', track:'A', formClass:'Form 2 Science A', status:'Active',   phone:'0244567890', email:'y.agyemang@afts.edu.gh',   address:'Asokwa, Kumasi',           joinDate:'2015-09-01' },
 ];
 
-const DEPARTMENTS  = ['Mathematics','English','Science','Social Studies','Technical','Business','Arts','Physical Education'];
-const SUBJECTS     = ['Mathematics','Core Mathematics','English Language','Integrated Science','Social Studies','Physics','Chemistry','Biology','ICT','Economics','Accounting','Technical Drawing','Geography','Literature','Government','History','French','Physical Education'];
+const DEPARTMENTS  = ['Core Mathematics','English','Science','Social Studies','Technical','Business','Arts','Physical Education'];
+const SUBJECTS     = ['Core Mathematics','Core Core Mathematics','English Language','Integrated Science','Social Studies','Physics','Chemistry','Biology','ICT','Economics','Accounting','Technical Drawing','Geography','Literature','Government','History','French','Physical Education'];
 const QUALIFICATIONS = ['BSc','BA','MSc','MA','PhD','HND','Diploma','Certificate'];
 const EMP_TYPES    = ['Full-time','Part-time','Contract','National Service'];
 const TITLES       = ['Mr','Mrs','Miss','Dr','Prof','Rev','Capt','Lt','Sgt','Cpl','WOI'];
@@ -38,7 +38,7 @@ const STATUSES     = ['Active','Inactive','On Leave'];
 
 const EMPTY = {
   staffId:'', title:'Mr', firstName:'', lastName:'', gender:'Male',
-  subject:'Mathematics', department:'Mathematics', qualification:'BSc',
+  subject:'Core Mathematics', department:'Mathematics', qualification:'BSc',
   employmentType:'Full-time', track:'A', formClass:'', status:'Active',
   phone:'', email:'', address:'', joinDate:'',
 };
@@ -154,7 +154,7 @@ const TeacherFormModal = ({ teacher, onSave, onClose }) => {
               <FInput label="Qualification"     value={form.qualification}    onChange={v=>set('qualification',v)}    options={QUALIFICATIONS} />
               <FInput label="Employment Type"   value={form.employmentType}   onChange={v=>set('employmentType',v)}   options={EMP_TYPES} />
               <FInput label="Track"             value={form.track}            onChange={v=>set('track',v)}            options={TRACKS} />
-              <FInput label="Form Class (if any)" value={form.formClass}      onChange={v=>set('formClass',v)} />
+              <FInput label="Form Class - (Year - Course)" value={form.formClass}      onChange={v=>set('formClass',v)} />
             </div>
           </div>
         </div>
@@ -363,6 +363,51 @@ const Teacher = () => {
     setSelected([]);
   };
 
+  const handleSampleGuide = () => {
+    const lines = [
+      '============================================',
+      'AFSHTS TEACHER IMPORT — SAMPLE GUIDE',
+      '============================================',
+      '',
+      'CSV FORMAT (first row must be the header):',
+      'title,firstName,lastName,email,phone,staffId,department,teacherRole,formClass',
+      '',
+      'EXAMPLE ROWS:',
+      'Mr,Kwabena,Adjei,k.adjei@afshts.edu.gh,0244123456,AFSHTS/TCH/001,Mathematics,Subject Teacher,',
+      'Mrs,Ama,Eshun,a.eshun@afshts.edu.gh,0277654321,AFSHTS/TCH/002,English,Subject Teacher + Form Teacher,Form 1 Arts A',
+      'Dr,Kofi,Osei,k.osei@afshts.edu.gh,0200112233,AFSHTS/TCH/003,Science,Subject Teacher + HOD,',
+      '',
+      'TEACHER ROLE OPTIONS (pick exactly one):',
+      '  - Subject Teacher',
+      '  - Subject Teacher + Form Teacher',
+      '  - Subject Teacher + HOD',
+      '  - Subject Teacher + Form Teacher + HOD',
+      '  - Form Teacher + HOD',
+      '  - Examiner',
+      '',
+      'TITLE OPTIONS:  Mr  Mrs  Ms  Dr  Prof  Rev  Col  Maj  Capt  WO  WOI',
+      '',
+      'STAFF ID FORMAT:  AFSHTS/TCH/001',
+      '',
+      'NOTES:',
+      '  - formClass only required for Form Teacher roles.',
+      '  - Email must be unique per teacher.',
+      '  - Default password is sent to teacher email after account creation.',
+      '============================================',
+    ];
+    const blob = new Blob([lines.join('\n')], { type:'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'AFSHTS_Teacher_Sample_Guide.txt'; a.click();
+    showToast('Teacher sample guide downloaded');
+  };
+
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    showToast(`"${file.name}" ready — import will be processed by the backend`, 'info');
+    e.target.value = '';
+  };
+
   const handleExport = () => {
     const rows = ['Staff ID,Title,First Name,Last Name,Gender,Subject,Department,Qualification,Employment,Track,Status,Email,Phone'];
     filtered.forEach(t=>rows.push(`${t.staffId},${t.title},${t.firstName},${t.lastName},${t.gender},${t.subject},${t.department},${t.qualification},${t.employmentType},${t.track},${t.status},${t.email},${t.phone}`));
@@ -402,6 +447,16 @@ const Teacher = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          <button type="button" onClick={handleSampleGuide}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition"
+            style={{ borderColor:'var(--success-dark)', color:'var(--success-dark)', backgroundColor:'#f0fdf4' }}>
+            <Download size={13}/> Sample Guide
+          </button>
+          <label className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition cursor-pointer"
+            style={{ borderColor:'var(--royal-blue)', color:'var(--royal-blue)', backgroundColor:'#eef2ff' }}>
+            <Upload size={13}/> Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={handleImport}/>
+          </label>
           <button type="button" onClick={handleExport}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border"
             style={{ borderColor:'var(--medium-gray)', color:'var(--dark-gray)', backgroundColor:'white' }}>
