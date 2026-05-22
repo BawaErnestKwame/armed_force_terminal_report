@@ -33,10 +33,10 @@ const NAV_SECTIONS = [
   {
     section: 'Academic Setup',
     items: [
-      { icon: FaCalendarAlt,      label: 'Academic Year',      path: '/dashboard/academicYear'              },
+      // { icon: FaCalendarAlt,      label: 'Academic Year',      path: '/dashboard/academicYear'              },
       { icon: FaLayerGroup,       label: 'Structure — Part 1', path: '/dashboard/academicStructure1'        },
       { icon: FaLayerGroup,       label: 'Structure — Part 2', path: '/dashboard/academicStructure2'        },
-      { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
+      // { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
       { icon: FaCommentDots,      label: 'Comment Bank',       path: '/dashboard/commentBank'               },
     ],
   },
@@ -53,14 +53,14 @@ const NAV_SECTIONS = [
       { icon: FaBullhorn,         label: 'Bulk Communication', path: '/dashboard/bulkCommunication'         },
     ],
   },
-  {
-    section: 'Analytics & Finance',
-    items: [
-      { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
-      { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
-      { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
-    ],
-  },
+  // {
+  //   section: 'Analytics & Finance',
+  //   items: [
+  //     { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
+  //     { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
+  //     { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
+  //   ],
+  // },
   {
     section: 'System',
     items: [

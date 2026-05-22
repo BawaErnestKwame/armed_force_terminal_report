@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   Save, RotateCcw, CheckCircle2, AlertCircle,
-  School, Calendar, Globe, Shield, Bell,
+  School, Globe, Shield, Bell,
   Users, Database, Upload, Info, Eye, EyeOff,
   ChevronDown
 } from 'lucide-react';
@@ -91,22 +91,6 @@ const Settings = () => {
     waecCode:'GH0042',
   });
   const setS = (k, v) => setSchool(s => ({ ...s, [k]: v }));
-
-  // ── Academic Year ─────────────────────────────────────────────────────────
-  const [academic, setAcademic] = useState({
-    year:            '2024/2025',
-    currentTerm:     'Term 2',
-    term1Start:      '2024-09-02', term1End: '2024-12-13',
-    term2Start:      '2025-01-06', term2End: '2025-04-11',
-    term3Start:      '2025-04-14', term3End: '2025-07-25',
-    trackAStart:     '2025-01-06',
-    trackBStart:     '2025-04-14',
-    weeklyPeriods:   30,
-    periodsPerDay:   8,
-    schoolStartTime: '07:00',
-    schoolEndTime:   '15:15',
-  });
-  const setA = (k, v) => setAcademic(a => ({ ...a, [k]: v }));
 
   // ── System Preferences ────────────────────────────────────────────────────
   const [prefs, setPrefs] = useState({
@@ -238,67 +222,6 @@ const Settings = () => {
           </Field>
         </div>
         <SaveButton section="School Info"/>
-      </SectionCard>
-
-      {/* ── Academic Year ─────────────────────────────────────────────── */}
-      <SectionCard icon={Calendar} title="Academic Year & Term Setup" description="Configure current academic year, term dates and school schedule" color="var(--warning)">
-        <div className="space-y-1">
-          <Field label="Current Academic Year">
-            <InputField value={academic.year} onChange={v => setA('year', v)} placeholder="e.g. 2024/2025"/>
-          </Field>
-          <Field label="Current Term">
-            <SelectField value={academic.currentTerm} onChange={v => setA('currentTerm', v)}
-              options={['Term 1', 'Term 2', 'Term 3']}/>
-          </Field>
-
-          {/* Term dates */}
-          {[1, 2, 3].map(t => (
-            <React.Fragment key={t}>
-              <div className="pt-3 pb-1">
-                <p className="text-xs font-black uppercase tracking-widest" style={{ color: 'var(--royal-blue)', opacity: 0.7 }}>
-                  Term {t} Dates
-                </p>
-              </div>
-              <Field label={`Term ${t} Start`}>
-                <InputField type="date" value={academic[`term${t}Start`]} onChange={v => setA(`term${t}Start`, v)}/>
-              </Field>
-              <Field label={`Term ${t} End`}>
-                <InputField type="date" value={academic[`term${t}End`]} onChange={v => setA(`term${t}End`, v)}/>
-              </Field>
-            </React.Fragment>
-          ))}
-
-          <div className="pt-3 pb-1">
-            <p className="text-xs font-black uppercase tracking-widest" style={{ color: 'var(--royal-blue)', opacity: 0.7 }}>
-              Double Track
-            </p>
-          </div>
-          <Field label="Track A Current Term Start">
-            <InputField type="date" value={academic.trackAStart} onChange={v => setA('trackAStart', v)}/>
-          </Field>
-          <Field label="Track B Current Term Start">
-            <InputField type="date" value={academic.trackBStart} onChange={v => setA('trackBStart', v)}/>
-          </Field>
-
-          <div className="pt-3 pb-1">
-            <p className="text-xs font-black uppercase tracking-widest" style={{ color: 'var(--royal-blue)', opacity: 0.7 }}>
-              School Schedule
-            </p>
-          </div>
-          <Field label="Periods Per Week">
-            <InputField type="number" value={academic.weeklyPeriods} onChange={v => setA('weeklyPeriods', parseInt(v) || 0)} placeholder="30"/>
-          </Field>
-          <Field label="Periods Per Day">
-            <InputField type="number" value={academic.periodsPerDay} onChange={v => setA('periodsPerDay', parseInt(v) || 0)} placeholder="8"/>
-          </Field>
-          <Field label="School Start Time">
-            <InputField type="time" value={academic.schoolStartTime} onChange={v => setA('schoolStartTime', v)}/>
-          </Field>
-          <Field label="School End Time">
-            <InputField type="time" value={academic.schoolEndTime} onChange={v => setA('schoolEndTime', v)}/>
-          </Field>
-        </div>
-        <SaveButton section="Academic Year"/>
       </SectionCard>
 
       {/* ── System Preferences ────────────────────────────────────────── */}

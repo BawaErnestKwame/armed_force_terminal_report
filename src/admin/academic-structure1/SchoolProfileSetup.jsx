@@ -1,6 +1,6 @@
 // src/admin/academic-structure1/SchoolProfileSetup.jsx
 import React, { useState, useRef } from 'react';
-import { Save, Camera, CheckCircle2, Building2, Phone, Mail, Globe, MapPin, User, Hash } from 'lucide-react';
+import { Save, Camera, CheckCircle2, Building2, Phone, Mail, Globe, MapPin, Hash } from 'lucide-react';
 import { SCHOOL_INFO } from '../data/adminData';
 
 const REGIONS = ['Greater Accra','Ashanti','Western','Eastern','Central','Volta','Northern','Upper East','Upper West','Bono','Ahafo','Bono East','Oti','North East','Savannah','Western North'];
@@ -23,12 +23,6 @@ const SchoolProfileSetup = () => {
     phone:          SCHOOL_INFO.phone,
     email:          SCHOOL_INFO.email,
     website:        SCHOOL_INFO.website,
-    principalTitle: 'Col.',
-    principalName:  'Emmanuel Kwame Asante (Rtd)',
-    principalPhone: '0244 000 000',
-    principalEmail: 'principal@afts.edu.gh',
-    nextTermReopen: '2025-04-14',
-    vacationDate:   '2025-04-11',
   });
   const [logo,  setLogo]  = useState(null);
   const [toast, setToast] = useState(null);
@@ -122,7 +116,7 @@ const SchoolProfileSetup = () => {
 
       <Section title="School Identity">
         <FInput label="Full School Name"   field="name"          placeholder="Full name"             required icon={Building2} span2/>
-        <FInput label="Short Name"         field="shortName"     placeholder="e.g. AFTS"             required/>
+        <FInput label="Short Name"         field="shortName"     placeholder="e.g. AFSHTS"             required/>
         <FInput label="Motto"              field="motto"         placeholder="School motto"                    span2/>
         <FInput label="School Type"        field="type"          placeholder="e.g. Senior High Technical School"/>
         <FInput label="WAEC Centre Code"   field="waecCode"      placeholder="e.g. GH0042"           icon={Hash}/>
@@ -141,17 +135,6 @@ const SchoolProfileSetup = () => {
         <FInput label="Website"            field="website"  placeholder="www.school.edu.gh"         icon={Globe}/>
       </Section>
 
-      <Section title="Leadership">
-        <FInput label="Principal Title"    field="principalTitle"  placeholder="e.g. Col., Mr., Dr."/>
-        <FInput label="Principal Name"     field="principalName"   placeholder="Full name"             icon={User}/>
-        <FInput label="Principal Phone"    field="principalPhone"  placeholder="0244..."               icon={Phone}/>
-        <FInput label="Principal Email"    field="principalEmail"  placeholder="principal@school.edu.gh" icon={Mail} type="email"/>
-      </Section>
-
-      <Section title="Current Term Info">
-        <FInput label="Vacation / End of Term Date" field="vacationDate"   type="date"/>
-        <FInput label="Next Term Reopening Date"    field="nextTermReopen" type="date"/>
-      </Section>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
   HelpCircle, Wrench, Calculator, Microscope, Book,
   Briefcase, Flag, Heart, PenTool, Music, Cog
 } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 // ─── SHS Ghana Specific Constants ─────────────────────────────────────────────
 
@@ -129,7 +130,7 @@ const SAMPLE_SHS_STUDENT = {
 };
 
 const MILITARY_COMMENT_TEMPLATES = [
-  "Excellent performance! Demonstrates leadership potential. Keep up the high standards expected of AFTS cadets.",
+  "Excellent performance! Demonstrates leadership potential. Keep up the high standards expected of AFSHTS students.",
   "Good effort. Shows discipline and commitment to academic excellence. Maintain the momentum.",
   "Satisfactory performance. Needs to improve in practical applications. Report to technical bay for extra drill.",
   "Average performance. Can do better with more focus. Requires supervision in workshop sessions.",
@@ -138,7 +139,7 @@ const MILITARY_COMMENT_TEMPLATES = [
   "Excellent in practicals. Theory needs more attention. Study more and report for tutorials.",
   "Demonstrates good understanding of technical concepts. Keep up with the hands-on approach.",
   "Attendance needs improvement. Punctuality is key to success in military and academics.",
-  "Outstanding performance! A role model for other cadets. Joint campus commendation recommended.",
+  "Outstanding performance! A role model for other students. Joint campus commendation recommended.",
 ];
 
 const COMMENT_TEMPLATES = MILITARY_COMMENT_TEMPLATES;
@@ -264,7 +265,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
         <div className="text-center p-8 text-gray-500">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--royal-blue)' }}></div>
           <p>Loading student data...</p>
-          <p className="text-xs mt-2">Please select a cadet</p>
+          <p className="text-xs mt-2">Please select a student</p>
         </div>
       </div>
     );
@@ -298,10 +299,11 @@ const LiveReportPreview = ({ settings, sections, student }) => {
       <div className="text-white py-4 px-6 border-b-4" style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))', borderBottomColor: 'var(--accent-red)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-wide">ARMED FORCES TECHNICAL SCHOOL</h1>
+            <h1 className="text-xl font-bold tracking-wide">ARMED FORCES SENIOR HIGH TECHNICAL SCHOOL</h1>
             <p className="text-xs text-blue-200 mt-1">Excellence Through Discipline - Uaddara Barracks, Kumasi</p>
           </div>
-          <Shield size={40} className="text-yellow-400" />
+          {/* <Shield size={40} className="text-yellow-400" /> */}
+          <img src={logo} alt="AFSHTS Logo" className="w-12 h-12 object-contain" />
         </div>
         <div className="mt-3 pt-2 border-t border-white/20 text-center">
           <p className="text-sm font-semibold">
@@ -320,7 +322,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
               {settings.studentInfo.fieldsToDisplay.includes('name') && (
-                <div><span className="text-gray-500">Cadet's Name:</span> <span className="font-semibold">{student.name}</span></div>
+                <div><span className="text-gray-500">Student's Name:</span> <span className="font-semibold">{student.name}</span></div>
               )}
               {settings.studentInfo.fieldsToDisplay.includes('id') && (
                 <div><span className="text-gray-500">Service No.:</span> <span className="font-semibold">{displayId}</span></div>
@@ -492,7 +494,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
                 </div>
               )}
               {settings.performance.showClassRank && (
-                <div><span className="text-gray-500">Class/Platoon Rank:</span> <span className="font-bold">3 / 48 Cadets</span></div>
+                <div><span className="text-gray-500">Class Position:</span> <span className="font-bold">3 / 48 Students</span></div>
               )}
               {settings.performance.showStreamRank && (
                 <div><span className="text-gray-500">Company Rank:</span> <span className="font-bold">2 / 24</span></div>
@@ -555,9 +557,9 @@ const LiveReportPreview = ({ settings, sections, student }) => {
               {settings.comments.showHeadComment && (
                 <div className="border-l-4 border-blue-500 pl-3">
                   <p className="text-sm italic text-gray-700">
-                    "An excellent cadet with outstanding academic and leadership potential. Recommended for promotion to Cadet Lance Corporal."
+                    "An excellent student with outstanding academic and leadership potential. Recommended for promotion to Student Lance Corporal."
                   </p>
-                  <p className="text-xs text-gray-500 mt-2">- Commandant, AFTS</p>
+                  <p className="text-xs text-gray-500 mt-2">- Headmaster, AFSHTS</p>
                 </div>
               )}
             </div>
@@ -589,7 +591,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
           <div className="flex justify-center items-center gap-4">
             <span>📅 Issued: {new Date().toLocaleDateString()}</span>
             <span>⚔️ "DISCIPLINE • EXCELLENCE • SERVICE"</span>
-            <span>🏫 AFTS - Uaddara Barracks, Kumasi</span>
+            <span>🏫 AFSHTS - Uaddara Barracks, Kumasi</span>
           </div>
         </div>
       )}
@@ -609,8 +611,8 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
   const [validationErrors, setValidationErrors] = useState({});
 
   const [template, setTemplate] = useState({
-    name: "AFTS Standard Report Card",
-    code: "AFTS-RPT-2024",
+    name: "AFSHTS Standard Report Card",
+    code: "AFSHTS-RPT-2024",
     academicYear: "2024/2025",
     term: "Term 1",
     version: "1.0",
@@ -694,7 +696,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
   });
 
   const [sections, setSections] = useState([
-    { id: "student-info",        name: "Cadet Information",           visible: true, order: 1 },
+    { id: "student-info",        name: "Student Information",           visible: true, order: 1 },
     { id: "academic-info",       name: "Academic Details",            visible: true, order: 2 },
     { id: "core-subjects",       name: "Core Subjects",               visible: true, order: 3 },
     { id: "elective-subjects",   name: "Elective/Technical Subjects", visible: true, order: 4 },
@@ -743,7 +745,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
       grading, performance, attendance, comments, sections,
       savedAt: new Date().toISOString(),
     };
-    console.log("Saving AFTS template:", templateData);
+    console.log("Saving AFSHTS template:", templateData);
     setSaved(true);
     setHasUnsavedChanges(false);
     setTimeout(() => setSaved(false), 3000);
@@ -852,7 +854,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
   const handleAddCommentTemplate = () => {
     setComments(prev => ({
       ...prev,
-      predefinedTemplates: [...prev.predefinedTemplates, "New cadet comment template"]
+      predefinedTemplates: [...prev.predefinedTemplates, "New student comment template"]
     }));
     markUnsaved();
   };
@@ -908,8 +910,8 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
             <div className="flex items-center gap-3">
               <Shield className="w-10 h-10 text-yellow-400" />
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-wide">AFTS Report Builder</h1>
-                <p className="text-blue-200 text-sm mt-1">Armed Forces Technical School - Excellence Through Discipline</p>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-wide">AFSHTS Report Builder</h1>
+                <p className="text-blue-200 text-sm mt-1">Armed Forces Senior High Technical School, Uaddara Barracks, Kumasi</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -943,7 +945,6 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
             {[
               { id: "general",  label: "General Settings",  icon: Settings },
               { id: "subjects", label: "Subjects & Table",  icon: BookOpen },
-              { id: "grading",  label: "Grading (WASSCE)", icon: Target },
               { id: "comments", label: "Comments",          icon: MessageSquare },
               { id: "sections", label: "Section Order",     icon: Layout },
             ].map(tab => {
@@ -980,7 +981,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               {/* ── TAB 1: GENERAL SETTINGS ── */}
               {activeTab === "general" && (
                 <>
-                  <SectionCard icon={Settings} title="Template Identification" description="Basic information for AFTS report template">
+                  <SectionCard icon={Settings} title="Template Identification" description="Basic information for AFSHTS report template">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       <Field label="Template Name" required error={validationErrors.templateName}>
                         <input className={inputCls(!!validationErrors.templateName)} value={template.name} onChange={e => handleTemplateChange('name', e.target.value)} placeholder="e.g., AFTS Standard Report" />
@@ -1022,12 +1023,12 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                     </div>
                   </SectionCard>
 
-                  <SectionCard icon={User} title="Cadet Information Display" description="Select which cadet details to display on the report">
+                  <SectionCard icon={User} title="Student Information Display" description="Select which student details to display on the report">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Toggle checked={studentInfo.showPhoto}      onChange={val => { setStudentInfo(prev => ({ ...prev, showPhoto:      val })); markUnsaved(); }} label="Show Cadet Photo" />
+                      <Toggle checked={studentInfo.showPhoto}      onChange={val => { setStudentInfo(prev => ({ ...prev, showPhoto:      val })); markUnsaved(); }} label="Show Student Photo" />
                       <Toggle checked={studentInfo.showParentInfo} onChange={val => { setStudentInfo(prev => ({ ...prev, showParentInfo: val })); markUnsaved(); }} label="Show Parent/Guardian Info" />
                       <Toggle checked={studentInfo.showContact}    onChange={val => { setStudentInfo(prev => ({ ...prev, showContact:    val })); markUnsaved(); }} label="Show Contact Information" />
-                      <Field label="Cadet ID Format">
+                      <Field label="Student ID Format">
                         <select className={inputCls()} value={studentInfo.studentIdFormat} onChange={e => { setStudentInfo(prev => ({ ...prev, studentIdFormat: e.target.value })); markUnsaved(); }}>
                           <option value="text">Text Only</option>
                           <option value="barcode">Barcode</option>
@@ -1057,7 +1058,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               {/* ── TAB 2: SUBJECTS & TABLE ── */}
               {activeTab === "subjects" && (
                 <>
-                  <SectionCard icon={BookOpen} title="Subject Configuration" description="Configure SHS subject display for AFTS">
+                  <SectionCard icon={BookOpen} title="Subject Configuration" description="Configure SHS subject display for AFSHTS">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Field label="Table Layout">
                         <select className={inputCls()} value={subjectTable.layout} onChange={e => { setSubjectTable(prev => ({ ...prev, layout: e.target.value })); markUnsaved(); }}>
@@ -1121,88 +1122,6 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               )}
 
               {/* ── TAB 3: GRADING ── */}
-              {activeTab === "grading" && (
-                <>
-                  <SectionCard icon={Target} title="WASSCE Grading System" description="Official Ghana WASSCE grading standards">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Grading System">
-                        <select className={inputCls()} value={grading.system} onChange={e => { setGrading(prev => ({ ...prev, system: e.target.value })); markUnsaved(); }}>
-                          {GRADING_SYSTEMS.map(sys => <option key={sys}>{sys}</option>)}
-                        </select>
-                      </Field>
-                      <Field label="GPA Calculation Method" tooltip="WASSCE uses weighted GPA based on grade points">
-                        <select className={inputCls()} value={grading.gpaCalculation} onChange={e => { setGrading(prev => ({ ...prev, gpaCalculation: e.target.value })); markUnsaved(); }}>
-                          {GPA_TYPES.map(type => <option key={type}>{type}</option>)}
-                        </select>
-                      </Field>
-                      <Toggle checked={grading.showGradePoints}     onChange={val => { setGrading(prev => ({ ...prev, showGradePoints:     val })); markUnsaved(); }} label="Show Grade Points" tooltip="A1=1, B2=2, B3=3 … F9=9" />
-                      <Toggle checked={grading.showSubjectPosition} onChange={val => { setGrading(prev => ({ ...prev, showSubjectPosition: val })); markUnsaved(); }} label="Show Subject Position" />
-                    </div>
-                  </SectionCard>
-
-                  <SectionCard icon={BarChart3} title="WASSCE Grade Boundaries" description="Official WAEC grade boundaries for SHS">
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Grade</th>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Min %</th>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Max %</th>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Points</th>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Remark</th>
-                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Interpretation</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                          {grading.gradeBoundaries.map((boundary, idx) => (
-                            <tr key={boundary.grade}>
-                              <td className="px-3 py-2 font-medium">{boundary.grade}</td>
-                              <td className="px-3 py-2"><input type="number" className="w-20 px-2 py-1 text-sm border rounded" value={boundary.min}    onChange={e => handleGradeBoundaryChange(idx, 'min',    e.target.value)} /></td>
-                              <td className="px-3 py-2"><input type="number" className="w-20 px-2 py-1 text-sm border rounded" value={boundary.max}    onChange={e => handleGradeBoundaryChange(idx, 'max',    e.target.value)} /></td>
-                              <td className="px-3 py-2"><input type="number" className="w-16 px-2 py-1 text-sm border rounded" value={boundary.points} onChange={e => handleGradeBoundaryChange(idx, 'points', e.target.value)} /></td>
-                              <td className="px-3 py-2 text-sm">{boundary.remark}</td>
-                              <td className="px-3 py-2 text-xs text-gray-500">{boundary.description}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {validationErrors.gradeBoundaries && (
-                      <p className="text-xs text-red-500 mt-2 flex items-center gap-1"><AlertCircle size={12} />{validationErrors.gradeBoundaries}</p>
-                    )}
-                    <p className="text-xs text-gray-400 mt-2">Tip: WASSCE grades A1–C6 are credit passes for tertiary admission</p>
-                  </SectionCard>
-
-                  <SectionCard icon={Award} title="Overall Performance Bands" description="Categorize overall student performance">
-                    <div className="space-y-3">
-                      {performance.performanceBands.map((band, idx) => (
-                        <div key={band.band} className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                          <div className="w-36 text-sm font-medium">{band.band}</div>
-                          <input type="number" className="w-20 px-2 py-1 text-sm border rounded" value={band.min} onChange={e => handlePerformanceBandChange(idx, 'min', e.target.value)} />
-                          <span className="text-sm">to</span>
-                          <input type="number" className="w-20 px-2 py-1 text-sm border rounded" value={band.max} onChange={e => handlePerformanceBandChange(idx, 'max', e.target.value)} />
-                          <div className="flex-1" />
-                          <span className="text-xs text-gray-500">{band.requirement}</span>
-                          {/* ColorPicker passes the raw hex string — no parseInt */}
-                          <ColorPicker value={band.color} onChange={val => handlePerformanceBandChange(idx, 'color', val)} label="" />
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Toggle checked={performance.showPerformanceBand}  onChange={val => { setPerformance(prev => ({ ...prev, showPerformanceBand:  val })); markUnsaved(); }} label="Show Performance Band" />
-                      <Toggle checked={performance.showTotalMarks}       onChange={val => { setPerformance(prev => ({ ...prev, showTotalMarks:       val })); markUnsaved(); }} label="Show Total Marks" />
-                      <Toggle checked={performance.showTotalPercentage}  onChange={val => { setPerformance(prev => ({ ...prev, showTotalPercentage:  val })); markUnsaved(); }} label="Show Total Percentage" />
-                      <Toggle checked={performance.showOverallGPA}       onChange={val => { setPerformance(prev => ({ ...prev, showOverallGPA:       val })); markUnsaved(); }} label="Show Overall GPA" />
-                      <Toggle checked={performance.showClassRank}        onChange={val => { setPerformance(prev => ({ ...prev, showClassRank:        val })); markUnsaved(); }} label="Show Class/Platoon Rank" />
-                      <Toggle checked={performance.showStreamRank}       onChange={val => { setPerformance(prev => ({ ...prev, showStreamRank:       val })); markUnsaved(); }} label="Show Company Rank" tooltip="Rank within the same company/stream" />
-                      <Toggle checked={performance.showSubjectsCount}    onChange={val => { setPerformance(prev => ({ ...prev, showSubjectsCount:    val })); markUnsaved(); }} label="Show Number of Subjects" />
-                      <Toggle checked={performance.showPassedCount}      onChange={val => { setPerformance(prev => ({ ...prev, showPassedCount:      val })); markUnsaved(); }} label="Show Credit Pass Count" tooltip="Number of subjects with A1–C6 grades" />
-                    </div>
-                  </SectionCard>
-                </>
-              )}
-
               {/* ── TAB 4: COMMENTS ── */}
               {activeTab === "comments" && (
                 <>
@@ -1253,7 +1172,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
 
               {/* ── TAB 5: SECTION ORDER ── */}
               {activeTab === "sections" && (
-                <SectionCard icon={Layout} title="Report Sections Order" description="Reorder sections for AFTS report layout">
+                <SectionCard icon={Layout} title="Report Sections Order" description="Reorder sections for AFSHTS report layout">
                   <div className="space-y-2">
                     {sortedSections.map((section) => (
                       <div key={section.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1282,7 +1201,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                     <Eye size={16} style={{ color: 'var(--royal-blue)' }} />
                     <h3 className="text-sm font-semibold" style={{ color: 'var(--dark-gray)' }}>Live Report Preview (SHS)</h3>
                   </div>
-                  <Badge variant="military">AFTS Template</Badge>
+                  <Badge variant="military">AFSHTS Template</Badge>
                 </div>
                 <div className="p-3 max-h-[80vh] overflow-y-auto" style={{ backgroundColor: 'var(--light-gray)' }}>
                   <LiveReportPreview
@@ -1328,7 +1247,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               style={{ backgroundColor: 'var(--accent-red)' }}
               onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--accent-red-dark)'}
               onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--accent-red)'}>
-              <Save size={14} /> Save AFTS Template
+              <Save size={14} /> Save AFSHTS Template
             </button>
           </div>
         </div>
@@ -1340,10 +1259,25 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center" style={{ borderColor: 'var(--medium-gray)' }}>
                 <div className="flex items-center gap-2">
                   <Shield size={18} style={{ color: 'var(--royal-blue)' }} />
-                  <h3 className="text-lg font-semibold" style={{ color: 'var(--dark-gray)' }}>AFTS Report Card Preview</h3>
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--dark-gray)' }}>AFSHTS Report Card Preview</h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50 flex items-center gap-1" style={{ borderColor: 'var(--medium-gray)' }}>
+                  <button className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50 flex items-center gap-1" style={{ borderColor: 'var(--medium-gray)' }}
+                    onClick={() => {
+                      const printContent = document.getElementById('report-card-print-area');
+                      if (!printContent) return;
+                      const win = window.open('', '_blank');
+                      win.document.write(`
+                        <html><head><title>AFSHTS Report Card</title>
+                        <style>
+                          body { margin: 0; font-family: Arial, sans-serif; }
+                          @media print { body { margin: 0; } }
+                        </style></head>
+                        <body>${printContent.innerHTML}</body></html>`);
+                      win.document.close();
+                      win.focus();
+                      setTimeout(() => { win.print(); win.close(); }, 500);
+                    }}>
                     <Printer size={14} /> Print
                   </button>
                   <button onClick={() => setShowPreview(false)} className="p-1 rounded-lg transition" style={{ color: 'var(--dark-gray)' }}
@@ -1353,7 +1287,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                   </button>
                 </div>
               </div>
-              <div className="p-6" style={{ backgroundColor: 'var(--light-gray)' }}>
+              <div id="report-card-print-area" className="p-6" style={{ backgroundColor: 'var(--light-gray)' }}>
                 <LiveReportPreview
                   settings={{ template, studentInfo, academicInfo, subjectTable, grading, performance, attendance, comments }}
                   sections={sections}
@@ -1362,7 +1296,26 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               </div>
               <div className="sticky bottom-0 border-t p-4 flex justify-end gap-2" style={{ backgroundColor: 'var(--light-gray)', borderColor: 'var(--medium-gray)' }}>
                 <button onClick={() => setShowPreview(false)} className="px-4 py-2 border rounded-lg" style={{ borderColor: 'var(--medium-gray)', color: 'var(--dark-gray)' }}>Close</button>
-                <button className="px-4 py-2 text-white rounded-lg" style={{ backgroundColor: 'var(--accent-red)' }}>Generate PDF Report</button>
+                <button
+                  onClick={() => {
+                    const printContent = document.getElementById('report-card-print-area');
+                    if (!printContent) return;
+                    const win = window.open('', '_blank');
+                    win.document.write(`
+                      <html><head><title>AFSHTS Report Card</title>
+                      <style>
+                        body { margin: 0; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        @page { size: A4; margin: 10mm; }
+                        @media print { body { margin: 0; } }
+                      </style></head>
+                      <body>${printContent.innerHTML}</body></html>`);
+                    win.document.close();
+                    win.focus();
+                    setTimeout(() => { win.print(); }, 600);
+                  }}
+                  className="px-4 py-2 text-white rounded-lg" style={{ backgroundColor: 'var(--accent-red)' }}>
+                  Export as PDF
+                </button>
               </div>
             </div>
           </div>
@@ -1372,7 +1325,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
         <div className="mt-6 text-center text-xs text-gray-400 flex items-center justify-center gap-4">
           <span className="flex items-center gap-1"><span className="px-1 py-0.5 bg-gray-200 rounded text-gray-600">Ctrl+S</span> Save Template</span>
           <span className="flex items-center gap-1"><span className="px-1 py-0.5 bg-gray-200 rounded text-gray-600">Ctrl+Z</span> Undo Changes</span>
-          <span className="flex items-center gap-1"><Shield size={10} /> AFTS • Excellence Through Discipline</span>
+          <span className="flex items-center gap-1"><Shield size={10} /> AFSHTS • Uaddara Barracks, Kumasi</span>
         </div>
 
       </div>

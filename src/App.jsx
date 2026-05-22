@@ -19,7 +19,6 @@ import ForgotPassword from './auth/ForgotPassword';
 import DashboardLayout    from './admin/DashboardLayout';
 import Dashboard          from './admin/dashboard/Dashboard';
 import UserManagement     from './admin/user-management/UserManagement';
-import AcademicYear       from './admin/academic-setup/AcademicYear';
 import SchoolStructure    from './admin/academic-setup/SchoolStructure';
 import GradingConfig      from './admin/academic-setup/GradingConfig';
 import CommentBank        from './admin/academic-setup/CommentBank';
@@ -53,18 +52,17 @@ import TeacherWorkshop        from './teacher/workshop/TeacherWorkshop';
 import TeacherSports          from './teacher/sports/TeacherSports';
 import TeacherReports         from './teacher/reports/TeacherReports';
 import TeacherProfile         from './teacher/profile/TeacherProfile';
-import TeacherTimetable       from './teacher/timetable/TeacherTimetable';
 
-// ── Student Portal 
+// ── Student Portal ────────────────────────────────────────────────────────────
 import StudentDashboardLayout from './student/StudentDashboardLayout';
 import StudentHome            from './student/dashboard/StudentHome';
 import StudentResults         from './student/results/StudentResults';
 import StudentReportCard      from './student/reportcard/StudentReportCard';
 import StudentAttendance      from './student/attendance/StudentAttendance';
 import StudentProfile         from './student/profile/StudentProfile';
+import StudentSettings        from './student/settings/StudentSettings';
 
-
-// ── Parent Portal 
+// ── Parent Portal ─────────────────────────────────────────────────────────────
 import ParentDashboardLayout from './parent/ParentDashboardLayout';
 import ParentHome            from './parent/dashboard/ParentHome';
 import ParentResults         from './parent/results/ParentResults';
@@ -72,7 +70,7 @@ import ParentReportCard      from './parent/reportcard/ParentReportCard';
 import ParentAttendance      from './parent/attendance/ParentAttendance';
 import ParentProfile         from './parent/profile/ParentProfile';
 
-// ── Admin extras 
+// ── Admin extras ──────────────────────────────────────────────────────────────
 import AdminAnalytics  from './admin/analytics/AdminAnalytics';
 import SchoolCalendar  from './admin/calendar/SchoolCalendar';
 
@@ -108,7 +106,6 @@ const App = () => (
         <Route path='/dashboard' element={<ProtectedRoute allowedRole="admin"><DashboardLayout /></ProtectedRoute>}>
           <Route index                     element={<Dashboard />} />
           <Route path='userManagement'     element={<UserManagement />} />
-          <Route path='academicYear'       element={<AcademicYear />} />
           <Route path='schoolStructure'    element={<SchoolStructure />} />
           <Route path='gradingConfig'      element={<GradingConfig />} />
           <Route path='commentBank'        element={<CommentBank />} />
@@ -136,7 +133,6 @@ const App = () => (
           <Route path='comments'      element={<TeacherComments />} />
           <Route path='reports'       element={<TeacherReports />}     />
           <Route path='analytics'     element={<TeacherAnalytics />}   />
-          <Route path='timetable'     element={<TeacherTimetable />}   />
           <Route path='profile'       element={<TeacherProfile />}     />
           <Route path='settings'      element={<Settings />}           />
           <Route path='hod'           element={<TeacherHODPanel />} />
@@ -158,6 +154,7 @@ const App = () => (
           <Route path='reportcard'    element={<StudentReportCard />}  />
           <Route path='attendance'    element={<StudentAttendance />}  />
           <Route path='profile'       element={<StudentProfile />}     />
+          <Route path='settings'      element={<StudentSettings />}    />
         </Route>
 
         {/* Parent portal */}

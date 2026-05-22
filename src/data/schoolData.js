@@ -7,7 +7,7 @@
 // ─── SCHOOL INFO ─────────────────────────────────────────────────────────────
 export const SCHOOL_INFO = {
   name:      'Armed Forces Senior High Technical School',
-  shortName: 'AFTS',
+  shortName: 'AFSHTS',
   motto:     'Service With Humanity',
   address:   'Uaddara Barracks, Kumasi, Ghana',
   phone:     '+233 32 200 0001',

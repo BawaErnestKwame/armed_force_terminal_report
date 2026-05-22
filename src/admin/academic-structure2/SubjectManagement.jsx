@@ -3,34 +3,34 @@ import React, { useState, useMemo } from 'react';
 import { Plus, Edit3, Trash2, Save, X, CheckCircle2, Search, BookOpen } from 'lucide-react';
 
 const INIT = [
-  { id:1,  name:'Core Mathematics',         code:'CMATH', type:'core',     department:'Mathematics',    programs:['General Science','General Arts','Business','Technical'], periodsPerWeek:5, active:true  },
-  { id:2,  name:'English Language',          code:'ENG',   type:'core',     department:'English',        programs:['General Science','General Arts','Business','Technical'], periodsPerWeek:5, active:true  },
-  { id:3,  name:'Integrated Science',        code:'ISCI',  type:'core',     department:'Science',        programs:['General Science','General Arts','Business','Technical'], periodsPerWeek:4, active:true  },
-  { id:4,  name:'Social Studies',            code:'SOCS',  type:'core',     department:'Social Studies', programs:['General Science','General Arts','Business','Technical'], periodsPerWeek:4, active:true  },
-  { id:5,  name:'ICT',                       code:'ICT',   type:'core',     department:'Technical',      programs:['General Science','General Arts','Business','Technical'], periodsPerWeek:3, active:true  },
-  { id:6,  name:'Elective Mathematics',      code:'EMATH', type:'elective', department:'Mathematics',    programs:['General Science'], periodsPerWeek:4, active:true  },
-  { id:7,  name:'Physics',                   code:'PHY',   type:'elective', department:'Science',        programs:['General Science'], periodsPerWeek:4, active:true  },
-  { id:8,  name:'Chemistry',                 code:'CHEM',  type:'elective', department:'Science',        programs:['General Science'], periodsPerWeek:4, active:true  },
-  { id:9,  name:'Biology',                   code:'BIO',   type:'elective', department:'Science',        programs:['General Science'], periodsPerWeek:4, active:true  },
-  { id:10, name:'Literature in English',     code:'LIT',   type:'elective', department:'English',        programs:['General Arts'],    periodsPerWeek:4, active:true  },
-  { id:11, name:'History',                   code:'HIST',  type:'elective', department:'Social Studies', programs:['General Arts'],    periodsPerWeek:4, active:true  },
-  { id:12, name:'Geography',                 code:'GEO',   type:'elective', department:'Social Studies', programs:['General Arts'],    periodsPerWeek:4, active:true  },
-  { id:13, name:'Economics',                 code:'ECON',  type:'elective', department:'Business',       programs:['General Arts','Business'], periodsPerWeek:4, active:true  },
-  { id:14, name:'Government',               code:'GOVT',  type:'elective', department:'Social Studies', programs:['General Arts'],    periodsPerWeek:4, active:true  },
-  { id:15, name:'Accounting',                code:'ACCT',  type:'elective', department:'Business',       programs:['Business'],        periodsPerWeek:4, active:true  },
-  { id:16, name:'Business Management',       code:'BM',    type:'elective', department:'Business',       programs:['Business'],        periodsPerWeek:4, active:true  },
-  { id:17, name:'Technical Drawing',         code:'TD',    type:'elective', department:'Technical',      programs:['Technical'],       periodsPerWeek:4, active:true  },
-  { id:18, name:'Auto Mechanics',            code:'AUTO',  type:'elective', department:'Technical',      programs:['Technical'],       periodsPerWeek:4, active:true  },
-  { id:19, name:'Welding & Fabrication',     code:'WELD',  type:'elective', department:'Technical',      programs:['Technical'],       periodsPerWeek:4, active:true  },
-  { id:20, name:'Electronics',               code:'ELEC',  type:'elective', department:'Technical',      programs:['Technical'],       periodsPerWeek:4, active:true  },
-  { id:21, name:'French',                    code:'FRE',   type:'elective', department:'English',        programs:['General Arts'],    periodsPerWeek:3, active:true  },
-  { id:22, name:'Typewriting/Keyboarding',   code:'TYPE',  type:'elective', department:'Business',       programs:['Business'],        periodsPerWeek:3, active:true  },
-  { id:23, name:'Electrical Installation',   code:'EI',    type:'elective', department:'Technical',      programs:['Technical'],       periodsPerWeek:4, active:false },
+  { id:1,  name:'Core Mathematics',         code:'CMATH', type:'core',     department:'Mathematics',    courses:['General Science','General Arts','Business','Technical'], periodsPerWeek:5, active:true  },
+  { id:2,  name:'English Language',          code:'ENG',   type:'core',     department:'English',        courses:['General Science','General Arts','Business','Technical'], periodsPerWeek:5, active:true  },
+  { id:3,  name:'Integrated Science',        code:'ISCI',  type:'core',     department:'Science',        courses:['General Science','General Arts','Business','Technical'], periodsPerWeek:4, active:true  },
+  { id:4,  name:'Social Studies',            code:'SOCS',  type:'core',     department:'Social Studies', courses:['General Science','General Arts','Business','Technical'], periodsPerWeek:4, active:true  },
+  { id:5,  name:'ICT',                       code:'ICT',   type:'core',     department:'Technical',      courses:['General Science','General Arts','Business','Technical'], periodsPerWeek:3, active:true  },
+  { id:6,  name:'Elective Mathematics',      code:'EMATH', type:'elective', department:'Mathematics',    courses:['General Science'], periodsPerWeek:4, active:true  },
+  { id:7,  name:'Physics',                   code:'PHY',   type:'elective', department:'Science',        courses:['General Science'], periodsPerWeek:4, active:true  },
+  { id:8,  name:'Chemistry',                 code:'CHEM',  type:'elective', department:'Science',        courses:['General Science'], periodsPerWeek:4, active:true  },
+  { id:9,  name:'Biology',                   code:'BIO',   type:'elective', department:'Science',        courses:['General Science'], periodsPerWeek:4, active:true  },
+  { id:10, name:'Literature in English',     code:'LIT',   type:'elective', department:'English',        courses:['General Arts'],    periodsPerWeek:4, active:true  },
+  { id:11, name:'History',                   code:'HIST',  type:'elective', department:'Social Studies', courses:['General Arts'],    periodsPerWeek:4, active:true  },
+  { id:12, name:'Geography',                 code:'GEO',   type:'elective', department:'Social Studies', courses:['General Arts'],    periodsPerWeek:4, active:true  },
+  { id:13, name:'Economics',                 code:'ECON',  type:'elective', department:'Business',       courses:['General Arts','Business'], periodsPerWeek:4, active:true  },
+  { id:14, name:'Government',               code:'GOVT',  type:'elective', department:'Social Studies', courses:['General Arts'],    periodsPerWeek:4, active:true  },
+  { id:15, name:'Accounting',                code:'ACCT',  type:'elective', department:'Business',       courses:['Business'],        periodsPerWeek:4, active:true  },
+  { id:16, name:'Business Management',       code:'BM',    type:'elective', department:'Business',       courses:['Business'],        periodsPerWeek:4, active:true  },
+  { id:17, name:'Technical Drawing',         code:'TD',    type:'elective', department:'Technical',      courses:['Technical'],       periodsPerWeek:4, active:true  },
+  { id:18, name:'Auto Mechanics',            code:'AUTO',  type:'elective', department:'Technical',      courses:['Technical'],       periodsPerWeek:4, active:true  },
+  { id:19, name:'Welding & Fabrication',     code:'WELD',  type:'elective', department:'Technical',      courses:['Technical'],       periodsPerWeek:4, active:true  },
+  { id:20, name:'Electronics',               code:'ELEC',  type:'elective', department:'Technical',      courses:['Technical'],       periodsPerWeek:4, active:true  },
+  { id:21, name:'French',                    code:'FRE',   type:'elective', department:'English',        courses:['General Arts'],    periodsPerWeek:3, active:true  },
+  { id:22, name:'Typewriting/Keyboarding',   code:'TYPE',  type:'elective', department:'Business',       courses:['Business'],        periodsPerWeek:3, active:true  },
+  { id:23, name:'Electrical Installation',   code:'EI',    type:'elective', department:'Technical',      courses:['Technical'],       periodsPerWeek:4, active:false },
 ];
 
 const DEPTS    = ['Mathematics','English','Science','Social Studies','Technical','Business'];
-const PROGRAMS = ['General Science','General Arts','Business','Technical'];
-const EMPTY    = { name:'', code:'', type:'elective', department:'Mathematics', programs:[], periodsPerWeek:4, active:true };
+const COURSES = ['General Science','General Arts','Business','Technical'];
+const EMPTY    = { name:'', code:'', type:'elective', department:'Mathematics', courses:[], periodsPerWeek:4, active:true };
 const TS       = { core:{ bg:'#eef2ff', color:'var(--royal-blue)', label:'Core' }, elective:{ bg:'#f5f3ff', color:'#7c3aed', label:'Elective' } };
 
 const Toggle = ({ checked, onChange }) => (
@@ -54,7 +54,7 @@ const SubjectManagement = () => {
 
   const showToast = (msg,type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
-  const toggleProg = (p) => set('programs', form.programs.includes(p)?form.programs.filter(x=>x!==p):[...form.programs,p]);
+  const toggleProg = (p) => set('programs', form.courses.includes(p)?form.courses.filter(x=>x!==p):[...form.courses,p]);
 
   const filtered = useMemo(()=>subjects.filter(s=>{
     const q=search.toLowerCase();
@@ -151,7 +151,7 @@ const SubjectManagement = () => {
           <table className="w-full text-sm min-w-[700px]">
             <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
               <tr>
-                {['Subject','Code','Type','Department','Programmes','Periods/Wk','Status',''].map(h=>(
+                {['Subject','Code','Type','Department','Courses','Periods/Wk','Status',''].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                 ))}
               </tr>
@@ -172,13 +172,13 @@ const SubjectManagement = () => {
                       <td className="px-4 py-3 text-xs text-gray-500">{s.department}</td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
-                          {s.programs.slice(0,2).map(p=>(
+                          {s.courses.slice(0,2).map(p=>(
                             <span key={p} className="text-xs px-1.5 py-0.5 rounded"
                               style={{ backgroundColor:'var(--light-gray)', color:'var(--dark-gray)' }}>
                               {p.replace('General ','')}
                             </span>
                           ))}
-                          {s.programs.length>2&&<span className="text-xs text-gray-400">+{s.programs.length-2}</span>}
+                          {s.courses.length>2&&<span className="text-xs text-gray-400">+{s.courses.length-2}</span>}
                         </div>
                       </td>
                       <td className="px-4 py-3 font-bold text-sm" style={{ color:'var(--royal-blue)' }}>{s.periodsPerWeek}</td>
@@ -187,7 +187,7 @@ const SubjectManagement = () => {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex gap-1.5">
-                          <button type="button" onClick={()=>{ setEditS(s); setForm({...s,programs:[...s.programs]}); setShowForm(true); }}
+                          <button type="button" onClick={()=>{ setEditS(s); setForm({...s,courses:[...s.courses]}); setShowForm(true); }}
                             style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
                           <button type="button" onClick={()=>handleDelete(s)}
                             style={{ color:'var(--accent-red)' }}><Trash2 size={14}/></button>
@@ -249,12 +249,12 @@ const SubjectManagement = () => {
                   style={{ borderColor:'var(--medium-gray)', color:'var(--royal-blue)' }}/>
               </div>
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider block mb-2" style={{ color:'var(--dark-gray)' }}>Programmes</label>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-2" style={{ color:'var(--dark-gray)' }}>Courses</label>
                 <div className="flex flex-wrap gap-2">
-                  {PROGRAMS.map(p=>(
+                  {COURSES.map(p=>(
                     <button key={p} type="button" onClick={()=>toggleProg(p)}
                       className="px-3 py-1.5 rounded-xl text-xs font-semibold"
-                      style={{ backgroundColor:form.programs.includes(p)?'var(--royal-blue)':'white', color:form.programs.includes(p)?'white':'var(--dark-gray)', border:'1px solid var(--medium-gray)' }}>
+                      style={{ backgroundColor:form.courses.includes(p)?'var(--royal-blue)':'white', color:form.courses.includes(p)?'white':'var(--dark-gray)', border:'1px solid var(--medium-gray)' }}>
                       {p.replace('General ','')}
                     </button>
                   ))}

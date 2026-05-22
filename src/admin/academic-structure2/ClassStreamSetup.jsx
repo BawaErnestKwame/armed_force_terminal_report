@@ -8,7 +8,7 @@ const buildClasses = () => {
   STUDENTS.forEach(s => {
     if (!s.formClass) return;
     if (!map[s.formClass]) {
-      map[s.formClass] = { id:s.formClass, name:s.formClass, year:s.year, program:s.program, track:s.track, capacity:40, enrolled:0, formTeacher:null };
+      map[s.formClass] = { id:s.formClass, name:s.formClass, year:s.year, course:s.course, track:s.track, capacity:40, enrolled:0, formTeacher:null };
     }
     map[s.formClass].enrolled++;
   });
@@ -19,9 +19,9 @@ const buildClasses = () => {
 };
 
 const YEARS    = ['Form 1','Form 2','Form 3'];
-const PROGRAMS = ['General Science','General Arts','Business','Technical'];
+const COURSES = ['General Science','General Arts','Business','Technical'];
 const TRACKS   = ['A','B'];
-const EMPTY    = { name:'', year:'Form 1', program:'General Science', track:'A', capacity:40, formTeacher:'', enrolled:0 };
+const EMPTY    = { name:'', year:'Form 1', course:'General Science', track:'A', capacity:40, formTeacher:'', enrolled:0 };
 
 const PC = { 'General Science':'var(--royal-blue)', 'General Arts':'#7c3aed', 'Business':'#ca8a04', 'Technical':'var(--success-dark)' };
 const PB = { 'General Science':'#eef2ff',           'General Arts':'#f5f3ff', 'Business':'#fefce8', 'Technical':'#f0fdf4'             };
@@ -148,8 +148,8 @@ const ClassStreamSetup = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(cls=>{
           const pct = Math.round((cls.enrolled/cls.capacity)*100);
-          const pc  = PC[cls.program]||'var(--royal-blue)';
-          const pb  = PB[cls.program]||'#eef2ff';
+          const pc  = PC[cls.course]||'var(--royal-blue)';
+          const pb  = PB[cls.course]||'#eef2ff';
           return (
             <div key={cls.id} className="bg-white rounded-2xl border shadow-sm p-4"
               style={{ borderColor:'var(--medium-gray)', borderLeft:`4px solid ${pc}` }}>
@@ -159,7 +159,7 @@ const ClassStreamSetup = () => {
                   <div className="flex gap-1.5 mt-1 flex-wrap">
                     <span className="text-xs px-1.5 py-0.5 rounded font-semibold"
                       style={{ backgroundColor:pb, color:pc }}>
-                      {cls.program.replace('General ','')}
+                      {(cls.course || cls.program || '').replace('General ','')}
                     </span>
                     <span className="text-xs px-1.5 py-0.5 rounded font-semibold"
                       style={{ backgroundColor:cls.track==='A'?'#fefce8':'#f0fdf4', color:cls.track==='A'?'#854d0e':'#166534' }}>
@@ -204,7 +204,7 @@ const ClassStreamSetup = () => {
             <div className="p-5 space-y-4">
               <FInput label="Class Name"    field="name"        required/>
               <FInput label="Year Group"    field="year"        options={YEARS}/>
-              <FInput label="Programme"     field="program"     options={PROGRAMS}/>
+              <FInput label="Course"     field="course"     options={COURSES}/>
               <FInput label="Track"         field="track"       options={TRACKS}/>
               <FInput label="Capacity"      field="capacity"    type="number"/>
               <FInput label="Form Teacher"  field="formTeacher"/>

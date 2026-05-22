@@ -108,8 +108,8 @@ const DepartmentManagement = () => {
           return (
             <div key={dept.id} className="bg-white rounded-2xl border shadow-sm overflow-hidden"
               style={{ borderColor:isOpen?dept.color:'var(--medium-gray)', borderWidth:isOpen?2:1 }}>
-              <button type="button" onClick={()=>setOpenDept(isOpen?null:dept.id)}
-                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition text-left">
+              <div onClick={()=>setOpenDept(isOpen?null:dept.id)}
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition text-left cursor-pointer">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xs font-black"
                     style={{ backgroundColor:dept.color }}>{dept.code}</div>
@@ -129,7 +129,7 @@ const DepartmentManagement = () => {
                   <ChevronDown size={15} className="text-gray-400 transition-transform"
                     style={{ transform:isOpen?'rotate(180deg)':undefined }}/>
                 </div>
-              </button>
+              </div>
 
               {isOpen && (
                 <div className="border-t px-4 pb-4 pt-3 space-y-4"
@@ -219,10 +219,10 @@ const DepartmentManagement = () => {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Subjects</label>
+                <label className="text-xs font-bold uppercase tracking-wider block mb-1" style={{ color:'var(--dark-gray)' }}>Courses</label>
                 <div className="flex gap-2 mb-2">
                   <input value={subInput} onChange={e=>setSubInput(e.target.value)}
-                    onKeyDown={e=>e.key==='Enter'&&addSub()} placeholder="Type subject + Enter"
+                    onKeyDown={e=>e.key==='Enter'&&addSub()} placeholder="Type course name + Enter"
                     className="flex-1 px-3 py-2 text-sm rounded-xl border-2 outline-none"
                     style={{ borderColor:'var(--medium-gray)' }}/>
                   <button type="button" onClick={addSub}

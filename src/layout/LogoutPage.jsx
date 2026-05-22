@@ -61,7 +61,7 @@ const LogoutPage = ({ role = 'student' }) => {
   useEffect(() => {
     const t = setInterval(() => {
       setSeconds(s => {
-        if (s <= 1) { clearInterval(t); navigate(rc.loginPath, { replace:true }); }
+        if (s <= 1) { clearInterval(t); navigate('/', { replace:true }); }
         return s - 1;
       });
     }, 1000);
@@ -165,7 +165,7 @@ const LogoutPage = ({ role = 'student' }) => {
             </div>
 
             {/* Sign in again */}
-            <button type="button" onClick={() => navigate(rc.loginPath, { replace:true })}
+            <button type="button" onClick={() => navigate('/', { replace:true })}
               className="w-full flex items-center justify-center gap-2.5 py-3 rounded-xl font-bold text-white transition-all shadow-md"
               style={{ backgroundColor: rc.color }}
               onMouseEnter={e=>e.currentTarget.style.backgroundColor=rc.colorDark}

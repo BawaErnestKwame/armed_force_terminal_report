@@ -16,7 +16,7 @@ const AdminLogout = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds(s => {
-        if (s <= 1) { clearInterval(interval); navigate('/adminLogin', { replace:true }); }
+        if (s <= 1) { clearInterval(interval); navigate('/', { replace:true }); }
         return s - 1;
       });
     }, 1000);
@@ -120,7 +120,7 @@ const AdminLogout = () => {
             </div>
 
             {/* Sign in button */}
-            <button type="button" onClick={()=>navigate('/adminLogin',{replace:true})}
+            <button type="button" onClick={()=>navigate('/', { replace:true })}
               className="w-full flex items-center justify-center gap-2.5 py-3 rounded-xl font-bold text-white transition-all shadow-lg"
               style={{ backgroundColor:'var(--royal-blue)' }}
               onMouseEnter={e=>e.currentTarget.style.backgroundColor='var(--royal-blue-dark)'}
