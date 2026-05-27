@@ -1,5 +1,6 @@
 // src/admin/bulkCommunication/BulkCommunication.jsx
 import React, { useState, useMemo } from 'react';
+import { FaUsers, FaGraduationCap, FaChalkboardTeacher, FaUserFriends } from 'react-icons/fa';
 import {
   Send, MessageSquare, Mail, Users, Filter,
   CheckCircle2, AlertCircle, Clock, Search,
@@ -42,11 +43,11 @@ const TEMPLATES = [
 ];
 
 const RECIPIENT_GROUPS = [
-  { value:'all_parents',    label:'All Parents',       icon:'👨‍👩‍👧', count: PARENTS.length              },
-  { value:'all_students',   label:'All Students',      icon:'🎓',    count: STUDENTS.length             },
-  { value:'all_teachers',   label:'All Teachers',      icon:'👩‍🏫',  count: TEACHERS.length             },
-  { value:'track_a_parents',label:'Track A Parents',   icon:'🔵',    count: Math.round(PARENTS.length/2)},
-  { value:'track_b_parents',label:'Track B Parents',   icon:'🟢',    count: Math.round(PARENTS.length/2)},
+  { value:'all_parents',    label:'All Parents',       Icon:FaUsers, count: PARENTS.length              },
+  { value:'all_students',   label:'All Students',      Icon:FaGraduationCap,    count: STUDENTS.length             },
+  { value:'all_teachers',   label:'All Teachers',      Icon:FaChalkboardTeacher,  count: TEACHERS.length             },
+  { value:'track_a_parents',label:'Track A Parents',   Icon:FaUserFriends,    count: Math.round(PARENTS.length/2)},
+  { value:'track_b_parents',label:'Track B Parents',   Icon:FaUserFriends,    count: Math.round(PARENTS.length/2)},
   { value:'form1_parents',  label:'Form 1 Parents',    icon:'1️⃣',   count: STUDENTS.filter(s=>s.year==='Form 1').length },
   { value:'form2_parents',  label:'Form 2 Parents',    icon:'2️⃣',   count: STUDENTS.filter(s=>s.year==='Form 2').length },
   { value:'form3_parents',  label:'Form 3 Parents',    icon:'3️⃣',   count: STUDENTS.filter(s=>s.year==='Form 3').length },

@@ -1,5 +1,6 @@
 // src/admin/academic-setup/CommentBank.jsx
 import React, { useState, useMemo } from 'react';
+import { FaBook, FaChalkboardTeacher, FaUserTie, FaStar, FaRegStar } from 'react-icons/fa';
 import {
   Plus, Edit3, Trash2, Copy, Save, X,
   Search, CheckCircle2, MessageSquare,
@@ -8,6 +9,23 @@ import {
 
 // ─── Initial comments ─────────────────────────────────────────────────────────
 const INITIAL_COMMENTS = [
+  // Subject Teacher — Excellent
+  { id:21, category:'subjectTeacher', performance:'excellent', text:'{name} has shown exceptional understanding of the subject this term. A consistent and hardworking student who grasps concepts quickly and applies them accurately.', tags:['understanding','hardworking'], favourite:true  },
+  { id:22, category:'subjectTeacher', performance:'excellent', text:'Outstanding performance in this subject. {name} demonstrates in-depth knowledge and always submits well-researched work. Keep it up.', tags:['outstanding','knowledge'], favourite:false },
+  { id:23, category:'subjectTeacher', performance:'excellent', text:'{name} is an excellent student in this subject. Participates actively, asks insightful questions and consistently scores at the top of the class.', tags:['participation','top performance'], favourite:true  },
+
+  // Subject Teacher — Good
+  { id:24, category:'subjectTeacher', performance:'good', text:'{name} has performed well this term. With a little more revision and practice, even better results are achievable. Good effort overall.', tags:['revision','effort'], favourite:false },
+  { id:25, category:'subjectTeacher', performance:'good', text:'A good performance in this subject. {name} understands the core content well and should focus on improving speed and accuracy in assessments.', tags:['understanding','accuracy'], favourite:true  },
+
+  // Subject Teacher — Average
+  { id:26, category:'subjectTeacher', performance:'average', text:'{name} shows some understanding of the subject but needs to put in more consistent effort, especially with revision and practice exercises.', tags:['effort','revision'], favourite:false },
+  { id:27, category:'subjectTeacher', performance:'average', text:'An average result this term. {name} is advised to attend extra classes, complete all assignments on time and review class notes regularly.', tags:['extra classes','assignments'], favourite:false },
+
+  // Subject Teacher — Needs Improvement
+  { id:28, category:'subjectTeacher', performance:'needsImprovement', text:'{name} has struggled with this subject this term. Regular practice, extra support and a more focused approach in class are strongly recommended.', tags:['practice','support'], favourite:false },
+  { id:29, category:'subjectTeacher', performance:'needsImprovement', text:'A disappointing result. {name} must pay more attention in class, complete all assignments and seek help from the subject teacher without delay.', tags:['attention','assignments'], favourite:false },
+
   // Form Teacher — Excellent
   { id:1,  category:'formTeacher', performance:'excellent', text:'An exceptionally dedicated student who demonstrates outstanding academic commitment. {name} is a role model to peers and is encouraged to maintain this excellent standard.', tags:['dedication','commitment'], favourite:true  },
   { id:2,  category:'formTeacher', performance:'excellent', text:'{name} has shown remarkable improvement this term. A hardworking and disciplined student who gives their best in all areas.', tags:['improvement','hardworking'], favourite:false },
@@ -46,8 +64,9 @@ const INITIAL_COMMENTS = [
 ];
 
 const CATEGORIES = [
-  { value:'formTeacher', label:'Form Teacher Comments', icon:'📝' },
-  { value:'headmaster',  label:'Headmaster Comments',   icon:'🎓' },
+  { value:'subjectTeacher', label:'Subject Teacher Comments', Icon:FaBook },
+  { value:'formTeacher',    label:'Form Teacher Comments',    Icon:FaChalkboardTeacher },
+  { value:'headmaster',     label:'Headmaster Comments',      Icon:FaUserTie },
 ];
 
 const PERFORMANCES = [
@@ -65,7 +84,7 @@ const PERF_STYLE = {
   needsImprovement: { bg:'#fff1f2', color:'var(--accent-red)',   label:'Needs Improvement' },
 };
 
-const EMPTY = { category:'formTeacher', performance:'excellent', text:'', tags:[], favourite:false };
+const EMPTY = { category:'subjectTeacher', performance:'excellent', text:'', tags:[], favourite:false };
 
 // ─── Comment Card ─────────────────────────────────────────────────────────────
 const CommentCard = ({ comment, onEdit, onDelete, onToggleFav, onCopy }) => {
@@ -91,7 +110,7 @@ const CommentCard = ({ comment, onEdit, onDelete, onToggleFav, onCopy }) => {
           <button type="button" onClick={() => onToggleFav(comment.id)}
             className="p-1 rounded transition text-sm"
             title={comment.favourite ? 'Remove from favourites' : 'Add to favourites'}>
-            {comment.favourite ? '⭐' : '☆'}
+            {comment.favourite ? <FaStar style={{color:'#f59e0b'}}/> : <FaRegStar style={{color:'#9ca3af'}}/>}
           </button>
           <button type="button" onClick={handleCopy}
             className="p-1.5 rounded-lg transition flex items-center gap-1 text-xs font-semibold"
@@ -189,7 +208,7 @@ const CommentModal = ({ comment, onSave, onClose }) => {
                     backgroundColor: form.category===c.value ? '#eef2ff' : 'white',
                     color: form.category===c.value ? 'var(--royal-blue)' : 'var(--dark-gray)',
                   }}>
-                  <span>{c.icon}</span> {c.label}
+                  <span><c.Icon size={14}/></span> {c.label}
                 </button>
               ))}
             </div>
@@ -289,7 +308,7 @@ const CommentModal = ({ comment, onSave, onClose }) => {
                 backgroundColor: form.favourite ? '#fffbeb' : 'white',
                 color: form.favourite ? '#92400e' : 'var(--dark-gray)',
               }}>
-              {form.favourite ? '⭐' : '☆'} {form.favourite ? 'Marked as Favourite' : 'Mark as Favourite'}
+              <>{form.favourite ? <FaStar style={{color:'#f59e0b'}}/> : <FaRegStar style={{color:'#9ca3af'}}/>} {form.favourite ? 'Marked as Favourite' : 'Mark as Favourite'}</>
             </button>
           </div>
         </div>
@@ -322,7 +341,7 @@ const CommentBank = () => {
   const [showModal,   setShowModal]  = useState(false);
   const [editComment, setEditC]      = useState(null);
   const [toast,       setToast]      = useState(null);
-  const [activeTab,   setActiveTab]  = useState('formTeacher');
+  const [activeTab,   setActiveTab]  = useState('subjectTeacher');
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -370,6 +389,7 @@ const CommentBank = () => {
 
   const stats = {
     total:   comments.length,
+    subjectTeacher: comments.filter(c=>c.category==='subjectTeacher').length,
     formTeacher: comments.filter(c=>c.category==='formTeacher').length,
     headmaster:  comments.filter(c=>c.category==='headmaster').length,
     favourites:  comments.filter(c=>c.favourite).length,
@@ -391,7 +411,7 @@ const CommentBank = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Comment Bank</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {stats.total} comments · {stats.formTeacher} form teacher · {stats.headmaster} headmaster · {stats.favourites} favourites
+            {stats.total} comments · {stats.subjectTeacher} subject teacher · {stats.formTeacher} form teacher · {stats.headmaster} headmaster · {stats.favourites} favourites
           </p>
         </div>
         <button type="button" onClick={() => { setEditC(null); setShowModal(true); }}
@@ -407,8 +427,9 @@ const CommentBank = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label:'Total Comments',  value:stats.total,        color:'var(--royal-blue)'   },
-          { label:'Form Teacher',    value:stats.formTeacher,  color:'#7c3aed'             },
-          { label:'Headmaster',      value:stats.headmaster,   color:'var(--warning)'      },
+          { label:'Subject Teacher',  value:stats.subjectTeacher, color:'var(--royal-blue)'   },
+          { label:'Form Teacher',    value:stats.formTeacher,    color:'#7c3aed'             },
+          { label:'Headmaster',      value:stats.headmaster,     color:'var(--warning)'      },
           { label:'Favourites ⭐',   value:stats.favourites,   color:'var(--success-dark)' },
         ].map(({ label,value,color }) => (
           <div key={label} className="bg-white rounded-xl border p-4 text-center shadow-sm"
@@ -475,7 +496,7 @@ const CommentBank = () => {
               borderColor: activeTab===c.value ? 'var(--royal-blue)' : 'transparent',
               color: activeTab===c.value ? 'var(--royal-blue)' : 'var(--dark-gray)',
             }}>
-            {c.icon} {c.label}
+            <c.Icon size={14}/> {c.label}
             <span className="text-xs px-1.5 py-0.5 rounded-full font-bold"
               style={{ backgroundColor: activeTab===c.value ? '#eef2ff' : 'var(--medium-gray)', color: activeTab===c.value ? 'var(--royal-blue)' : '#6b7280' }}>
               {filtered.filter(x => x.category === c.value).length}
