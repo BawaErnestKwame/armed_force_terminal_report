@@ -60,7 +60,7 @@ import StudentResults         from './student/results/StudentResults';
 import StudentReportCard      from './student/reportcard/StudentReportCard';
 import StudentAttendance      from './student/attendance/StudentAttendance';
 import StudentProfile         from './student/profile/StudentProfile';
-import StudentSettings        from './student/settings/StudentSettings';
+import StudentSettings        from './student/setting/StudentSettings';
 
 // ── Parent Portal ─────────────────────────────────────────────────────────────
 import ParentDashboardLayout from './parent/ParentDashboardLayout';
@@ -154,7 +154,7 @@ const App = () => (
           <Route path='reportcard'    element={<StudentReportCard />}  />
           <Route path='attendance'    element={<StudentAttendance />}  />
           <Route path='profile'       element={<StudentProfile />}     />
-          <Route path='settings'      element={<StudentSettings />}    />
+          <Route path='setting'      element={<StudentSettings />}    />
         </Route>
 
         {/* Parent portal */}
