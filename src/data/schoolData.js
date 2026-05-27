@@ -35,21 +35,21 @@ export const ACADEMIC_YEARS = [
     id: 1, year: '2024/2025', status: 'active',
     sem1: { start:'2024-09-02', end:'2024-12-13', sem1Start:'2024-09-02', sem2Start:'2024-12-16' },
     sem2: { start:'2025-01-06', end:'2025-04-11', sem1Start:'2025-01-06', sem2Start:'2025-04-14' },
-     { start:'2025-04-14', end:'2025-07-25', sem1Start:'2025-04-14', sem2Start:'2025-07-28' },
+    sem3: { start:'2025-04-14', end:'2025-07-25', sem1Start:'2025-04-14', sem2Start:'2025-07-28' },  // ✅ Added "sem3:"
     notes: 'Current academic year — WASSCE for Form 3 in May/June 2025',
   },
   {
     id: 2, year: '2023/2024', status: 'archived',
     sem1: { start:'2023-09-04', end:'2023-12-15', sem1Start:'2023-09-04', sem2Start:'2023-12-18' },
     sem2: { start:'2024-01-08', end:'2024-04-12', sem1Start:'2024-01-08', sem2Start:'2024-04-15' },
-     { start:'2024-04-15', end:'2024-07-26', sem1Start:'2024-04-15', sem2Start:'2024-07-29' },
+    sem3: { start:'2024-04-15', end:'2024-07-26', sem1Start:'2024-04-15', sem2Start:'2024-07-29' },  // ✅ Fix this one too
     notes: 'Completed successfully. WASSCE results published August 2024.',
   },
   {
     id: 3, year: '2022/2023', status: 'archived',
     sem1: { start:'2022-09-05', end:'2022-12-16', sem1Start:'2022-09-05', sem2Start:'2022-12-19' },
     sem2: { start:'2023-01-09', end:'2023-04-14', sem1Start:'2023-01-09', sem2Start:'2023-04-17' },
-     { start:'2023-04-17', end:'2023-07-28', sem1Start:'2023-04-17', sem2Start:'2023-07-31' },
+    sem3: { start:'2023-04-17', end:'2023-07-28', sem1Start:'2023-04-17', sem2Start:'2023-07-31' },  // ✅ Fix this one too
     notes: 'Completed. First year with full double-track implementation.',
   },
 ];
