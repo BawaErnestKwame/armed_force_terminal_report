@@ -33,10 +33,10 @@ const NAV_SECTIONS = [
   {
     section: 'Academic Setup',
     items: [
-      // { icon: FaCalendarAlt,      label: 'Academic Year',      path: '/dashboard/academicYear'              },
+      { icon: FaCalendarAlt,      label: 'Academic Year',      path: '/dashboard/academicYear'              },
       { icon: FaLayerGroup,       label: 'Structure — Part 1', path: '/dashboard/academicStructure1'        },
       { icon: FaLayerGroup,       label: 'Structure — Part 2', path: '/dashboard/academicStructure2'        },
-      // { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
+      { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
       { icon: FaCommentDots,      label: 'Comment Bank',       path: '/dashboard/commentBank'               },
     ],
   },
@@ -53,14 +53,14 @@ const NAV_SECTIONS = [
       { icon: FaBullhorn,         label: 'Bulk Communication', path: '/dashboard/bulkCommunication'         },
     ],
   },
-  // {
-  //   section: 'Analytics & Finance',
-  //   items: [
-  //     { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
-  //     { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
-  //     { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
-  //   ],
-  // },
+  {
+    section: 'Analytics & Finance',
+    items: [
+      { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
+      { icon: FaDollarSign,       label: 'Fee Management',     path: '/dashboard/fees'                      },
+      { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
+    ],
+  },
   {
     section: 'System',
     items: [
@@ -161,7 +161,7 @@ const DashboardLayout = () => {
             </p>
             <div className="mt-2 px-2 py-1 rounded-lg"
               style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <p className="text-xs font-bold text-yellow-300">🛡 Administrator</p>
+              <p className="text-xs font-bold text-yellow-300">Administrator</p>
             </div>
           </div>
         )}
@@ -274,11 +274,11 @@ const DashboardLayout = () => {
           <div className="flex items-center gap-3 text-xs">
             <span className="px-3 py-1.5 rounded-lg font-semibold"
               style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
-              📅 2024/2025 · Term 2
+              2024/2025 · Term 2
             </span>
             <span className="px-3 py-1.5 rounded-lg font-semibold"
               style={{ backgroundColor: '#f0fdf4', color: 'var(--success-dark)' }}>
-              🔁 Double Track
+              Double Track
             </span>
           </div>
         </header>

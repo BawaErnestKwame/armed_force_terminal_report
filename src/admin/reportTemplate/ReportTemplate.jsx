@@ -12,7 +12,6 @@ import {
   HelpCircle, Wrench, Calculator, Microscope, Book,
   Briefcase, Flag, Heart, PenTool, Music, Cog
 } from 'lucide-react';
-import logo from '../../assets/logo.png';
 
 // ─── SHS Ghana Specific Constants ─────────────────────────────────────────────
 
@@ -299,11 +298,10 @@ const LiveReportPreview = ({ settings, sections, student }) => {
       <div className="text-white py-4 px-6 border-b-4" style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))', borderBottomColor: 'var(--accent-red)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-wide">ARMED FORCES SENIOR HIGH TECHNICAL SCHOOL</h1>
+            <h1 className="text-xl font-bold tracking-wide">ARMED FORCES TECHNICAL SCHOOL</h1>
             <p className="text-xs text-blue-200 mt-1">Excellence Through Discipline - Uaddara Barracks, Kumasi</p>
           </div>
-          {/* <Shield size={40} className="text-yellow-400" /> */}
-          <img src={logo} alt="AFSHTS Logo" className="w-12 h-12 object-contain" />
+          <Shield size={40} className="text-yellow-400" />
         </div>
         <div className="mt-3 pt-2 border-t border-white/20 text-center">
           <p className="text-sm font-semibold">
@@ -522,9 +520,10 @@ const LiveReportPreview = ({ settings, sections, student }) => {
         {/* Attendance */}
         {visibleSections.find(s => s.id === "attendance") && settings.attendance.showAttendance && (
           <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-              <Clock size={14} /> ATTENDANCE & DRILL RECORD
+            <h3 className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
+              <Clock size={14} /> ATTENDANCE RECORD
             </h3>
+            <p className="text-xs text-gray-400 mb-3 italic">Recorded by Form Teacher</p>
             <div className="flex flex-wrap gap-5 text-sm">
               {settings.attendance.showPresent     && <div><span className="text-gray-500">Present:</span> <span className="font-medium">{student.attendance.present} days</span></div>}
               {settings.attendance.showAbsent      && <div><span className="text-gray-500">Absent:</span>  <span className="font-medium">{student.attendance.absent} days</span></div>}
@@ -589,9 +588,9 @@ const LiveReportPreview = ({ settings, sections, student }) => {
       {visibleSections.find(s => s.id === "footer") && (
         <div className="border-t border-gray-200 p-3 text-center text-xs text-gray-500 bg-gray-50">
           <div className="flex justify-center items-center gap-4">
-            <span>📅 Issued: {new Date().toLocaleDateString()}</span>
-            <span>⚔️ "DISCIPLINE • EXCELLENCE • SERVICE"</span>
-            <span>🏫 AFSHTS - Uaddara Barracks, Kumasi</span>
+            <span>Issued: {new Date().toLocaleDateString()}</span>
+            <span>DISCIPLINE • EXCELLENCE • SERVICE</span>
+            <span>AFSHTS - Uaddara Barracks, Kumasi</span>
           </div>
         </div>
       )}
@@ -701,7 +700,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
     { id: "core-subjects",       name: "Core Subjects",               visible: true, order: 3 },
     { id: "elective-subjects",   name: "Elective/Technical Subjects", visible: true, order: 4 },
     { id: "performance-summary", name: "Performance Summary",         visible: true, order: 5 },
-    { id: "attendance",          name: "Attendance Record",           visible: true, order: 6 },
+    { id: "attendance",          name: "Attendance Record (Form Teacher)",    visible: true, order: 6 },
     { id: "teacher-comments",    name: "Instructor's Remarks",        visible: true, order: 7 },
     { id: "signatures",          name: "Signatures",                  visible: true, order: 8 },
     { id: "footer",              name: "Footer",                      visible: true, order: 9 },
@@ -1140,8 +1139,8 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                           </Field>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <Toggle checked={comments.allowMultipleTeachers}    onChange={val => { setComments(prev => ({ ...prev, allowMultipleTeachers:    val })); markUnsaved(); }} label="Allow Subject-Specific Comments" />
-                            <Toggle checked={comments.showClassTeacherComment}  onChange={val => { setComments(prev => ({ ...prev, showClassTeacherComment:  val })); markUnsaved(); }} label="Show Class Instructor Comment" />
-                            <Toggle checked={comments.showHeadComment}          onChange={val => { setComments(prev => ({ ...prev, showHeadComment:          val })); markUnsaved(); }} label="Show Commandant's Comment" />
+                            <Toggle checked={comments.showClassTeacherComment}  onChange={val => { setComments(prev => ({ ...prev, showClassTeacherComment:  val })); markUnsaved(); }} label="Show Form Teacher Comment" />
+                            <Toggle checked={comments.showHeadComment}          onChange={val => { setComments(prev => ({ ...prev, showHeadComment:          val })); markUnsaved(); }} label="Show Headmaster's Comment" />
                             <Toggle checked={comments.showSignature}            onChange={val => { setComments(prev => ({ ...prev, showSignature:            val })); markUnsaved(); }} label="Show Signature Lines" />
                           </div>
                         </>

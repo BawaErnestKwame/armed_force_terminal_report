@@ -80,25 +80,25 @@ export const NOTIFICATIONS = [
   { id:1, type:'info',    title:'Score Submission Reminder', message:'End of term scores due by Friday March 28, 2025.',       time:'2 hours ago', read:false },
   { id:2, type:'success', title:'Attendance Marked',         message:'Attendance for Form 3 Science A successfully recorded.', time:'Today 08:15', read:false },
   { id:3, type:'warning', title:'HOD Meeting',               message:'Department meeting scheduled for Monday at 10:00 AM.',   time:'Yesterday',   read:false },
-  { id:4, type:'info',    title:'Report Cards Ready',        message:'Term 2 report cards are now available for review.',      time:'2 days ago',  read:true  },
+  { id:4, type:'info',    title:'Report Cards Ready',        message:'Semester 1 report cards are now available for review.',      time:'2 days ago',  read:true  },
   { id:5, type:'success', title:'Timetable Updated',         message:'Your timetable has been updated for the new term.',      time:'3 days ago',  read:true  },
 ];
 
 // ─── DEPT_TEACHERS ────────────────────────────────────────────────────────────
 export const DEPT_TEACHERS = [
-  { id:1,  name:'Capt Kwabena Adjei',  subject:'Core Mathematics',   track:'A', periods:28, maxPeriods:30, status:'Active'   },
-  { id:15, name:'Dr Yaa Agyemang',     subject:'Core Mathematics',   track:'A', periods:30, maxPeriods:30, status:'Active'   },
-  { id:3,  name:'Dr Kofi Osei',        subject:'Integrated Science', track:'B', periods:24, maxPeriods:30, status:'Active'   },
-  { id:6,  name:'Mrs Abena Mensah',    subject:'Physics',            track:'B', periods:25, maxPeriods:30, status:'Active'   },
-  { id:7,  name:'Lt Kwame Asare',      subject:'Chemistry',          track:'A', periods:23, maxPeriods:30, status:'Active'   },
-  { id:8,  name:'Mr Yaw Tawiah',       subject:'Biology',            track:'B', periods:26, maxPeriods:30, status:'Active'   },
-  { id:4,  name:'Sgt Efua Frimpong',   subject:'ICT',                track:'A', periods:22, maxPeriods:30, status:'Active'   },
-  { id:12, name:'Mr Ekow Sarpong',     subject:'Geography',          track:'B', periods:0,  maxPeriods:30, status:'Inactive' },
+  { id:1,  name:'Capt Kwabena Adjei',  subject:'Core Mathematics',   yearGroup:'form1', periods:28, maxPeriods:30, status:'Active'   },
+  { id:15, name:'Dr Yaa Agyemang',     subject:'Core Mathematics',   yearGroup:'form1', periods:30, maxPeriods:30, status:'Active'   },
+  { id:3,  name:'Dr Kofi Osei',        subject:'Integrated Science', yearGroup:'form3', periods:24, maxPeriods:30, status:'Active'   },
+  { id:6,  name:'Mrs Abena Mensah',    subject:'Physics',            yearGroup:'form3', periods:25, maxPeriods:30, status:'Active'   },
+  { id:7,  name:'Lt Kwame Asare',      subject:'Chemistry',          yearGroup:'form1', periods:23, maxPeriods:30, status:'Active'   },
+  { id:8,  name:'Mr Yaw Tawiah',       subject:'Biology',            yearGroup:'form3', periods:26, maxPeriods:30, status:'Active'   },
+  { id:4,  name:'Sgt Efua Frimpong',   subject:'ICT',                yearGroup:'form1', periods:22, maxPeriods:30, status:'Active'   },
+  { id:12, name:'Mr Ekow Sarpong',     subject:'Geography',          yearGroup:'form3', periods:0,  maxPeriods:30, status:'Inactive' },
 ];
 
 // ─── EXAM_DATA ────────────────────────────────────────────────────────────────
 export const EXAM_DATA = {
-  currentExam:      'End of Term 2 Examinations',
+  currentExam:      'End of Semester 1 Examinations',
   startDate:        '2025-03-24',
   endDate:          '2025-04-04',
   venue:            'AFTS Examination Halls A, B & C',
@@ -128,10 +128,10 @@ export const YEAR_GROUP_DATA = {
   avgAttendance:  91,
   avgScore:       74,
   classes: [
-    { name:'Form 2 Science A',  track:'A', students:20, formTeacher:'Capt Kwabena Adjei', avgScore:79, attendance:94 },
-    { name:'Form 2 Science B',  track:'B', students:20, formTeacher:'Mr Yaw Tawiah',       avgScore:72, attendance:89 },
-    { name:'Form 2 Arts A',     track:'A', students:20, formTeacher:'Mr Nana Boateng',     avgScore:71, attendance:90 },
-    { name:'Form 2 Business B', track:'B', students:20, formTeacher:'Mrs Esi Tawiah',      avgScore:75, attendance:91 },
+    { name:'Form 2 Science A',  yearGroup:'form1', students:20, formTeacher:'Capt Kwabena Adjei', avgScore:79, attendance:94 },
+    { name:'Form 2 Science B',  yearGroup:'form3', students:20, formTeacher:'Mr Yaw Tawiah',       avgScore:72, attendance:89 },
+    { name:'Form 2 Arts A',     yearGroup:'form1', students:20, formTeacher:'Mr Nana Boateng',     avgScore:71, attendance:90 },
+    { name:'Form 2 Business B', yearGroup:'form3', students:20, formTeacher:'Mrs Esi Tawiah',      avgScore:75, attendance:91 },
   ],
 };
 
