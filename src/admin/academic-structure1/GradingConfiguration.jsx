@@ -11,8 +11,6 @@ const GradingConfiguration = () => {
   const [showAdd, setShowAdd]   = useState(false);
   const [newRow, setNewRow]     = useState({ grade:'', min:0, max:0, label:'', points:1, color:'#2563eb' });
   const [toast, setToast]       = useState(null);
-  const [promotionGrade, setPromo] = useState('D7');
-  const [examMinScore, setExamMin] = useState(40);
 
   const showToast = (msg,type='success') => { setToast({msg,type}); setTimeout(()=>setToast(null),3000); };
   const update = (i,k,v) => setGrades(gs=>gs.map((g,j)=>j===i?{...g,[k]:v}:g));
@@ -57,32 +55,6 @@ const GradingConfiguration = () => {
       </div>
 
       {/* Settings row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl border p-4 shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
-          <label className="text-xs font-bold uppercase tracking-wider block mb-1.5" style={{ color:'var(--dark-gray)' }}>
-            Promotion Threshold
-          </label>
-          <select value={promotionGrade} onChange={e=>setPromo(e.target.value)}
-            className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none bg-white"
-            style={{ borderColor:'var(--medium-gray)' }}>
-            {grades.map(g=><option key={g.grade}>{g.grade} — {g.label}</option>)}
-          </select>
-          <p className="text-xs text-gray-400 mt-1.5">Minimum grade required to pass and be promoted</p>
-        </div>
-        <div className="bg-white rounded-xl border p-4 shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
-          <label className="text-xs font-bold uppercase tracking-wider block mb-1.5" style={{ color:'var(--dark-gray)' }}>
-            Minimum Exam Score to Sit
-          </label>
-          <input type="number" min={0} max={100} value={examMinScore}
-            onChange={e=>setExamMin(parseInt(e.target.value)||0)}
-            className="w-full px-3 py-2.5 text-sm rounded-xl border-2 outline-none text-center font-black"
-            style={{ borderColor:'var(--medium-gray)', color:'var(--royal-blue)' }}
-            onFocus={e=>e.target.style.borderColor='var(--royal-blue)'}
-            onBlur={e=>e.target.style.borderColor='var(--medium-gray)'}/>
-          <p className="text-xs text-gray-400 mt-1.5">Student must score at least {examMinScore}% in CA to sit exam</p>
-        </div>
-      </div>
-
       {/* Grade scale table */}
       <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
         <div className="flex items-center justify-between px-5 py-3 border-b"
