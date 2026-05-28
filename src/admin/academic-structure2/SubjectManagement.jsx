@@ -145,57 +145,126 @@ const SubjectManagement = () => {
         <p className="text-xs text-gray-400 mt-2">Showing {filtered.length} of {subjects.length}</p>
       </div>
 
+      {/* ── CORE SUBJECTS — always shown, all courses ── */}
+      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden"
+        style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b"
+          style={{ borderColor:'var(--medium-gray)', backgroundColor:'#eef2ff' }}>
+          <div>
+            <p className="text-sm font-black" style={{ color:'var(--royal-blue)' }}>
+              Core Subjects
+            </p>
+            <p className="text-xs mt-0.5" style={{ color:'#6b7280' }}>
+              Compulsory for all courses — {subjects.filter(s=>s.type==='core').length} subjects
+            </p>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+            style={{ backgroundColor:'var(--royal-blue)', color:'white' }}>
+            All Courses
+          </span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
+            <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
+              <tr>
+                {['Subject','Code','Department','Periods/Wk','Status',''].map(h=>(
+                  <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y" style={{ borderColor:'var(--medium-gray)' }}>
+              {subjects.filter(s=>s.type==='core').map(s=>(
+                <tr key={s.id} className="hover:bg-blue-50" style={{ opacity:s.active?1:0.5 }}>
+                  <td className="px-4 py-3 font-semibold text-sm" style={{ color:'var(--dark-gray)' }}>
+                    {s.name}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-gray-500">{s.code}</td>
+                  <td className="px-4 py-3 text-xs text-gray-500">{s.department}</td>
+                  <td className="px-4 py-3 font-bold text-sm" style={{ color:'var(--royal-blue)' }}>
+                    {s.periodsPerWeek}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Toggle checked={s.active}
+                      onChange={v=>setSubjects(ss=>ss.map(x=>x.id===s.id?{...x,active:v}:x))}/>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1.5">
+                      <button type="button"
+                        onClick={()=>{ setEditS(s); setForm({...s, courses:[...s.courses]}); setShowForm(true); }}
+                        style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
+                      <button type="button" onClick={()=>handleDelete(s)}
+                        style={{ color:'var(--accent-red)' }}><Trash2 size={14}/></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ── ELECTIVE SUBJECTS ── */}
+      <div className="flex items-center gap-3 pt-2">
+        <div className="flex-1 h-px" style={{ backgroundColor:'var(--medium-gray)' }}/>
+        <p className="text-xs font-bold uppercase tracking-widest" style={{ color:'#9ca3af' }}>
+          Elective Subjects by Course
+        </p>
+        <div className="flex-1 h-px" style={{ backgroundColor:'var(--medium-gray)' }}/>
+      </div>
+
       {/* Table */}
       <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor:'var(--medium-gray)' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b"
+          style={{ borderColor:'var(--medium-gray)', backgroundColor:'#f5f3ff' }}>
+          <div>
+            <p className="text-sm font-black" style={{ color:'#7c3aed' }}>Elective Subjects</p>
+            <p className="text-xs mt-0.5" style={{ color:'#6b7280' }}>
+              Course-specific subjects · {subjects.filter(s=>s.type==='elective').length} subjects
+            </p>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[700px]">
             <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
               <tr>
-                {['Subject','Code','Type','Department','Courses','Periods/Wk','Status',''].map(h=>(
+                {['Subject','Code','Department','Courses','Periods/Wk','Status',''].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y" style={{ borderColor:'var(--medium-gray)' }}>
-              {filtered.length===0
-                ? <tr><td colSpan={8} className="px-4 py-10 text-center text-gray-400">No subjects match your filter</td></tr>
-                : filtered.map(s=>{
-                  const ts = TS[s.type]||TS.elective;
-                  return (
-                    <tr key={s.id} className="hover:bg-gray-50" style={{ opacity:s.active?1:0.5 }}>
-                      <td className="px-4 py-3 font-semibold text-sm" style={{ color:'var(--dark-gray)' }}>{s.name}</td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{s.code}</td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                          style={{ backgroundColor:ts.bg, color:ts.color }}>{ts.label}</span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-500">{s.department}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-wrap gap-1">
-                          {s.courses.slice(0,2).map(p=>(
-                            <span key={p} className="text-xs px-1.5 py-0.5 rounded"
-                              style={{ backgroundColor:'var(--light-gray)', color:'var(--dark-gray)' }}>
-                              {p.replace('General ','')}
-                            </span>
-                          ))}
-                          {s.courses.length>2&&<span className="text-xs text-gray-400">+{s.courses.length-2}</span>}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 font-bold text-sm" style={{ color:'var(--royal-blue)' }}>{s.periodsPerWeek}</td>
-                      <td className="px-4 py-3">
-                        <Toggle checked={s.active} onChange={v=>setSubjects(ss=>ss.map(x=>x.id===s.id?{...x,active:v}:x))}/>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-1.5">
-                          <button type="button" onClick={()=>{ setEditS(s); setForm({...s,courses:[...s.courses]}); setShowForm(true); }}
-                            style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
-                          <button type="button" onClick={()=>handleDelete(s)}
-                            style={{ color:'var(--accent-red)' }}><Trash2 size={14}/></button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
+              {filtered.filter(s=>s.type==='elective').length===0
+                ? <tr><td colSpan={7} className="px-4 py-10 text-center text-gray-400">No elective subjects match your filter</td></tr>
+                : filtered.filter(s=>s.type==='elective').map(s=>(
+                  <tr key={s.id} className="hover:bg-gray-50" style={{ opacity:s.active?1:0.5 }}>
+                    <td className="px-4 py-3 font-semibold text-sm" style={{ color:'var(--dark-gray)' }}>{s.name}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-500">{s.code}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500">{s.department}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {s.courses.slice(0,2).map(p=>(
+                          <span key={p} className="text-xs px-1.5 py-0.5 rounded"
+                            style={{ backgroundColor:'var(--light-gray)', color:'var(--dark-gray)' }}>
+                            {p.replace('General ','')}
+                          </span>
+                        ))}
+                        {s.courses.length>2&&<span className="text-xs text-gray-400">+{s.courses.length-2}</span>}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 font-bold text-sm" style={{ color:'#7c3aed' }}>{s.periodsPerWeek}</td>
+                    <td className="px-4 py-3">
+                      <Toggle checked={s.active} onChange={v=>setSubjects(ss=>ss.map(x=>x.id===s.id?{...x,active:v}:x))}/>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-1.5">
+                        <button type="button" onClick={()=>{ setEditS(s); setForm({...s,courses:[...s.courses]}); setShowForm(true); }}
+                          style={{ color:'var(--warning)' }}><Edit3 size={14}/></button>
+                        <button type="button" onClick={()=>handleDelete(s)}
+                          style={{ color:'var(--accent-red)' }}><Trash2 size={14}/></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
               }
             </tbody>
           </table>

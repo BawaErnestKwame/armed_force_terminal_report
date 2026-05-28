@@ -13,14 +13,13 @@ import {
 import { STUDENTS as INITIAL_STUDENTS, PARENTS, STUDENT_PARENT } from '../data/adminData';
 
 const PROGRAMS = ['General Science','General Arts','Business','Technical','Visual Arts','Home Economics'];
-const YEARS    = ['Form 1','Form 2','Form 3'];
-const TRACKS   = ['A','B'];
+const YEAR_GROUPS = ['Form 1','Form 2','Form 3'];
 const HOUSES   = ['Warrior','Eagle','Phoenix','Valor'];
 const STATUSES = ['Active','Inactive','Suspended'];
 
 const EMPTY = {
   studentId:'', firstName:'', lastName:'', gender:'Male', dob:'',
-  course:'General Science', year:'Form 1', formClass:'', track:'A',
+  course:'General Science', year:'Form 1', formClass:'', yearGroup:'form1', year:'Form 1',
   house:'Warrior', status:'Active', attendance:0, avgScore:0,
   parentId:null, address:'', email:'', enrollDate:'',
 };
@@ -139,10 +138,9 @@ const StudentFormModal = ({ student, onSave, onClose }) => {
             <p className="text-xs font-black uppercase tracking-widest mb-3 px-1"
               style={{ color:'var(--royal-blue)', opacity:0.7 }}>Academic Information</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FInput label="Course"  value={form.course}   onChange={v=>set('course',v)}   options={PROGRAMS} />
-              <FInput label="Year Group" value={form.year}      onChange={v=>set('year',v)}      options={YEARS} />
+              <FInput label="Course"     value={form.course}    onChange={v=>set('course',v)}    options={PROGRAMS} />
+              <FInput label="Year Group" value={form.yearGroup} onChange={v=>set('yearGroup',v)} options={YEAR_GROUPS} />
               <FInput label="Form Class" value={form.formClass} onChange={v=>set('formClass',v)} />
-              <FInput label="Track"      value={form.track}     onChange={v=>set('track',v)}     options={TRACKS} />
               <FInput label="House"      value={form.house}     onChange={v=>set('house',v)}     options={HOUSES} />
               <FInput label="Status"     value={form.status}    onChange={v=>set('status',v)}    options={STATUSES} />
             </div>
@@ -270,7 +268,7 @@ const ProfileDrawer = ({ student, onEdit, onClose }) => {
                 <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
                   style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>{student.year}</span>
                 <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                  style={{ backgroundColor:'#f0fdf4', color:'var(--success-dark)' }}>Track {student.track}</span>
+                  style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>{student.year || student.yearGroup}</span>
               </div>
             </div>
           </div>
@@ -321,8 +319,7 @@ const Students = () => {
   const [students, setStudents]       = useState(INITIAL_STUDENTS);
   const [search,   setSearch]         = useState('');
   const [filterCourse, setFP]        = useState('All');
-  const [filterYear,    setFY]        = useState('All');
-  const [filterTrack,   setFT]        = useState('All');
+  const [filterYearGroup,   setFT]        = useState('All');
   const [filterStatus,  setFS]        = useState('All');
   const [viewMode,      setViewMode]  = useState('table'); // 'table' | 'cards'
   const [selected,      setSelected]  = useState([]);      // bulk selection IDs
@@ -347,12 +344,11 @@ const Students = () => {
         s.lastName.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q) ||
         s.email.toLowerCase().includes(q);
       const matchCourse = filterCourse==='All' || s.course===filterCourse;
-      const matchYear    = filterYear   ==='All' || s.year   ===filterYear;
-      const matchTrack   = filterTrack  ==='All' || s.track  ===filterTrack;
+      const matchYearGroup    = filterYearGroup  ==='All' || s.year === filterYearGroup;
       const matchStatus  = filterStatus ==='All' || s.status ===filterStatus;
-      return matchSearch && matchCourse && matchYear && matchTrack && matchStatus;
+      return matchSearch && matchCourse && matchYearGroup && matchStatus;
     })
-  ,[students, search, filterCourse, filterYear, filterTrack, filterStatus]);
+  ,[students, search, filterCourse, filterYearGroup, filterStatus]);
 
   // ── CRUD ───────────────────────────────────────────────────────────────────
   const handleSave = (form) => {
@@ -435,10 +431,10 @@ const Students = () => {
   };
 
   const handleExport = () => {
-    const rows = ['Student ID,First Name,Last Name,Gender,Course,Year,Form Class,Track,Status,Email,Parent'];
+    const rows = ['Student ID,First Name,Last Name,Gender,Course,Year,Form Class,Year Group,Status,Email,Parent'];
     filtered.forEach(s=>{
       const { parentName } = getParentInfo(s.parentId);
-      rows.push(`${s.studentId},${s.firstName},${s.lastName},${s.gender},${s.course || s.program},${s.year},${s.formClass},${s.track},${s.status},${s.email},${parentName}`);
+      rows.push(`${s.studentId},${s.firstName},${s.lastName},${s.gender},${s.course || s.program},${s.year},${s.formClass},${s.yearGroup},${s.status},${s.email},${parentName}`);
     });
     const blob = new Blob([rows.join('\n')], { type:'text/csv' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -450,13 +446,14 @@ const Students = () => {
   const toggleAll    = () => setSelected(sel => sel.length===filtered.length ? [] : filtered.map(s=>s.id));
   const allSelected  = filtered.length>0 && selected.length===filtered.length;
 
-  const activeFilters = [filterCourse,filterYear,filterTrack,filterStatus].filter(f=>f!=='All').length;
+  const activeFilters = [filterCourse,filterYearGroup,filterStatus].filter(f=>f!=='All').length;
 
   // ── Stats ──────────────────────────────────────────────────────────────────
   const total   = students.length;
   const active  = students.filter(s=>s.status==='Active').length;
-  const trackA  = students.filter(s=>s.track==='A').length;
-  const trackB  = students.filter(s=>s.track==='B').length;
+  const form1Count = students.filter(s=>s.year==='Form 1').length;
+  const form2Count = students.filter(s=>s.year==='Form 2').length;
+  const form3Count = students.filter(s=>s.year==='Form 3').length;
 
   return (
     <div className="space-y-5">
@@ -475,7 +472,7 @@ const Students = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Students</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {total} students enrolled · {active} active · Track A: {trackA} · Track B: {trackB}
+            {total} students enrolled · {active} active · Form 1: {form1Count} · Form 2: {form2Count} · Form 3: {form3Count}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -518,8 +515,9 @@ const Students = () => {
         {[
           { label:'Total Students',  value:total,  color:'var(--royal-blue)',   icon:GraduationCap },
           { label:'Active Students', value:active, color:'var(--success-dark)', icon:CheckCircle2  },
-          { label:'Track A',         value:trackA, color:'var(--warning)',       icon:Users         },
-          { label:'Track B',         value:trackB, color:'var(--info)',          icon:Users         },
+          { label:'Form 1',  value:form1Count, color:'var(--royal-blue)',   icon:Users },
+          { label:'Form 2',  value:form2Count, color:'#7c3aed',             icon:Users },
+          { label:'Form 3',  value:form3Count, color:'var(--success-dark)',  icon:Users },
         ].map(({ label,value,color,icon:Icon })=>(
           <div key={label} className="bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>
@@ -579,8 +577,7 @@ const Students = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 pt-3 border-t" style={{ borderColor:'var(--medium-gray)' }}>
             {[
               { label:'Course', value:filterCourse, set:setFP, opts:['All',...PROGRAMS] },
-              { label:'Year Group', value:filterYear,   set:setFY, opts:['All',...YEARS]    },
-              { label:'Track',     value:filterTrack,   set:setFT, opts:['All',...TRACKS]   },
+              { label:'Year Group',   value:filterYearGroup,   set:setFT, opts:['All',...YEAR_GROUPS] },
               { label:'Status',    value:filterStatus,  set:setFS, opts:['All',...STATUSES] },
             ].map(({ label,value,set,opts })=>(
               <div key={label}>
@@ -602,7 +599,7 @@ const Students = () => {
             Showing <strong>{filtered.length}</strong> of <strong>{total}</strong> students
           </p>
           {(search || activeFilters>0) && (
-            <button onClick={()=>{ setSearch(''); setFP('All'); setFY('All'); setFT('All'); setFS('All'); }}
+            <button onClick={()=>{ setSearch(''); setFP('All'); setFT('All'); setFS('All'); }}
               className="text-xs font-semibold" style={{ color:'var(--accent-red)' }}>
               Clear all
             </button>
@@ -621,7 +618,7 @@ const Students = () => {
                     <input type="checkbox" checked={allSelected} onChange={toggleAll}
                       className="w-4 h-4 rounded" style={{ accentColor:'var(--royal-blue)' }}/>
                   </th>
-                  {['Student','ID','Course','Class','Track','Status','Actions'].map(h=>(
+                  {['Student','ID','Course','Class','Semester','Status','Actions'].map(h=>(
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                   ))}
                 </tr>
@@ -654,8 +651,8 @@ const Students = () => {
                         <td className="px-4 py-3 text-xs text-gray-600">{s.formClass}</td>
                         <td className="px-4 py-3">
                           <span className="text-xs font-bold px-2 py-0.5 rounded"
-                            style={{ backgroundColor: s.track==='A'?'#fefce8':'#f0fdf4', color: s.track==='A'?'#854d0e':'var(--success-dark)' }}>
-                            {s.track}
+                            style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>
+                            {s.year || s.yearGroup}
                           </span>
                         </td>
                         <td className="px-4 py-3">
@@ -726,8 +723,8 @@ const Students = () => {
                         {s.year}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded"
-                        style={{ backgroundColor:s.track==='A'?'#fefce8':'#f0fdf4', color:s.track==='A'?'#854d0e':'var(--success-dark)' }}>
-                        Track {s.track}
+                        style={{ backgroundColor:'#eef2ff', color:'var(--royal-blue)' }}>
+                        {s.year || s.yearGroup}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor:'#f5f3ff', color:'#7c3aed' }}>
                         {(s.course || s.program || '').replace('General ','')}
