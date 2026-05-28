@@ -85,8 +85,8 @@ const ReportCardView = ({ student, onClose }) => {
                 { label: 'Student ID',    value: student.studentId      },
                 { label: 'Class',         value: user?.formClass || 'Form 3 Science B' },
                 { label: 'Academic Year', value: TERM_INFO.academicYear  },
-                { label: 'Term',          value: TERM_INFO.term          },
-                { label: 'Track',         value: `Track ${TERM_INFO.track}` },
+                { label: 'Semester',          value: TERM_INFO.term          },
+                { label: 'Year Group',         value: user?.yearGroup || 'Form 1' },
               ].map(({ label, value }) => (
                 <div key={label} className="p-3 border-b border-r" style={{ borderColor: 'var(--medium-gray)' }}>
                   <p className="text-xs text-gray-400 uppercase">{label}</p>

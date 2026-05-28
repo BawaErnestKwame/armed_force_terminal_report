@@ -43,15 +43,15 @@ export const RolePill = ({ role }) => {
   );
 };
 
-export const TrackBadge = ({ track }) => {
+export const YearGroupBadge = ({ yearGroup }) => {
   const styles = {
-    A:    'bg-yellow-100 text-yellow-800',
-    B:    'bg-green-100 text-green-800',
-    Both: 'bg-blue-100 text-blue-800',
+    'Form 1': 'bg-blue-100 text-blue-800',
+    'Form 2': 'bg-purple-100 text-purple-800',
+    'Form 3': 'bg-green-100 text-green-800',
   };
   return (
-    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[track] || 'bg-gray-100 text-gray-700'}`}>
-      {track === 'Both' ? '🔁 Both' : `Track ${track}`}
+    <span className={`px-2 py-0.5 rounded text-xs font-semibold ${styles[yearGroup] || 'bg-gray-100 text-gray-700'}`}>
+      {yearGroup || 'All Year Groups'}
     </span>
   );
 };

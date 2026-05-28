@@ -1,6 +1,6 @@
 // src/teacher/TeacherDashboardLayout.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FaTachometerAlt, FaBookOpen, FaClipboardList, FaCheckSquare,
@@ -26,35 +26,36 @@ const N = {
 
 // ─── Sidebar config for 5 roles ───────────────────────────────────────────────
 const SIDEBAR_CONFIG = {
-
   'Subject Teacher': [
     { section: 'Main',     items: [N.dashboard, N.classes, N.scores, N.attendance] },
     { section: 'Academic', items: [N.comments, N.reports, N.analytics]             },
   ],
-
   'Subject Teacher + Form Teacher': [
     { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
     { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
     { section: 'Form Teacher', items: [N.formclass]                                    },
   ],
-
   'Subject Teacher + HOD': [
     { section: 'Main',       items: [N.dashboard, N.classes, N.scores, N.attendance] },
-    { section: 'Department', items: [N.hod, N.analytics]                             },
-    { section: 'Academic',   items: [N.comments, N.reports]                          },
+    { section: 'Academic',   items: [N.comments, N.reports, N.analytics]             },
+    { section: 'Department', items: [N.hod]                                          },
   ],
-
   'Subject Teacher + Form Teacher + HOD': [
     { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
     { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
-    { section: 'Department',   items: [N.hod]                                          },
     { section: 'Form Teacher', items: [N.formclass]                                    },
+    { section: 'Department',   items: [N.hod]                                          },
   ],
-
+  'Form Teacher + HOD': [
+    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
+    { section: 'Form Teacher', items: [N.formclass]                                    },
+    { section: 'Department',   items: [N.hod]                                          },
+  ],
   'Examiner': [
-    { section: 'Main',         items: [N.dashboard]       },
-    { section: 'Examinations', items: [N.examcoord]                    },
-    { section: 'Academic',     items: [N.scores, N.analytics]          },
+    { section: 'Main',         items: [N.dashboard, N.classes, N.scores, N.attendance] },
+    { section: 'Academic',     items: [N.comments, N.reports, N.analytics]             },
+    { section: 'Examinations', items: [N.examcoord]                                    },
   ],
 };
 
@@ -101,12 +102,10 @@ const TeacherDashboardLayout = () => {
         <div className="flex items-center justify-between p-4 border-b border-white/20 flex-shrink-0">
           {!collapsed && (
             <div className="flex items-center gap-2 text-white min-w-0">
-              <Link to="/" className="flex-shrink-0">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                <img src={logo} alt="AFTS" className="w-7 h-7 object-contain" />
+                <img src={logo} alt="AFSHTS" className="w-7 h-7 object-contain" />
               </div>
-              </Link>
               <div className="min-w-0">
                 <p className="text-sm font-black leading-tight truncate">ARMED FORCES SHTS</p>
                 <p className="text-xs text-blue-200 italic truncate">Service With Humanity</p>
@@ -133,7 +132,7 @@ const TeacherDashboardLayout = () => {
             <p className="text-blue-300/60 text-xs text-center">{user?.department} Dept</p>
             <div className="mt-2 w-full px-2 py-1.5 rounded-lg text-center"
               style={{ backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <p className="text-xs font-bold text-yellow-300 leading-snug">🎭 {activeRole}</p>
+              <p className="text-xs font-bold text-yellow-300 leading-snug">{activeRole}</p>
             </div>
           </div>
         )}
@@ -225,7 +224,7 @@ const TeacherDashboardLayout = () => {
             <FaBars className="text-xl" />
           </button>
           <div className="flex items-center gap-2">
-            <img src={logo} alt="AFTS" className="w-6 h-6 object-contain" />
+            <img src={logo} alt="AFSHTS" className="w-6 h-6 object-contain" />
             <span className="font-black text-sm" style={{ color: 'var(--royal-blue)' }}>Teacher Portal</span>
           </div>
           <span className="text-xs font-semibold px-2 py-1 rounded"
@@ -242,10 +241,10 @@ const TeacherDashboardLayout = () => {
           </p>
           <div className="flex items-center gap-3 text-xs">
             <span className="px-3 py-1.5 rounded-lg font-semibold" style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
-              📅 {TERM_INFO.academicYear} · {TERM_INFO.term} · Track {TERM_INFO.track}
+              {TERM_INFO.academicYear} · {TERM_INFO.term} 
             </span>
             <span className="px-3 py-1.5 rounded-lg font-semibold" style={{ backgroundColor: '#fffbeb', color: '#92400e' }}>
-              🔁 Double Track
+              Transitional System
             </span>
           </div>
         </header>
@@ -267,7 +266,7 @@ const TeacherDashboardLayout = () => {
                 <FaSignOutAlt size={22} className="text-white"/>
               </div>
               <p className="text-white font-black text-lg">Sign Out</p>
-              <p className="text-blue-200 text-xs mt-1">AFTS Teacher Portal</p>
+              <p className="text-blue-200 text-xs mt-1">AFSHTS Teacher Portal</p>
             </div>
             <div className="h-1" style={{ backgroundColor:'var(--royal-blue)' }}/>
             <div className="p-6 space-y-4">

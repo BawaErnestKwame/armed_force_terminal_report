@@ -135,7 +135,7 @@ const TeacherProfile = () => {
           <div className="bg-white rounded-xl border shadow-sm p-5" style={{ borderColor: 'var(--medium-gray)' }}>
             <h3 className="font-black text-sm mb-3" style={{ color: 'var(--dark-gray)' }}>School Information</h3>
             <InfoRow icon={BookOpen} label="Staff ID"        value={user?.staffId}       color="var(--royal-blue)"   />
-            <InfoRow icon={BookOpen} label="Track"           value={`Track ${user?.track || 'A & B'}`} color="var(--warning)" />
+            <InfoRow icon={BookOpen} label="Year Group"      value={user?.yearGroup || 'All Year Groups'} color="var(--warning)" />
             <InfoRow icon={BookOpen} label="Max Periods"     value={`${user?.maxPeriods || 30} per week`} color="var(--info)" />
             <InfoRow icon={BookOpen} label="Current Periods" value={`${user?.currentPeriods || 0} this week`} color="var(--success-dark)" />
             {user?.formClass && <InfoRow icon={User} label="Form Class" value={user.formClass} color="#7c3aed" />}
@@ -147,7 +147,7 @@ const TeacherProfile = () => {
             <div className="rounded-xl p-4 text-white"
               style={{ background: 'linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark))' }}>
               <p className="text-blue-200 text-xs">{TERM_INFO.academicYear}</p>
-              <p className="font-black text-lg">{TERM_INFO.term} · Track {TERM_INFO.track}</p>
+              <p className="font-black text-lg">{TERM_INFO.term}</p>
               <p className="text-blue-200 text-xs mt-1">Week {TERM_INFO.weeksGone} of {TERM_INFO.weeksTotal}</p>
               <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
                 <div className="h-full rounded-full"
