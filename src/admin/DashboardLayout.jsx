@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import { MdDashboard, MdSchool } from 'react-icons/md';
 
-// ─── Sidebar nav sections ─────────────────────────────────────────────────────
+// ─── Sidebar nav sections 
 const NAV_SECTIONS = [
   {
     section: 'Main',
@@ -272,11 +272,11 @@ const DashboardLayout = () => {
           <div className="flex items-center gap-3 text-xs">
             <span className="px-3 py-1.5 rounded-lg font-semibold"
               style={{ backgroundColor: '#eef2ff', color: 'var(--royal-blue)' }}>
-              2024/2025 · Term 2
+              2024/2025 · Semester 1
             </span>
             <span className="px-3 py-1.5 rounded-lg font-semibold"
               style={{ backgroundColor: '#f0fdf4', color: 'var(--success-dark)' }}>
-              Double Track
+              Transitional System
             </span>
           </div>
         </header>
