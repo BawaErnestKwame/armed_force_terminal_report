@@ -44,7 +44,7 @@ export const WelcomeBanner = ({ title, subtitle, accentColor = 'var(--royal-blue
   );
 };
 
-// ─── Stat card row ────────────────────────────────────────────────────────────
+// ─── Stat card row 
 export const StatRow = ({ stats }) => (
   <div className={`grid gap-4 grid-cols-2 ${stats.length >= 4 ? 'lg:grid-cols-4' : `lg:grid-cols-${stats.length}`}`}>
     {stats.map(({ icon: Icon, label, value, sub, color, onClick }) => (

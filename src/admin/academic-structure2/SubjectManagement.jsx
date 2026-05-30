@@ -110,7 +110,6 @@ const SubjectManagement = () => {
           { label:'Total',    value:subjects.length,                            color:'var(--royal-blue)'   },
           { label:'Core',     value:subjects.filter(s=>s.type==='core').length, color:'var(--success-dark)' },
           { label:'Elective', value:subjects.filter(s=>s.type==='elective').length,'color':'#7c3aed'        },
-          { label:'Active',   value:subjects.filter(s=>s.active).length,        color:'var(--warning)'      },
         ].map(({label,value,color})=>(
           <div key={label} className="bg-white rounded-xl border p-3 text-center shadow-sm" style={{ borderColor:'var(--medium-gray)' }}>
             <p className="text-2xl font-black" style={{ color }}>{value}</p>
@@ -167,7 +166,7 @@ const SubjectManagement = () => {
           <table className="w-full text-sm min-w-[600px]">
             <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
               <tr>
-                {['Subject','Code','Department','Periods/Wk','Status',''].map(h=>(
+                {['Subject','Code','Department','Status',''].map(h=>(
                   <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                 ))}
               </tr>
@@ -180,9 +179,6 @@ const SubjectManagement = () => {
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-500">{s.code}</td>
                   <td className="px-4 py-3 text-xs text-gray-500">{s.department}</td>
-                  <td className="px-4 py-3 font-bold text-sm" style={{ color:'var(--royal-blue)' }}>
-                    {s.periodsPerWeek}
-                  </td>
                   <td className="px-4 py-3">
                     <Toggle checked={s.active}
                       onChange={v=>setSubjects(ss=>ss.map(x=>x.id===s.id?{...x,active:v}:x))}/>
@@ -227,7 +223,7 @@ const SubjectManagement = () => {
           <table className="w-full text-sm min-w-[700px]">
             <thead className="border-b" style={{ backgroundColor:'var(--light-gray)', borderColor:'var(--medium-gray)' }}>
               <tr>
-                {['Subject','Code','Department','Courses','Periods/Wk','Status',''].map(h=>(
+                {['Subject','Code','Department','Courses','Status',''].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                 ))}
               </tr>
@@ -251,7 +247,6 @@ const SubjectManagement = () => {
                         {s.courses.length>2&&<span className="text-xs text-gray-400">+{s.courses.length-2}</span>}
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-bold text-sm" style={{ color:'#7c3aed' }}>{s.periodsPerWeek}</td>
                     <td className="px-4 py-3">
                       <Toggle checked={s.active} onChange={v=>setSubjects(ss=>ss.map(x=>x.id===s.id?{...x,active:v}:x))}/>
                     </td>

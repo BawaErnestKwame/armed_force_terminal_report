@@ -451,9 +451,6 @@ const Students = () => {
   // ── Stats ──────────────────────────────────────────────────────────────────
   const total   = students.length;
   const active  = students.filter(s=>s.status==='Active').length;
-  const form1Count = students.filter(s=>s.year==='Form 1').length;
-  const form2Count = students.filter(s=>s.year==='Form 2').length;
-  const form3Count = students.filter(s=>s.year==='Form 3').length;
 
   return (
     <div className="space-y-5">
@@ -472,7 +469,7 @@ const Students = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Students</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {total} students enrolled · {active} active · Form 1: {form1Count} · Form 2: {form2Count} · Form 3: {form3Count}
+            {total} students enrolled · {active} active
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -515,9 +512,6 @@ const Students = () => {
         {[
           { label:'Total Students',  value:total,  color:'var(--royal-blue)',   icon:GraduationCap },
           { label:'Active Students', value:active, color:'var(--success-dark)', icon:CheckCircle2  },
-          { label:'Form 1',  value:form1Count, color:'var(--royal-blue)',   icon:Users },
-          { label:'Form 2',  value:form2Count, color:'#7c3aed',             icon:Users },
-          { label:'Form 3',  value:form3Count, color:'var(--success-dark)',  icon:Users },
         ].map(({ label,value,color,icon:Icon })=>(
           <div key={label} className="bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>

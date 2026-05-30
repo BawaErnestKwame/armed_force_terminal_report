@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   CheckCircle2, Plus, Save, Trash2, Calendar, Edit3,
-  X, ChevronDown, Clock, Users, BookOpen, AlertTriangle
+  X, ChevronDown, Clock, Users, BookOpen, AlertTriangle, Search
 } from 'lucide-react';
 import SchoolProfileSetup      from './SchoolProfileSetup';
 import GradingConfiguration    from './GradingConfiguration';
@@ -135,7 +135,7 @@ const YearGroupToggle = ({ inSchool, inHouse, onChange }) => {
 };
 
 // ─── Year Modal ───────────────────────────────────────────────────────────────
-const YearModal = ({ yearData, onSave, onClose }) => {
+const YearModal = ({ yearData, onSave, onClose, allYears = [] }) => {
   const isEdit = !!yearData?.id;
   const [form, setForm] = useState(yearData
     ? { ...yearData }
@@ -144,6 +144,17 @@ const YearModal = ({ yearData, onSave, onClose }) => {
   );
   const [activeSem, setAS] = useState('sem1');
   const [errors, setErrors] = useState({});
+  const [yearSearch, setYearSearch] = useState('');
+
+  const pastYears = allYears.filter(y =>
+    y.id !== yearData?.id &&
+    y.year.toLowerCase().includes(yearSearch.toLowerCase())
+  );
+
+  const loadPastYear = (y) => {
+    setForm({ ...y, id: yearData?.id || null });
+    setYearSearch('');
+  };
 
   const setSem = (key, val) => setForm(f => ({...f, [key]:val}));
 
@@ -179,6 +190,46 @@ const YearModal = ({ yearData, onSave, onClose }) => {
         <div className="h-1" style={{ backgroundColor:'var(--accent-red)' }}/>
 
         <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+
+          {/* Search past years */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5"
+              style={{ color:'var(--dark-gray)' }}>
+              Search Past Academic Years
+            </label>
+            <div className="relative">
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
+              <input type="text" value={yearSearch}
+                onChange={e => setYearSearch(e.target.value)}
+                placeholder="e.g. 2023/2024 — click to load its dates"
+                className="w-full pl-8 pr-3 py-2 text-sm border-2 rounded-xl outline-none"
+                style={{ borderColor:'var(--medium-gray)' }}
+                onFocus={e => e.target.style.borderColor='var(--royal-blue)'}
+                onBlur={e  => e.target.style.borderColor='var(--medium-gray)'}/>
+            </div>
+            {yearSearch && pastYears.length > 0 && (
+              <div className="mt-1 border rounded-xl overflow-hidden shadow-sm"
+                style={{ borderColor:'var(--medium-gray)' }}>
+                {pastYears.map(y => {
+                  const sc = STATUS_CFG[y.status] || STATUS_CFG.upcoming;
+                  return (
+                    <button key={y.id} type="button" onClick={() => loadPastYear(y)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-blue-50 text-left border-b last:border-0"
+                      style={{ borderColor:'var(--medium-gray)' }}>
+                      <span className="text-sm font-semibold" style={{ color:'var(--dark-gray)' }}>{y.year}</span>
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor:sc.bg, color:sc.color }}>{sc.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {yearSearch && pastYears.length === 0 && (
+              <p className="text-xs text-gray-400 mt-1.5">No matching academic years found</p>
+            )}
+          </div>
+
+          <div className="h-px" style={{ backgroundColor:'var(--medium-gray)' }}/>
           {/* Year + Status */}
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -376,12 +427,10 @@ const AcademicYearAndTrack = () => {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {[
-          { label:'Active Years',    value:years.filter(y=>y.status==='active').length,   color:'var(--success-dark)', bg:'#f0fdf4', icon:CheckCircle2 },
-          { label:'Upcoming Years',  value:years.filter(y=>y.status==='upcoming').length, color:'var(--royal-blue)',   bg:'#eef2ff', icon:Clock        },
-          { label:'In School Now',   value: activeYear ? activeYear.inSchool.length : 0,  color:'#7c3aed',            bg:'#f5f3ff', icon:Users        },
-          { label:'In House Now',    value: activeYear ? activeYear.inHouse.length  : 0,  color:'#b45309',            bg:'#fefce8', icon:BookOpen     },
+          { label:'In School Now', value: activeYear ? activeYear.inSchool.length : 0, color:'#7c3aed',  bg:'#f5f3ff', icon:Users     },
+          { label:'In House Now',  value: activeYear ? activeYear.inHouse.length  : 0, color:'#b45309',  bg:'#fefce8', icon:BookOpen  },
         ].map(({ label, value, color, bg, icon:Icon }) => (
           <div key={label} className="bg-white rounded-xl border p-3 flex items-center gap-3 shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>
@@ -572,6 +621,7 @@ const AcademicYearAndTrack = () => {
       {showModal && (
         <YearModal
           yearData={editYear}
+          allYears={years}
           onSave={handleSave}
           onClose={() => { setModal(false); setEditYear(null); }}/>
       )}

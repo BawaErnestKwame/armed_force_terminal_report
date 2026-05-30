@@ -16,8 +16,11 @@ import { useAuth } from '../../context/AuthContext';
 // ─── Mock school-wide data ────────────────────────────────────────────────────
 const STATS = {
   totalStudents:    5000,
-  trackA:           2500,
-  trackB:           2500,
+  totalTeachers:    30,
+  totalParents:     3200,
+  totalClasses:     30,
+  form1Students:           2500,
+  form2Students:           2500,
   totalTeachers:    42,
   totalParents:     3800,
   totalClasses:     24,
@@ -57,20 +60,13 @@ const YEAR_ATTENDANCE = [
 ];
 
 // Department performance
-const DEPT_PERF = [
-  { dept: 'Science',    avg: 74, teachers: 8  },
-  { dept: 'Maths',      avg: 70, teachers: 6  },
-  { dept: 'English',    avg: 72, teachers: 5  },
-  { dept: 'Social Std', avg: 68, teachers: 4  },
-  { dept: 'Technical',  avg: 65, teachers: 7  },
-  { dept: 'Business',   avg: 69, teachers: 5  },
-  { dept: 'Arts',       avg: 71, teachers: 7  },
-];
+
+
 
 // Track split pie
 const TRACK_DATA = [
-  { name: 'Track A (Gold)',  value: 243, color: '#ca8a04' },
-  { name: 'Track B (Green)', value: 243, color: '#16a34a' },
+  { name: 'Semester 1 (Gold)',  value: 243, color: '#ca8a04' },
+  { name: 'Semester 2 (Green)', value: 243, color: '#16a34a' },
 ];
 
 // Program split pie
@@ -86,9 +82,9 @@ const RECENT_ACTIVITY = [
   { text: 'WOI Ama Mensah submitted Form 3A exam scores',        time: '5 min ago',  type: 'success' },
   { text: '14 score submissions still pending — deadline Friday', time: '1 hr ago',   type: 'warning' },
   { text: 'New teacher Cpt Ebo Darko added to Mathematics dept',  time: '2 hrs ago',  type: 'info'    },
-  { text: 'Term 1 report cards approved for Form 3 Science B',   time: '3 hrs ago',  type: 'success' },
+  { text: 'Semester 1 report cards approved for Form 3 Science B',   time: '3 hrs ago',  type: 'success' },
   { text: '12 new students enrolled — Form 1 General Science',   time: '1 day ago',  type: 'info'    },
-  { text: 'Bulk SMS sent to 380 parents re: Term 2 exams',       time: '2 days ago', type: 'info'    },
+  { text: 'Bulk SMS sent to 380 parents re: Semester 1 exams',       time: '2 days ago', type: 'info'    },
 ];
 
 // Activity icon map
@@ -210,8 +206,6 @@ const Card = ({ title, subtitle, children, linkTo, linkLabel = 'View all', accen
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user }  = useAuth();
-  const termProgress = Math.round((9 / 14) * 100);
-
   return (
     <div className="space-y-6">
 
@@ -223,53 +217,36 @@ const Dashboard = () => {
           <div className="w-36 h-36 rounded-full bg-white absolute right-10 bottom-4" />
         </div>
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <div >
+          <div>
             <p className="text-blue-200 text-sm mb-1">Welcome back,</p>
             <h2 className="text-xl sm:text-2xl font-black">{user?.name || 'Administrator'}</h2>
             <p className="text-blue-300 text-xs mt-0.5">Armed Forces Senior High Technical School · Admin Portal</p>
             <p className="text-blue-300 text-xs">Uaddara Barracks, Kumasi, Ghana</p>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {[
-                { label: `${STATS.totalStudents} Students`, bg: 'rgba(255,255,255,0.15)' },
-                { label: `${STATS.totalTeachers} Teachers`, bg: 'rgba(255,255,255,0.15)' },
-                
-              ].map(b => (
-                <span key={b.label} className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                  style={{ backgroundColor: b.bg }}>
-                  {b.label}
-                </span>
-              ))}
-            </div>
           </div>
-          {/* Term progress card */}
-          <div className="rounded-xl p-4 text-center min-w-[150px] flex-shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-            <p className="text-blue-200 text-xs">2024/2025</p>
-            <p className="font-bold text-sm">Term 2</p>
-            <p className="text-blue-200 text-xs mt-1">Week 9 of 14</p>
-            <div className="mt-2 h-2 rounded-full overflow-hidden"
-              style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-              <div className="h-full rounded-full"
-                style={{ width: `${termProgress}%`, backgroundColor: '#facc15' }} />
-            </div>
-            <p className="text-yellow-300 text-xs mt-1 font-bold">{termProgress}% complete</p>
+          {/* Info badges */}
+          <div className="flex flex-col gap-2 flex-shrink-0">
+            {[
+              { label: 'Academic Year', value: '2024 / 2025'          },
+              { label: 'Current Semester', value: 'Semester 1'        },
+              { label: 'System',           value: 'Transitional'      },
+              { label: 'Location',         value: 'Kumasi, Ghana'     },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex items-center justify-between gap-4 px-3 py-1.5 rounded-lg"
+                style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                <span className="text-xs text-blue-300">{label}</span>
+                <span className="text-xs font-bold text-white">{value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Key stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={GraduationCap} label="Total Students"    target={STATS.totalStudents}  suffix="+"  sub={`Track A: ${STATS.trackA.toLocaleString()} · B: ${STATS.trackB.toLocaleString()}`} color="var(--royal-blue)"   onClick={() => navigate('/dashboard/students')} />
-        <StatCard icon={Users}         label="Total Teachers"    target={STATS.totalTeachers}              sub={`${STATS.totalClasses} classes`}                  color="#7c3aed"             onClick={() => navigate('/dashboard/teacher')}  />
-        <StatCard icon={UserCheck}     label="Attendance Rate"   target={STATS.attendanceRate} suffix="%"  sub="This term"                                        color="var(--success-dark)" />
-        <StatCard icon={Award}         label="Overall Pass Rate" target={STATS.passRate}        suffix="%"  sub="Credit & above"                                   color="var(--warning)"      />
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={BookOpen}      label="Total Classes"     target={STATS.totalClasses}       sub="24 active this term"   color="var(--info)"         onClick={() => navigate('/dashboard/academicStructure1')} />
-        <StatCard icon={ClipboardList} label="Pending Scores"    target={STATS.pendingScores}      sub="Chase up before Friday" color="var(--accent-red)"  alert onClick={() => navigate('/dashboard/teacher')} />
-        <StatCard icon={CheckCircle2}  label="Reports Generated" target={STATS.reportsGenerated}   suffix="+"  sub="This term"  color="var(--success-dark)" />
-        <StatCard icon={Users}         label="Total Parents"     target={STATS.totalParents}       suffix="+"  sub="Registered on portal" color="#0369a1" onClick={() => navigate('/dashboard/parents')} />
+        <StatCard icon={GraduationCap} label="Total Students" target={STATS.totalStudents} suffix="+" color="var(--royal-blue)"   onClick={() => navigate('/dashboard/students')} />
+        <StatCard icon={Users}         label="Total Teachers"  target={STATS.totalTeachers} suffix="+" color="#7c3aed"             onClick={() => navigate('/dashboard/teacher')}  />
+        <StatCard icon={UserCheck}     label="Total Parents"   target={STATS.totalParents}  suffix="+" color="var(--success-dark)" onClick={() => navigate('/dashboard/parents')}  />
+        <StatCard icon={BookOpen}      label="Total Classes"   target={STATS.totalClasses}  suffix="+" color="var(--warning)"      onClick={() => navigate('/dashboard/academicStructure2')} />
       </div>
 
       {/* Charts row 1 — Grade distribution + Term trend */}
@@ -336,28 +313,8 @@ const Dashboard = () => {
       {/* Charts row 2 — Dept perf + Enrollment split */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Department performance */}
-        <div className="lg:col-span-2">
-          <Card title="Department Average Scores" subtitle="Current term — all departments">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={DEPT_PERF} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 10, fill: '#6b7280' }} domain={[0, 100]} />
-                <YAxis type="category" dataKey="dept" tick={{ fontSize: 11, fill: '#6b7280' }} width={70} />
-                <Tooltip content={<BarTip />} />
-                <Bar dataKey="avg" name="Avg Score (%)" radius={[0, 6, 6, 0]}>
-                  {DEPT_PERF.map((entry, i) => (
-                    <Cell key={i}
-                      fill={entry.avg >= 72 ? 'var(--success-dark)' : entry.avg >= 65 ? 'var(--royal-blue)' : 'var(--warning)'}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </div>
-
         {/* Enrollment by program */}
+        <div className="lg:col-span-2">
         <Card title="Enrollment by Programme" subtitle="Total 486 students">
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -373,6 +330,7 @@ const Dashboard = () => {
             </PieChart>
           </ResponsiveContainer>
         </Card>
+        </div>
       </div>
 
       {/* Charts row 3 — Attendance + Track + Activity */}
@@ -394,7 +352,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Track split */}
-        <Card title="Double Track Split" subtitle="Track A in session · Track B on vacation">
+        <Card title="Transitional System Split" subtitle="Semester 1 in session · Semester 2 on vacation">
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               <Pie data={TRACK_DATA} cx="50%" cy="50%" innerRadius={50} outerRadius={75}

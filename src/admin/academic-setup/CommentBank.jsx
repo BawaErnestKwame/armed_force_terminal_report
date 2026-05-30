@@ -1,11 +1,11 @@
 // src/admin/academic-setup/CommentBank.jsx
 import React, { useState, useMemo } from 'react';
-import { FaBook, FaChalkboardTeacher, FaUserTie, FaStar, FaRegStar } from 'react-icons/fa';
 import {
   Plus, Edit3, Trash2, Copy, Save, X,
   Search, CheckCircle2, MessageSquare,
   ChevronDown, Filter, Star, BookOpen
 } from 'lucide-react';
+import { FaBook, FaChalkboardTeacher, FaUserTie, FaStar, FaRegStar } from 'react-icons/fa';
 
 // ─── Initial comments ─────────────────────────────────────────────────────────
 const INITIAL_COMMENTS = [
@@ -66,7 +66,7 @@ const INITIAL_COMMENTS = [
 const CATEGORIES = [
   { value:'subjectTeacher', label:'Subject Teacher Comments', Icon:FaBook },
   { value:'formTeacher',    label:'Form Teacher Comments',    Icon:FaChalkboardTeacher },
-  { value:'headmaster',     label:'Headmaster Comments',      Icon:FaUserTie },
+  { value:'headmaster',     label:'HOD Comments',             Icon:FaUserTie },
 ];
 
 const PERFORMANCES = [
@@ -337,7 +337,6 @@ const CommentBank = () => {
   const [search,      setSearch]     = useState('');
   const [filterCat,   setFCat]       = useState('all');
   const [filterPerf,  setFPerf]      = useState('all');
-  const [filterFav,   setFFav]       = useState(false);
   const [showModal,   setShowModal]  = useState(false);
   const [editComment, setEditC]      = useState(null);
   const [toast,       setToast]      = useState(null);
@@ -377,13 +376,12 @@ const CommentBank = () => {
     comments.filter(c => {
       const matchCat  = filterCat ==='all' || c.category   === filterCat;
       const matchPerf = filterPerf==='all' || c.performance === filterPerf;
-      const matchFav  = !filterFav || c.favourite;
       const matchSearch = !search ||
         c.text.toLowerCase().includes(search.toLowerCase()) ||
         c.tags.some(t => t.includes(search.toLowerCase()));
-      return matchCat && matchPerf && matchFav && matchSearch;
+      return matchCat && matchPerf && matchSearch;
     })
-  , [comments, filterCat, filterPerf, filterFav, search]);
+  , [comments, filterCat, filterPerf, search]);
 
   const tabComments = filtered.filter(c => c.category === activeTab);
 
@@ -392,7 +390,6 @@ const CommentBank = () => {
     subjectTeacher: comments.filter(c=>c.category==='subjectTeacher').length,
     formTeacher: comments.filter(c=>c.category==='formTeacher').length,
     headmaster:  comments.filter(c=>c.category==='headmaster').length,
-    favourites:  comments.filter(c=>c.favourite).length,
   };
 
   return (
@@ -411,7 +408,7 @@ const CommentBank = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Comment Bank</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {stats.total} comments · {stats.subjectTeacher} subject teacher · {stats.formTeacher} form teacher · {stats.headmaster} headmaster · {stats.favourites} favourites
+            {stats.total} comments · {stats.subjectTeacher} subject teacher · {stats.formTeacher} form teacher · {stats.headmaster} HOD
           </p>
         </div>
         <button type="button" onClick={() => { setEditC(null); setShowModal(true); }}
@@ -429,8 +426,7 @@ const CommentBank = () => {
           { label:'Total Comments',  value:stats.total,        color:'var(--royal-blue)'   },
           { label:'Subject Teacher',  value:stats.subjectTeacher, color:'var(--royal-blue)'   },
           { label:'Form Teacher',    value:stats.formTeacher,    color:'#7c3aed'             },
-          { label:'Headmaster',      value:stats.headmaster,     color:'var(--warning)'      },
-          { label:'Favourites ⭐',   value:stats.favourites,   color:'var(--success-dark)' },
+          { label:'HOD',             value:stats.headmaster,     color:'var(--warning)'      },
         ].map(({ label,value,color }) => (
           <div key={label} className="bg-white rounded-xl border p-4 text-center shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>
@@ -467,24 +463,11 @@ const CommentBank = () => {
               </button>
             ))}
           </div>
-          {/* Favourites toggle */}
-          <button type="button" onClick={() => setFFav(f => !f)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl transition"
-            style={{
-              backgroundColor: filterFav ? '#fffbeb' : 'white',
-              color: filterFav ? '#92400e' : 'var(--dark-gray)',
-              border: `1px solid ${filterFav ? '#f59e0b' : 'var(--medium-gray)'}`,
-            }}>
-            ⭐ Favourites {filterFav ? 'ON' : 'OFF'}
-          </button>
-        </div>
-        <p className="text-xs text-gray-400 mt-2">
-          Showing <strong>{filtered.length}</strong> of <strong>{stats.total}</strong> comments
-          {(search || filterPerf !== 'all' || filterFav) && (
-            <button type="button" onClick={() => { setSearch(''); setFPerf('all'); setFFav(false); }}
+          {(search || filterPerf !== 'all') && (
+            <button type="button" onClick={() => { setSearch(''); setFPerf('all'); }}
               className="ml-2 font-semibold" style={{ color:'var(--accent-red)' }}>Clear</button>
           )}
-        </p>
+        </div>
       </div>
 
       {/* Category Tabs */}

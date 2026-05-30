@@ -424,7 +424,6 @@ const Teacher = () => {
   const total    = teachers.length;
   const active   = teachers.filter(t=>t.status==='Active').length;
   const fullTime = teachers.filter(t=>t.employmentType==='Full-time').length;
-  const formTeachers = teachers.filter(t=>t.formClass).length;
   const activeFilters = [filterDept,filterStatus,filterYearGroup].filter(f=>f!=='All').length;
 
   return (
@@ -443,7 +442,7 @@ const Teacher = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Teachers & Staff</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {total} staff · {active} active · {fullTime} full-time · {formTeachers} form teachers
+            {total} staff · {active} active
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -484,8 +483,6 @@ const Teacher = () => {
         {[
           { label:'Total Staff',     value:total,       color:'var(--royal-blue)',  icon:Users        },
           { label:'Active',          value:active,      color:'var(--success-dark)',icon:CheckCircle2 },
-          { label:'Full-time',       value:fullTime,    color:'var(--warning)',     icon:Briefcase    },
-          { label:'Form Teachers',   value:formTeachers,color:'#7c3aed',            icon:GraduationCap},
         ].map(({ label,value,color,icon:Icon })=>(
           <div key={label} className="bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>

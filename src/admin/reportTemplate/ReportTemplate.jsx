@@ -16,7 +16,7 @@ import {
 // ─── SHS Ghana Specific Constants ─────────────────────────────────────────────
 
 const ACADEMIC_YEARS = ["2023/2024", "2024/2025", "2025/2026"];
-const TERMS = ["Term 1", "Term 2", "Term 3"];
+const TERMS = ["Semester 1", "Semester 1", "Semester 2"];
 const LANGUAGES = ["English", "French", "Bilingual"];
 
 const SHS_PROGRAMS = [
@@ -91,7 +91,6 @@ const SUBJECT_COLUMNS = [
   { id: "total",            label: "Total Score (100%)",    default: true,  fixed: false },
   { id: "percentage",       label: "Percentage",            default: true,  fixed: false },
   { id: "grade",            label: "Grade (WASSCE)",        default: true,  fixed: false },
-  { id: "grade_point",      label: "Grade Point",           default: true,  fixed: false },
   { id: "position",         label: "Class Position",        default: true,  fixed: false },
   { id: "remark",           label: "Remark",                default: true,  fixed: false },
   { id: "teacher_comment",  label: "Teacher's Comment",     default: false, fixed: false },
@@ -99,7 +98,7 @@ const SUBJECT_COLUMNS = [
 
 const SAMPLE_SHS_STUDENT = {
   name: "Cpl John Mensah (Jnr)",
-  id: "AFTS/2024/001",
+  id: "AFSHTS/2024/001",
   dob: "15/03/2008",
   gender: "Male",
   parent: "WOII Mensah & Mrs. Mensah",
@@ -109,7 +108,7 @@ const SAMPLE_SHS_STUDENT = {
   program: "Technical",
   academicYear: "Form 1 - Technical",
   class: "Form 1 - Technical A",
-  track: "A",
+  yearGroup: "form1",
   residentialStatus: "Day Student",
   attendance: { present: 45, absent: 2, late: 3, percentage: 90.0, excused: 1, medical: 1 },
   caWeight: 30,
@@ -281,10 +280,6 @@ const LiveReportPreview = ({ settings, sections, student }) => {
   const maxTotal         = student.subjects.length * 100;
   const overallPercentage = (totalScore / maxTotal) * 100;
   const overallBand      = getPerformanceBand(overallPercentage);
-  const totalGradePoints = student.subjects.reduce((sum, s) => sum + s.points, 0);
-  const gpa              = settings.performance.showOverallGPA
-    ? (totalGradePoints / student.subjects.length).toFixed(2)
-    : null;
 
   const coreSubjects     = student.subjects.slice(0, 5);
   const electiveSubjects = student.subjects.slice(5);
@@ -307,7 +302,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
           <p className="text-sm font-semibold">
             STUDENT ACADEMIC REPORT CARD - {settings.template?.academicYear || "2024/2025"} ACADEMIC YEAR
           </p>
-          <p className="text-xs text-blue-200">WASSCE Standard • Technical/Vocational Track</p>
+          <p className="text-xs text-blue-200">WASSCE Standard • Transitional System Track</p>
         </div>
       </div>
 
@@ -355,10 +350,10 @@ const LiveReportPreview = ({ settings, sections, student }) => {
           <div className="flex flex-wrap gap-4 text-sm border-b border-gray-200 pb-3">
             <div><span className="text-gray-500">Class/Platoon:</span> <span className="font-medium">{student.class}</span></div>
             {settings.academicInfo.showProgramme && (
-              <div><span className="text-gray-500">Programme:</span> <span className="font-medium">{student.program}</span></div>
+              <div><span className="text-gray-500">Course:</span> <span className="font-medium">{student.course || student.program}</span></div>
             )}
             {settings.academicInfo.showTrack && (
-              <div><span className="text-gray-500">Company:</span> <span className="font-medium">{student.track} Company</span></div>
+              <div><span className="text-gray-500">Year Group:</span> <span className="font-medium">{student.yearGroup || student.year || 'Form 1'}</span></div>
             )}
             {settings.academicInfo.showResidentialStatus && (
               <div><span className="text-gray-500">Status:</span> <span className="font-medium">{student.residentialStatus}</span></div>
@@ -386,7 +381,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
                     {settings.subjectTable.columns.includes('exam_score')  && <th className="p-2 text-center border">Exam (70)</th>}
                     {settings.subjectTable.columns.includes('total')       && <th className="p-2 text-center border">Total</th>}
                     {settings.subjectTable.columns.includes('grade')       && <th className="p-2 text-center border">Grade</th>}
-                    {settings.subjectTable.columns.includes('grade_point') && <th className="p-2 text-center border">GP</th>}
+                    
                     {settings.subjectTable.columns.includes('position')    && <th className="p-2 text-center border">Pos</th>}
                     {settings.subjectTable.columns.includes('remark')      && <th className="p-2 text-left border">Remark</th>}
                   </tr>
@@ -408,7 +403,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
                           </Badge>
                         </td>
                       )}
-                      {settings.subjectTable.columns.includes('grade_point') && <td className="p-2 text-center border">{subject.points}</td>}
+                      
                       {settings.subjectTable.columns.includes('position')    && <td className="p-2 text-center border">{subject.position}</td>}
                       {settings.subjectTable.columns.includes('remark')      && <td className="p-2 border">{subject.remark}</td>}
                     </tr>
@@ -435,7 +430,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
                     {settings.subjectTable.columns.includes('exam_score')  && <th className="p-2 text-center border">Exam (70)</th>}
                     {settings.subjectTable.columns.includes('total')       && <th className="p-2 text-center border">Total</th>}
                     {settings.subjectTable.columns.includes('grade')       && <th className="p-2 text-center border">Grade</th>}
-                    {settings.subjectTable.columns.includes('grade_point') && <th className="p-2 text-center border">GP</th>}
+                    
                     {settings.subjectTable.columns.includes('position')    && <th className="p-2 text-center border">Pos</th>}
                     {settings.subjectTable.columns.includes('remark')      && <th className="p-2 text-left border">Remark</th>}
                   </tr>
@@ -455,7 +450,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
                           </Badge>
                         </td>
                       )}
-                      {settings.subjectTable.columns.includes('grade_point') && <td className="p-2 text-center border">{subject.points}</td>}
+                      
                       {settings.subjectTable.columns.includes('position')    && <td className="p-2 text-center border">{subject.position}</td>}
                       {settings.subjectTable.columns.includes('remark')      && <td className="p-2 border">{subject.remark}</td>}
                     </tr>
@@ -479,9 +474,6 @@ const LiveReportPreview = ({ settings, sections, student }) => {
               {settings.performance.showTotalPercentage && (
                 <div><span className="text-gray-500">Percentage:</span> <span className="font-bold text-lg">{overallPercentage.toFixed(1)}%</span></div>
               )}
-              {settings.performance.showOverallGPA && gpa && (
-                <div><span className="text-gray-500">GPA:</span> <span className="font-bold text-lg">{gpa}</span></div>
-              )}
               {settings.performance.showPerformanceBand && (
                 <div>
                   <span className="text-gray-500">Performance:</span>{' '}
@@ -493,9 +485,6 @@ const LiveReportPreview = ({ settings, sections, student }) => {
               )}
               {settings.performance.showClassRank && (
                 <div><span className="text-gray-500">Class Position:</span> <span className="font-bold">3 / 48 Students</span></div>
-              )}
-              {settings.performance.showStreamRank && (
-                <div><span className="text-gray-500">Company Rank:</span> <span className="font-bold">2 / 24</span></div>
               )}
               {settings.performance.showSubjectsCount && (
                 <div><span className="text-gray-500">Subjects:</span> <span className="font-bold">{student.subjects.length}</span></div>
@@ -527,10 +516,7 @@ const LiveReportPreview = ({ settings, sections, student }) => {
             <div className="flex flex-wrap gap-5 text-sm">
               {settings.attendance.showPresent     && <div><span className="text-gray-500">Present:</span> <span className="font-medium">{student.attendance.present} days</span></div>}
               {settings.attendance.showAbsent      && <div><span className="text-gray-500">Absent:</span>  <span className="font-medium">{student.attendance.absent} days</span></div>}
-              {settings.attendance.showLate        && <div><span className="text-gray-500">Late:</span>    <span className="font-medium">{student.attendance.late} days</span></div>}
               {settings.attendance.showPercentage  && <div><span className="text-gray-500">Attendance %:</span> <span className="font-medium text-green-600">{student.attendance.percentage}%</span></div>}
-              <div><span className="text-gray-500">Medical:</span> <span className="font-medium">{student.attendance.medical} day</span></div>
-              <div><span className="text-gray-500">Excused:</span> <span className="font-medium">{student.attendance.excused} day</span></div>
             </div>
           </div>
         )}
@@ -613,7 +599,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
     name: "AFSHTS Standard Report Card",
     code: "AFSHTS-RPT-2024",
     academicYear: "2024/2025",
-    term: "Term 1",
+    term: "Semester 1",
     version: "1.0",
     language: "English",
     isDefault: true,
@@ -650,12 +636,11 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
     separateCoreElective: true,
     coreSectionTitle: "Core Subjects (Compulsory)",
     electiveSectionTitle: "Elective/Technical Subjects",
-    columns: ["subject", "teacher", "ca_score", "exam_score", "total", "grade", "grade_point", "position", "remark"],
+    columns: ["subject", "teacher", "ca_score", "exam_score", "total", "grade", "position", "remark"],
   });
 
   const [grading, setGrading] = useState({
     system: "WASSCE (Standard)",
-    showGradePoints: true,
     gpaCalculation: "Weighted (WASSCE)",
     showSubjectPosition: true,
     gradeBoundaries: WASSCE_GRADE_BOUNDARIES,
@@ -664,9 +649,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
   const [performance, setPerformance] = useState({
     showTotalMarks: true,
     showTotalPercentage: true,
-    showOverallGPA: true,
     showClassRank: true,
-    showStreamRank: true,
     showSubjectsCount: true,
     showPassedCount: true,
     showPerformanceBand: true,
@@ -678,7 +661,6 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
     format: "summary",
     showPresent: true,
     showAbsent: true,
-    showLate: true,
     showPercentage: true,
     showTermBreakdown: false,
   });
@@ -983,10 +965,10 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                   <SectionCard icon={Settings} title="Template Identification" description="Basic information for AFSHTS report template">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       <Field label="Template Name" required error={validationErrors.templateName}>
-                        <input className={inputCls(!!validationErrors.templateName)} value={template.name} onChange={e => handleTemplateChange('name', e.target.value)} placeholder="e.g., AFTS Standard Report" />
+                        <input className={inputCls(!!validationErrors.templateName)} value={template.name} onChange={e => handleTemplateChange('name', e.target.value)} placeholder="e.g., AFSHTS Standard Report" />
                       </Field>
                       <Field label="Template Code" required error={validationErrors.templateCode}>
-                        <input className={inputCls(!!validationErrors.templateCode)} value={template.code} onChange={e => handleTemplateChange('code', e.target.value.toUpperCase())} placeholder="e.g., AFTS-RPT-2024" />
+                        <input className={inputCls(!!validationErrors.templateCode)} value={template.code} onChange={e => handleTemplateChange('code', e.target.value.toUpperCase())} placeholder="e.g., AFSHTS-RPT-2024" />
                       </Field>
                       <Field label="Template Version">
                         <input className={inputCls()} value={template.version} onChange={e => handleTemplateChange('version', e.target.value)} placeholder="e.g., v1.0" />
@@ -1108,8 +1090,8 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                           <option value="none">None</option>
                         </select>
                       </Field>
-                      <Toggle checked={academicInfo.showProgramme}        onChange={val => { setAcademicInfo(prev => ({ ...prev, showProgramme:        val })); markUnsaved(); }} label="Show Programme/Course" />
-                      <Toggle checked={academicInfo.showTrack}            onChange={val => { setAcademicInfo(prev => ({ ...prev, showTrack:            val })); markUnsaved(); }} label="Show Company/Track" tooltip="Display company or platoon assignment" />
+                      <Toggle checked={academicInfo.showProgramme}        onChange={val => { setAcademicInfo(prev => ({ ...prev, showProgramme:        val })); markUnsaved(); }} label="Show Course" />
+                      <Toggle checked={academicInfo.showTrack}            onChange={val => { setAcademicInfo(prev => ({ ...prev, showTrack:            val })); markUnsaved(); }} label="Show Year Group" />
                       <Toggle checked={academicInfo.showResidentialStatus} onChange={val => { setAcademicInfo(prev => ({ ...prev, showResidentialStatus: val })); markUnsaved(); }} label="Show Residential Status" />
                       <Toggle checked={academicInfo.showAttendance}       onChange={val => { setAcademicInfo(prev => ({ ...prev, showAttendance:       val })); markUnsaved(); }} label="Show Attendance Summary" />
                       <Toggle checked={academicInfo.showClassPosition}    onChange={val => { setAcademicInfo(prev => ({ ...prev, showClassPosition:    val })); markUnsaved(); }} label="Show Class/Platoon Position" />
@@ -1140,7 +1122,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <Toggle checked={comments.allowMultipleTeachers}    onChange={val => { setComments(prev => ({ ...prev, allowMultipleTeachers:    val })); markUnsaved(); }} label="Allow Subject-Specific Comments" />
                             <Toggle checked={comments.showClassTeacherComment}  onChange={val => { setComments(prev => ({ ...prev, showClassTeacherComment:  val })); markUnsaved(); }} label="Show Form Teacher Comment" />
-                            <Toggle checked={comments.showHeadComment}          onChange={val => { setComments(prev => ({ ...prev, showHeadComment:          val })); markUnsaved(); }} label="Show Headmaster's Comment" />
+                            <Toggle checked={comments.showHeadComment}          onChange={val => { setComments(prev => ({ ...prev, showHeadComment:          val })); markUnsaved(); }} label="Show HOD Comment" />
                             <Toggle checked={comments.showSignature}            onChange={val => { setComments(prev => ({ ...prev, showSignature:            val })); markUnsaved(); }} label="Show Signature Lines" />
                           </div>
                         </>
@@ -1240,7 +1222,7 @@ const ReportTemplate = ({ selectedStudent: propSelectedStudent }) => {
               <span className="flex items-center gap-1 text-xs text-yellow-600"><AlertCircle size={12} />Unsaved changes</span>
             )}
             {saved && (
-              <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle2 size={12} />Saved ✓</span>
+              <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle2 size={12} /> Saved</span>
             )}
             <button onClick={handleSave} className="px-6 py-2 text-sm text-white rounded-lg transition shadow-md flex items-center gap-2"
               style={{ backgroundColor: 'var(--accent-red)' }}

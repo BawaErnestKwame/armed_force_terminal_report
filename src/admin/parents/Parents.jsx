@@ -466,8 +466,6 @@ const Parents = () => {
 
   const total    = parents.length;
   const active   = parents.filter(p=>p.status==='Active').length;
-  const multiKids = parents.filter(p=>getChildrenByParentId(p.id).length>1).length;
-  const totalKids = STUDENTS.length;
 
   return (
     <div className="space-y-5">
@@ -486,7 +484,7 @@ const Parents = () => {
         <div>
           <h1 className="text-xl font-black" style={{ color:'var(--dark-gray)' }}>Parents & Guardians</h1>
           <p className="text-xs text-gray-400 mt-0.5">
-            {total} registered · {active} active · {totalKids} children linked · {multiKids} with multiple children
+            {total} registered · {active} active
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -527,8 +525,6 @@ const Parents = () => {
         {[
           { label:'Total Parents',       value:total,     color:'#5b21b6',             icon:Users        },
           { label:'Active',              value:active,    color:'var(--success-dark)',  icon:UserCheck    },
-          { label:'Total Children',      value:totalKids, color:'var(--royal-blue)',    icon:GraduationCap},
-          { label:'Multiple Children',   value:multiKids, color:'var(--warning)',       icon:Users        },
         ].map(({ label,value,color,icon:Icon })=>(
           <div key={label} className="bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm"
             style={{ borderColor:'var(--medium-gray)' }}>

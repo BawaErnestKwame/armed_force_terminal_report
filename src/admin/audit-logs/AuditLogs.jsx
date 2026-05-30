@@ -15,11 +15,11 @@ const INITIAL_LOGS = [
   { id:2,  timestamp:'2025-03-17 14:35:22', user:'System Administrator', role:'admin',   action:'STUDENT_ADDED',   module:'Students',       details:'New student registered: Kwabena Acheampong (AFTS/2025/001)', status:'success', ip:'192.168.1.10' },
   { id:3,  timestamp:'2025-03-17 14:40:05', user:'System Administrator', role:'admin',   action:'STUDENT_EDITED',  module:'Students',       details:'Student record updated: Adwoa Mensah (AFTS/2025/002) — class changed to Form 1 Science A', status:'success', ip:'192.168.1.10' },
   { id:4,  timestamp:'2025-03-17 14:45:18', user:'System Administrator', role:'admin',   action:'PARENT_ADDED',    module:'Parents',        details:'New parent registered: Mr Emmanuel Asante (e.asante@gmail.com)', status:'success', ip:'192.168.1.10' },
-  { id:5,  timestamp:'2025-03-17 14:50:33', user:'System Administrator', role:'admin',   action:'SMS_SENT',        module:'Communication',  details:'Bulk SMS sent to All Parents (45 recipients) — Subject: Term 2 Exam Notice', status:'success', ip:'192.168.1.10' },
+  { id:5,  timestamp:'2025-03-17 14:50:33', user:'System Administrator', role:'admin',   action:'SMS_SENT',        module:'Communication',  details:'Bulk SMS sent to All Parents (45 recipients) — Subject: Semester 1 Exam Notice', status:'success', ip:'192.168.1.10' },
   { id:6,  timestamp:'2025-03-17 15:00:12', user:'System Administrator', role:'admin',   action:'REPORT_GENERATED',module:'Reports',        details:'Report card generated for Form 3 Science A (42 students)', status:'success', ip:'192.168.1.10' },
   { id:7,  timestamp:'2025-03-17 15:10:44', user:'System Administrator', role:'admin',   action:'TEACHER_ADDED',   module:'Teachers',       details:'New teacher added: Dr Yaa Agyemang (AFTS/TCH/015) — Mathematics dept', status:'success', ip:'192.168.1.10' },
   { id:8,  timestamp:'2025-03-17 15:20:09', user:'System Administrator', role:'admin',   action:'GRADING_UPDATED', module:'Settings',       details:'Grading configuration updated — pass score changed from 45 to 50', status:'success', ip:'192.168.1.10' },
-  { id:9,  timestamp:'2025-03-17 15:30:55', user:'System Administrator', role:'admin',   action:'EVENT_ADDED',     module:'Calendar',       details:'Calendar event added: Term 2 Exams Begin (2025-03-24)', status:'success', ip:'192.168.1.10' },
+  { id:9,  timestamp:'2025-03-17 15:30:55', user:'System Administrator', role:'admin',   action:'EVENT_ADDED',     module:'Calendar',       details:'Calendar event added: Semester 1 Exams Begin (2025-03-24)', status:'success', ip:'192.168.1.10' },
   { id:10, timestamp:'2025-03-17 15:45:22', user:'System Administrator', role:'admin',   action:'LOGOUT',          module:'Auth',           details:'Admin logged out', status:'success', ip:'192.168.1.10' },
 
   // Teacher actions
@@ -36,7 +36,7 @@ const INITIAL_LOGS = [
 
   // Student actions
   { id:21, timestamp:'2025-03-17 07:30:55', user:'Kofi Asante',          role:'student', action:'LOGIN',           module:'Auth',           details:'Student logged in — AFTS/2024/001', status:'success', ip:'192.168.1.50' },
-  { id:22, timestamp:'2025-03-17 07:35:22', user:'Kofi Asante',          role:'student', action:'RESULTS_VIEWED',  module:'Results',        details:'Term 2 results viewed by student', status:'success', ip:'192.168.1.50' },
+  { id:22, timestamp:'2025-03-17 07:35:22', user:'Kofi Asante',          role:'student', action:'RESULTS_VIEWED',  module:'Results',        details:'Semester 1 results viewed by student', status:'success', ip:'192.168.1.50' },
   { id:23, timestamp:'2025-03-17 07:40:11', user:'Kofi Asante',          role:'student', action:'REPORT_PRINTED',  module:'Reports',        details:'Report card printed/saved as PDF', status:'success', ip:'192.168.1.50' },
   { id:24, timestamp:'2025-03-17 07:45:33', user:'Akosua Bonsu',         role:'student', action:'LOGIN',           module:'Auth',           details:'Student logged in — AFTS/2024/010', status:'success', ip:'192.168.1.55' },
   { id:25, timestamp:'2025-03-17 07:50:44', user:'Akosua Bonsu',         role:'student', action:'PROFILE_UPDATED', module:'Profile',        details:'Student contact information updated — phone number changed', status:'success', ip:'192.168.1.55' },
@@ -82,11 +82,6 @@ const ACTION_CONFIG = {
   EVENT_ADDED:       { label:'Event Added',       color:'var(--royal-blue)',   bg:'#eef2ff', icon:Calendar   },
 };
 
-const STATUS_STYLE = {
-  success: { bg:'#f0fdf4', color:'var(--success-dark)', label:'Success', icon:CheckCircle2 },
-  failed:  { bg:'#fff1f2', color:'var(--accent-red)',   label:'Failed',  icon:AlertCircle  },
-  warning: { bg:'#fffbeb', color:'var(--warning)',       label:'Warning', icon:AlertCircle  },
-};
 
 const ROLE_STYLE = {
   admin:   { bg:'#eef2ff', color:'var(--royal-blue)' },
@@ -97,14 +92,12 @@ const ROLE_STYLE = {
 };
 
 const MODULES   = ['All','Auth','Students','Teachers','Parents','Scores','Attendance','Reports','Communication','Calendar','Settings','Profile'];
-const STATUSES  = ['All','success','failed','warning'];
 const ROLES     = ['All','admin','teacher','student','parent'];
 
 // ─── AuditLogs ────────────────────────────────────────────────────────────────
 const AuditLogs = () => {
   const [search,       setSearch]     = useState('');
   const [filterModule, setFModule]    = useState('All');
-  const [filterStatus, setFStatus]    = useState('All');
   const [filterRole,   setFRole]      = useState('All');
   const [filterDate,   setFDate]      = useState('');
   const [showFilters,  setShowFilters]= useState(false);
@@ -119,21 +112,19 @@ const AuditLogs = () => {
         log.user.toLowerCase().includes(q)    ||
         log.action.toLowerCase().includes(q)  ||
         log.details.toLowerCase().includes(q) ||
-        log.module.toLowerCase().includes(q)  ||
-        log.ip.includes(q);
+        log.module.toLowerCase().includes(q);
       const matchModule = filterModule === 'All' || log.module === filterModule;
-      const matchStatus = filterStatus === 'All' || log.status === filterStatus;
       const matchRole   = filterRole   === 'All' || log.role   === filterRole;
       const matchDate   = !filterDate  || log.timestamp.startsWith(filterDate);
-      return matchSearch && matchModule && matchStatus && matchRole && matchDate;
+      return matchSearch && matchModule && matchRole && matchDate;
     })
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-  , [search, filterModule, filterStatus, filterRole, filterDate]);
+  , [search, filterModule, filterRole, filterDate]);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  const activeFilters = [filterModule, filterStatus, filterRole].filter(f => f !== 'All').length + (filterDate ? 1 : 0);
+  const activeFilters = [filterModule, filterRole].filter(f => f !== 'All').length + (filterDate ? 1 : 0);
 
   const handleExport = () => {
     const rows = ['Timestamp,User,Role,Action,Module,Status,IP,Details'];
@@ -147,9 +138,6 @@ const AuditLogs = () => {
 
   const stats = {
     total:   INITIAL_LOGS.length,
-    success: INITIAL_LOGS.filter(l => l.status === 'success').length,
-    failed:  INITIAL_LOGS.filter(l => l.status === 'failed').length,
-    warning: INITIAL_LOGS.filter(l => l.status === 'warning').length,
   };
 
   return (
@@ -173,12 +161,9 @@ const AuditLogs = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4" style={{ maxWidth: 220 }}>
         {[
           { label:'Total Events',    value:stats.total,   color:'var(--royal-blue)',   icon:Clock        },
-          { label:'Successful',      value:stats.success, color:'var(--success-dark)', icon:CheckCircle2 },
-          { label:'Failed',          value:stats.failed,  color:'var(--accent-red)',   icon:AlertCircle  },
-          { label:'Warnings',        value:stats.warning, color:'var(--warning)',       icon:AlertCircle  },
         ].map(({ label, value, color, icon: Icon }) => (
           <div key={label} className="bg-white rounded-xl border p-4 flex items-center gap-3 shadow-sm"
             style={{ borderColor: 'var(--medium-gray)' }}>
@@ -227,11 +212,10 @@ const AuditLogs = () => {
 
         {/* Filter dropdowns */}
         {showFilters && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 pt-3 border-t"
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3 pt-3 border-t"
             style={{ borderColor: 'var(--medium-gray)' }}>
             {[
               { label:'Module',  value:filterModule, set:v => { setFModule(v); setPage(1); },  opts:MODULES  },
-              { label:'Status',  value:filterStatus, set:v => { setFStatus(v); setPage(1); },  opts:STATUSES },
               { label:'Role',    value:filterRole,   set:v => { setFRole(v);   setPage(1); },  opts:ROLES    },
               { label:'Date',    value:filterDate,   set:v => { setFDate(v);   setPage(1); },  type:'date'   },
             ].map(({ label, value, set, opts, type }) => (
@@ -275,7 +259,7 @@ const AuditLogs = () => {
           <table className="w-full text-sm min-w-[800px]">
             <thead className="border-b" style={{ backgroundColor: 'var(--light-gray)', borderColor: 'var(--medium-gray)' }}>
               <tr>
-                {['Timestamp','User / Role','Action','Module','Status','IP',''].map(h => (
+                {['Timestamp','User / Role','Action','Module',''].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">{h}</th>
                 ))}
               </tr>
@@ -283,15 +267,13 @@ const AuditLogs = () => {
             <tbody className="divide-y" style={{ borderColor: 'var(--medium-gray)' }}>
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
+                  <td colSpan={5} className="px-4 py-12 text-center text-gray-400">
                     No logs match your search or filter
                   </td>
                 </tr>
               ) : paginated.map(log => {
                 const ac = ACTION_CONFIG[log.action] || { label: log.action, color: '#6b7280', bg: '#f3f4f6', icon: Info };
-                const ss = STATUS_STYLE[log.status];
                 const rs = ROLE_STYLE[log.role]  || ROLE_STYLE.unknown;
-                const StatusIcon = ss.icon;
                 const ActionIcon = ac.icon;
 
                 return (
@@ -333,17 +315,6 @@ const AuditLogs = () => {
                         {log.module}
                       </span>
                     </td>
-
-                    {/* Status */}
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <StatusIcon size={12} style={{ color: ss.color }}/>
-                        <span className="text-xs font-semibold" style={{ color: ss.color }}>{ss.label}</span>
-                      </div>
-                    </td>
-
-                    {/* IP */}
-                    <td className="px-4 py-3 font-mono text-xs text-gray-400">{log.ip}</td>
 
                     {/* View */}
                     <td className="px-4 py-3">
@@ -400,10 +371,8 @@ const AuditLogs = () => {
       {/* Detail modal */}
       {viewLog && (() => {
         const ac = ACTION_CONFIG[viewLog.action] || { label: viewLog.action, color: '#6b7280', bg: '#f3f4f6', icon: Info };
-        const ss = STATUS_STYLE[viewLog.status];
         const rs = ROLE_STYLE[viewLog.role] || ROLE_STYLE.unknown;
         const ActionIcon = ac.icon;
-        const StatusIcon = ss.icon;
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
@@ -423,15 +392,13 @@ const AuditLogs = () => {
                   <X size={18}/>
                 </button>
               </div>
-              <div className="h-1" style={{ backgroundColor: ss.color }}/>
+              <div className="h-1" style={{ backgroundColor: 'var(--royal-blue)' }}/>
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { label:'User',      value:viewLog.user   },
                     { label:'Role',      value:viewLog.role,  badge:true, style:rs },
-                    { label:'Status',    value:ss.label,      badge:true, style:{bg:ss.bg, color:ss.color} },
                     { label:'Module',    value:viewLog.module },
-                    { label:'IP Address',value:viewLog.ip     },
                     { label:'Timestamp', value:viewLog.timestamp },
                   ].map(({ label, value, badge, style: bStyle }) => (
                     <div key={label} className="p-3 rounded-xl" style={{ backgroundColor: 'var(--light-gray)' }}>
