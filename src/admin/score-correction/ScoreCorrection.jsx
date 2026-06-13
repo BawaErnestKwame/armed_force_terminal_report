@@ -330,7 +330,7 @@ const ScoreCorrection = () => {
 
       {/* Header */}
       <div className="flex items-start justify-between gap-3 flex-wrap">
-        <div >
+        <div>
           <h1
             className="text-xl font-black"
             style={{ color: "var(--dark-gray)" }}
@@ -549,7 +549,7 @@ const ScoreCorrection = () => {
                     CA max: 30 · Exam max: 70 · Total: 100
                   </p>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
                   <table className="w-full text-sm min-w-[550px]">
                     <thead
                       className="border-b"

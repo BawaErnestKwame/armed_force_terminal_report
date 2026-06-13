@@ -62,7 +62,7 @@ const OTHER_ROLES = [
     Icon: () => <AccessibilityNewIcon sx={{ fontSize: 40, color: "white" }} />,
     bg: "bg-blue-500",
     hover: "hover:bg-blue-600",
-    demo: "kofi@afts.edu.gh",
+    demo: "kofi@afshts.edu.gh",
     redirect: "/student",
   },
   {
@@ -218,7 +218,7 @@ const TeacherModal = ({ onClose }) => {
               className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
               style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
             >
-              <img src={logo} alt="AFTS" className="w-8 h-8 object-contain" />
+              <img src={logo} alt="AFSHTS" className="w-8 h-8 object-contain" />
             </div>
             <div>
               <p className="font-black text-base leading-tight">
@@ -623,7 +623,7 @@ const SimpleLoginModal = ({ role, onClose }) => {
             >
               <img
                 src={logo}
-                alt="AFTS"
+                alt="AFSHTS"
                 className="w-full h-full object-contain p-1"
               />
             </div>
@@ -669,9 +669,9 @@ const SimpleLoginModal = ({ role, onClose }) => {
           >
             {isStudent ? (
               <>
-                <span className="font-bold">Demo: </span>kofi@afts.edu.gh · ID:{" "}
-                <span className="font-mono font-bold">AFTS/2024/031</span> · pw:{" "}
-                <span className="font-mono font-bold">student123</span>
+                <span className="font-bold">Demo: </span>kofi@afshts.edu.gh ·
+                ID: <span className="font-mono font-bold">AFSHTS/2024/031</span>{" "}
+                · pw: <span className="font-mono font-bold">student123</span>
               </>
             ) : (
               <>
@@ -715,7 +715,7 @@ const SimpleLoginModal = ({ role, onClose }) => {
                     onChange={(e) => setStudentId(e.target.value)}
                     required
                     autoFocus
-                    placeholder="e.g. AFTS/2024/031"
+                    placeholder="e.g. AFSHTS/2024/031"
                     className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border-2 outline-none transition-all font-mono"
                     style={{
                       borderColor: "var(--medium-gray)",

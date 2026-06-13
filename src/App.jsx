@@ -32,6 +32,7 @@ import AcademicStructure1 from "./admin/academic-structure1/AcademicStructure1";
 import AcademicStructure2 from "./admin/academic-structure2/AcademicStructure2";
 import ReportTemplateWrapper from "./admin/reportTemplate/ReportTemplateWrapper";
 import ScoreCorrection from "./admin/score-correction/ScoreCorrection";
+import PublishReports from "./admin/publish-reports/PublishReports";
 import AdditionalInfo from "./admin/additional-info/AdditionalInfo";
 import AuditLogs from "./admin/audit-logs/AuditLogs";
 import TeacherDashboardLayout from "./teacher/TeacherDashboardLayout";
@@ -52,6 +53,7 @@ import TeacherWAEC from "./teacher/waec/TeacherWAEC";
 import TeacherWorkshop from "./teacher/workshop/TeacherWorkshop";
 import TeacherSports from "./teacher/sports/TeacherSports";
 import TeacherReports from "./teacher/reports/TeacherReports";
+import ScoreReview from "./teacher/score-review/ScoreReview";
 import TeacherProfile from "./teacher/profile/TeacherProfile";
 
 // ── Student Portal ────────────────────────────────────────────────────────────
@@ -127,6 +129,7 @@ const App = () => (
           <Route path="academicStructure2" element={<AcademicStructure2 />} />
           <Route path="reportTemplate" element={<ReportTemplateWrapper />} />
           <Route path="scoreCorrection" element={<ScoreCorrection />} />
+          <Route path="publishReports" element={<PublishReports />} />
           <Route path="additionalInfo" element={<AdditionalInfo />} />
           <Route path="auditLogs" element={<AuditLogs />} />
           <Route path="analytics" element={<AdminAnalytics />} />
@@ -153,6 +156,7 @@ const App = () => (
           <Route path="settings" element={<Settings />} />
           <Route path="hod" element={<TeacherHODPanel />} />
           <Route path="formclass" element={<TeacherFormClass />} />
+          <Route path="scoreReview" element={<ScoreReview />} />
           <Route path="assistant-hod" element={<TeacherAssistantHOD />} />
           <Route path="yeargroup" element={<TeacherYearGroup />} />
           <Route path="examcoord" element={<TeacherExamCoord />} />

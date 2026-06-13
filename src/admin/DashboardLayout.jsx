@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
+
 import {
   FaTachometerAlt,
   FaUsers,
+   FaPaperPlane ,
   FaChalkboardTeacher,
   FaUserGraduate,
   FaUserFriends,
@@ -103,6 +105,12 @@ const NAV_SECTIONS = [
         icon: FaEraser,
         label: "Score Correction",
         path: "/dashboard/scoreCorrection",
+      },
+
+      {
+        icon: FaClipboardList, 
+        label: "Publish Reports",
+        path: "/dashboard/publishReports",
       },
     ],
   },
