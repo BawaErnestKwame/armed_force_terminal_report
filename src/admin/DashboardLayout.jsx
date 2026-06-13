@@ -4,65 +4,133 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
 import {
-  FaTachometerAlt, FaUsers, FaChalkboardTeacher, FaUserGraduate,
-  FaUserFriends, FaCalendarAlt, FaLayerGroup, FaFileAlt,
-  FaClipboardList, FaBullhorn, FaInfoCircle, FaHistory,
-  FaCog, FaUser, FaBars, FaTimes, FaSignOutAlt,
-  FaShieldAlt, FaBook, FaCommentDots, FaChartBar,
-  FaCalendar, FaDollarSign
-} from 'react-icons/fa';
+  FaTachometerAlt,
+  FaUsers,
+  FaChalkboardTeacher,
+  FaUserGraduate,
+  FaUserFriends,
+  FaCalendarAlt,
+  FaLayerGroup,
+  FaFileAlt,
+  FaClipboardList,
+  FaBullhorn,
+  FaInfoCircle,
+  FaHistory,
+  FaCog,
+  FaUser,
+  FaBars,
+  FaTimes,
+  FaSignOutAlt,
+  FaShieldAlt,
+  FaBook,
+  FaCommentDots,
+  FaChartBar,
+  FaCalendar,
+  FaDollarSign,
+  FaEraser,
+} from "react-icons/fa";
 import { MdDashboard, MdSchool } from 'react-icons/md';
 
 // ─── Sidebar nav sections 
 const NAV_SECTIONS = [
   {
-    section: 'Main',
+    section: "Main",
     items: [
-      { icon: FaTachometerAlt,    label: 'Dashboard',          path: '/dashboard',              end: true  },
-      { icon: FaUsers,            label: 'User Management',    path: '/dashboard/userManagement'            },
+      {
+        icon: FaTachometerAlt,
+        label: "Dashboard",
+        path: "/dashboard",
+        end: true,
+      },
+      {
+        icon: FaUsers,
+        label: "User Management",
+        path: "/dashboard/userManagement",
+      },
     ],
   },
   {
-    section: 'People',
+    section: "People",
     items: [
-      { icon: FaChalkboardTeacher, label: 'Teachers',          path: '/dashboard/teacher'                   },
-      { icon: FaUserGraduate,      label: 'Students',          path: '/dashboard/students'                  },
-      { icon: FaUserFriends,       label: 'Parents',           path: '/dashboard/parents'                   },
+      {
+        icon: FaChalkboardTeacher,
+        label: "Teachers",
+        path: "/dashboard/teacher",
+      },
+      { icon: FaUserGraduate, label: "Students", path: "/dashboard/students" },
+      { icon: FaUserFriends, label: "Parents", path: "/dashboard/parents" },
     ],
   },
   {
-    section: 'Academic Setup',
+    section: "Academic Setup",
     items: [
-      { icon: FaLayerGroup,       label: 'Structure — Part 1', path: '/dashboard/academicStructure1'        },
-      { icon: FaLayerGroup,       label: 'Structure — Part 2', path: '/dashboard/academicStructure2'        },
-      { icon: FaBook,             label: 'Grading Config',     path: '/dashboard/gradingConfig'             },
-      { icon: FaCommentDots,      label: 'Comment Bank',       path: '/dashboard/commentBank'               },
+      {
+        icon: FaLayerGroup,
+        label: "Structure — Part 1",
+        path: "/dashboard/academicStructure1",
+      },
+      {
+        icon: FaLayerGroup,
+        label: "Structure — Part 2",
+        path: "/dashboard/academicStructure2",
+      },
+      {
+        icon: FaBook,
+        label: "Grading Config",
+        path: "/dashboard/gradingConfig",
+      },
+      {
+        icon: FaCommentDots,
+        label: "Comment Bank",
+        path: "/dashboard/commentBank",
+      },
     ],
   },
   {
-    section: 'Reports',
+    section: "Reports",
     items: [
-      { icon: FaFileAlt,          label: 'Report Template',    path: '/dashboard/reportTemplate'            },
-      { icon: FaClipboardList,    label: 'Additional Info',    path: '/dashboard/additionalInfo'            },
+      {
+        icon: FaFileAlt,
+        label: "Report Template",
+        path: "/dashboard/reportTemplate",
+      },
+      {
+        icon: FaClipboardList,
+        label: "Additional Info",
+        path: "/dashboard/additionalInfo",
+      },
+      {
+        icon: FaEraser,
+        label: "Score Correction",
+        path: "/dashboard/scoreCorrection",
+      },
     ],
   },
   {
-    section: 'Communication',
+    section: "Communication",
     items: [
-      { icon: FaBullhorn,         label: 'Bulk Communication', path: '/dashboard/bulkCommunication'         },
+      {
+        icon: FaBullhorn,
+        label: "Bulk Communication",
+        path: "/dashboard/bulkCommunication",
+      },
     ],
   },
   {
-    section: 'Analytics & Finance',
+    section: "Analytics & Finance",
     items: [
-      { icon: FaChartBar,         label: 'Analytics',          path: '/dashboard/analytics'                 },
-      { icon: FaCalendar,         label: 'School Calendar',    path: '/dashboard/calendar'                  },
+      { icon: FaChartBar, label: "Analytics", path: "/dashboard/analytics" },
+      {
+        icon: FaCalendar,
+        label: "School Calendar",
+        path: "/dashboard/calendar",
+      },
     ],
   },
   {
-    section: 'System',
+    section: "System",
     items: [
-      { icon: FaHistory,          label: 'Audit Logs',         path: '/dashboard/auditLogs'                 },
+      { icon: FaHistory, label: "Audit Logs", path: "/dashboard/auditLogs" },
     ],
   },
 ];
